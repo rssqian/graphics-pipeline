@@ -32,11 +32,11 @@ vec3 color(1.f);
 
 /* model names */
 char* modelNames[] = {
-	"model/quad.obj",
-	"model/couch.obj",
-	"model/blaze.obj",
-	"model/ateneal.obj",
-	"model/venusm.obj",
+  "model/quad.obj",
+  "model/couch.obj",
+  "model/blaze.obj",
+  "model/ateneal.obj",
+  "model/venusm.obj",
 	"model/bunnyC.obj",
 	"model/duck4KN.obj",
 	"model/happy10KN.obj",
