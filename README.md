@@ -5,7 +5,7 @@
 2. How to compile & execute
 3. Functions explained
 
-### 1.Source Code
+### 1. Source Code
 
 Header file:
 - framebuffer.h
@@ -16,7 +16,7 @@ Source file:
 - model.cpp
 - main.cpp
 
-### 2.How to compile & execute
+### 2. How to compile & execute
 
 #### Command Line
 
@@ -37,7 +37,7 @@ To remove the program, run command:
 4. Switch the compiling mode to "Release" mode.
 5. Press F5 to start debugging.
 
-### 3.Functions explained
+### 3. Functions explained
 H/h: Show help menu
 M/m: Select model
 UP/DOWN: Rotate along x-axis
@@ -48,6 +48,8 @@ L/l: Toggle lighting mode
 W/w: Toggle wireframe mode
 S/s: Save image
 Q/q: Quit
+
+#### Notes
 
 * Wireframe mode doesn't display information for depth of the pixel.
 * Lighting mode contains three mode: Shading by depth, Flat shading, Smooth shading.
