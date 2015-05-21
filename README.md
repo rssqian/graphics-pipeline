@@ -1,5 +1,9 @@
 # 3D Graphics Pipeline
 
+A program to read and show given 3D model files (.obj) with rasterization and lighting.
+
+![Program Flow](program-flow.png)
+
 ## Index
 1. Source Code
 2. How to compile & execute
@@ -7,19 +11,34 @@
 
 ### 1. Source Code
 
-Header file:
-- framebuffer.h
-- model.h
+makefile	For compiling
 
-Source file:
-- framebuffer.cpp
-- model.cpp
-- main.cpp
+src/		Source code
+	main.cpp
+	framebuffer.h
+	framebuffer.cpp
+	model.h
+	model.cpp
+
+model/		Model files
+	quad.obj
+	couch.obj
+	blaze.obj
+	ateneal.obj
+	venusm.obj
+	bunnyC.obj
+	duck4KN.obj
+	happy10KN.obj
+	dragon10KN.obj
+	elephant16KN.obj
+	Statue_of_Liberty.obj
+	Nissan_Pathfinder.obj
 
 ### 2. How to compile & execute
 
 #### Command Line
 
+OpenGL/freeglut is needed to compile the program.
 To compile the program, run command:
 
 `make`
@@ -29,6 +48,10 @@ And the executable file will appear in the working directory.
 To remove the program, run command:
 
 `make clean`
+
+Run the program:
+
+`./3d-graphics-engine`
 
 #### Visual Studio
 1. Open Visual Studio 2010 or newer version of Visual Studio.
