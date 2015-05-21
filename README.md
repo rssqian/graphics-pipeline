@@ -38,16 +38,16 @@ To remove the program, run command:
 5. Press F5 to start debugging.
 
 ### 3. Functions explained
-H/h: Show help menu
-M/m: Select model
-UP/DOWN: Rotate along x-axis
-LEFT/RIGHT: Rotate along y-axis
-C/c: Toggle back-face culling
-B/b: Toggle background color
-L/l: Toggle lighting mode
-W/w: Toggle wireframe mode
-S/s: Save image
-Q/q: Quit
+- H/h: Show help menu
+- M/m: Select model
+- UP/DOWN: Rotate along x-axis
+- LEFT/RIGHT: Rotate along y-axis
+- C/c: Toggle back-face culling
+- B/b: Toggle background color
+- L/l: Toggle lighting mode
+- W/w: Toggle wireframe mode
+- S/s: Save image
+- Q/q: Quit
 
 #### Notes
 
