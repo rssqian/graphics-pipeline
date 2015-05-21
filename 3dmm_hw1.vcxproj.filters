@@ -24,12 +24,30 @@
     <ClCompile Include="src\model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rasterize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rasterize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

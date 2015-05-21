@@ -1,0 +1,86 @@
+﻿Build started 2015/5/21 上午 11:29:13.
+     1>Project "D:\Github\graphics-pipeline\3dmm_hw1.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\3dmm_hw1.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\framebuffer.cpp src\lighting.cpp src\main.cpp src\model.cpp src\rasterize.cpp src\transform.cpp
+         transform.cpp
+     1>d:\github\graphics-pipeline\src\transform.cpp(19): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\transform.cpp(20): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\transform.cpp(24): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\transform.cpp(25): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+         rasterize.cpp
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(8): warning C4244: '正在初始化' : 將 'const float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(70): warning C4244: '=' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(91): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(151): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(157): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(167): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\rasterize.cpp(173): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
+         model.cpp
+     1>d:\github\graphics-pipeline\src\model.cpp(91): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(95): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(116): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(127): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(128): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(136): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(137): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+     1>d:\github\graphics-pipeline\src\model.cpp(143): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(325) : 請參閱 'sscanf' 的宣告
+         main.cpp
+     1>d:\github\graphics-pipeline\src\main.cpp(158): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(158): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(159): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(159): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(160): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(160): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\main.cpp(196): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : 請參閱 'sprintf' 的宣告
+     1>d:\github\graphics-pipeline\src\main.cpp(228): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\time.inl(112) : 請參閱 'localtime' 的宣告
+         lighting.cpp
+     1>d:\github\graphics-pipeline\src\lighting.cpp(7): warning C4305: '正在初始化' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\lighting.cpp(12): warning C4305: '正在初始化' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
+         framebuffer.cpp
+     1>d:\github\graphics-pipeline\src\framebuffer.cpp(28): warning C4305: '=' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\framebuffer.cpp(45): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\framebuffer.cpp(46): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\src\framebuffer.cpp(47): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+         正在產生程式碼...
+       ManifestResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\3dmm_hw1.exe.embed.manifest.res" Debug\3dmm_hw1_manifest.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\3dmm_hw1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.lib" /MACHINE:X86 Debug\3dmm_hw1.exe.embed.manifest.res
+         Debug\framebuffer.obj
+         Debug\lighting.obj
+         Debug\main.obj
+         Debug\model.obj
+         Debug\rasterize.obj
+         Debug\transform.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\3dmm_hw1.exe.embed.manifest" /manifest Debug\3dmm_hw1.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\3dmm_hw1.exe.embed.manifest.res" Debug\3dmm_hw1_manifest.rc 
+       LinkEmbedManifest:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\3dmm_hw1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Github\graphics-pipeline\Debug\3dmm_hw1.lib" /MACHINE:X86 Debug\3dmm_hw1.exe.embed.manifest.res
+         Debug\framebuffer.obj
+         Debug\lighting.obj
+         Debug\main.obj
+         Debug\model.obj
+         Debug\rasterize.obj
+         Debug\transform.obj
+         3dmm_hw1.vcxproj -> D:\Github\graphics-pipeline\Debug\3dmm_hw1.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\3dmm_hw1.unsuccessfulbuild".
+         Touching "Debug\3dmm_hw1.lastbuildstate".
+     1>Done Building Project "D:\Github\graphics-pipeline\3dmm_hw1.vcxproj" (build target(s)).
+
+建置成功。
+
+Time Elapsed 00:00:04.24

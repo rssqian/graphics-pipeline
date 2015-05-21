@@ -80,12 +80,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\framebuffer.cpp" />
+    <ClCompile Include="src\lighting.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model.cpp" />
+    <ClCompile Include="src\rasterize.cpp" />
+    <ClCompile Include="src\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\framebuffer.h" />
+    <ClInclude Include="src\lighting.h" />
     <ClInclude Include="src\model.h" />
+    <ClInclude Include="src\rasterize.h" />
+    <ClInclude Include="src\transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
