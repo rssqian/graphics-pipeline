@@ -1,25 +1,14 @@
 # 3D Graphics Pipeline
 
-## Index
-1. Source Code
-2. How to compile & execute
-3. Functions explained
+A program to read and show given 3D model files (.obj) with rasterization and lighting.
 
-### 1. Source Code
+![Program Flow](program-flow.png)
 
-Header file:
-- framebuffer.h
-- model.h
-
-Source file:
-- framebuffer.cpp
-- model.cpp
-- main.cpp
-
-### 2. How to compile & execute
+### How to compile & execute
 
 #### Command Line
 
+OpenGL/freeglut is needed to compile the program.
 To compile the program, run command:
 
 `make`
@@ -30,6 +19,10 @@ To remove the program, run command:
 
 `make clean`
 
+Run the program:
+
+`./3d-graphics-engine`
+
 #### Visual Studio
 1. Open Visual Studio 2010 or newer version of Visual Studio.
 2. Add all the header files to the header folder of the solution explorer.
@@ -37,7 +30,7 @@ To remove the program, run command:
 4. Switch the compiling mode to "Release" mode.
 5. Press F5 to start debugging.
 
-### 3. Functions explained
+### How to use the program
 - H/h: Show help menu
 - M/m: Select model
 - UP/DOWN: Rotate along x-axis
@@ -49,7 +42,7 @@ To remove the program, run command:
 - S/s: Save image
 - Q/q: Quit
 
-#### Notes
+### Notes
 
 * Wireframe mode doesn't display information for depth of the pixel.
 * Lighting mode contains three mode: Shading by depth, Flat shading, Smooth shading.
