@@ -1,0 +1,638 @@
+# 
+# Wavefront material file
+# Converted by the DEEP Exploration  Deep Exploration 5.5 5.5.3.2642 Release
+# Right Hemisphere, LTD
+# http://www.righthemisphere.com/
+# 
+
+newmtl chrome_hlight
+Ka 0.227451 0.227451 0.227451
+Kd 0.227451 0.227451 0.227451
+Ks 1 1 1
+illum 2
+Ns 34.2967
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Plastic
+Ka 0.207843 0.207843 0.207843
+Kd 0.207843 0.207843 0.207843
+Ks 0.886275 0.886275 0.886275
+illum 2
+Ns 36.7583
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl black
+Ka 0 0 0
+Kd 0 0 0
+Ks 0.329412 0.329412 0.329412
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl chrome
+Ka 0 0 0
+Kd 0.301961 0.301961 0.301961
+Ks 0.901961 0.901961 0.901961
+illum 2
+Ns 42.2243
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Indicator
+Ka 0 0 0
+Kd 0.737255 0.270588 0.0901961
+Ks 0.94902 0.94902 0.94902
+illum 2
+Ns 64
+d 0.89
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl bulb
+Ka 0.00784314 0.00784314 0.00784314
+Kd 0.00784314 0.00784314 0.00784314
+Ks 0.941177 0.941177 0.941177
+illum 2
+Ns 34.2967
+d 0.47
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl bottom
+Ka 0.152941 0.152941 0.152941
+Kd 0.152941 0.152941 0.152941
+Ks 0.52549 0.52549 0.52549
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Chrome0
+Ka 0.27451 0.27451 0.27451
+Kd 0.27451 0.27451 0.27451
+Ks 0.913726 0.913726 0.913726
+illum 2
+Ns 16
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl window_lining
+Ka 0 0 0
+Kd 0.105882 0.105882 0.105882
+Ks 0.941177 0.941177 0.941177
+illum 2
+Ns 32
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl rear_lamp
+Ka 0 0 0
+Kd 1 1 1
+Ks 0.933333 0.921569 0.921569
+illum 2
+Ns 29.8571
+d 0.77
+map_Kd feuxred.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Ampoule_orange
+Ka 0 0 0
+Kd 0.627451 0.27451 0.0117647
+Ks 0.988235 0.988235 0.988235
+illum 2
+Ns 8
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Feux_blanc
+Ka 0.0705882 0.0705882 0.0705882
+Kd 0.0705882 0.0705882 0.0705882
+Ks 0.972549 0.972549 0.972549
+illum 2
+Ns 29.8571
+d 0.57
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl HL_glass
+Ka 0.0470588 0.0862745 0.113725
+Kd 0.0470588 0.0862745 0.113725
+Ks 0.94902 0.94902 0.94902
+illum 2
+Ns 16
+d 0.4
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl screen_ln
+Ka 0 0 0
+Kd 0.0862745 0.0862745 0.0862745
+Ks 1 1 1
+illum 2
+Ns 18.3792
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl roof_glass
+Ka 0.0509804 0.0784314 0.0745098
+Kd 0.0509804 0.0784314 0.0745098
+Ks 0.913726 0.913726 0.913726
+illum 2
+Ns 42.2243
+d 0.54
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl wind_glass
+Ka 0.0196078 0.0627451 0.0901961
+Kd 0.0196078 0.0627451 0.0901961
+Ks 0.913726 0.913726 0.913726
+illum 2
+Ns 42.2243
+d 0.54
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl metal
+Ka 0.301961 0.301961 0.301961
+Kd 0.301961 0.301961 0.301961
+Ks 0.921569 0.921569 0.921569
+illum 2
+Ns 17.1484
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl metal0
+Ka 0 0 0
+Kd 1 1 1
+Ks 0.929412 0.929412 0.929412
+illum 2
+Ns 17.1484
+map_Kd barre G.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl metal1
+Ka 0 0 0
+Kd 1 1 1
+Ks 0.933333 0.933333 0.933333
+illum 2
+Ns 17.1484
+map_Kd barre D.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl mirror
+Ka 0 0 0
+Kd 0.254902 0.254902 0.254902
+Ks 1 1 1
+illum 2
+Ns 64
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Miroir_2
+Ka 0 0 0
+Kd 0.286275 0.286275 0.286275
+Ks 0.171765 0.171765 0.171765
+illum 2
+Ns 64
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl rim
+Ka 0.419608 0.419608 0.419608
+Kd 0.419608 0.419608 0.419608
+Ks 0.94902 0.94902 0.94902
+illum 2
+Ns 22.6274
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl metal2
+Ka 0 0 0
+Kd 0.392157 0.392157 0.392157
+Ks 0.960784 0.960784 0.960784
+illum 2
+Ns 22.6274
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl interior_color
+Ka 0.223529 0.223529 0.223529
+Kd 0.701961 0.572549 0.454902
+Ks 0.764706 0.764706 0.764706
+illum 2
+Ns 48.5029
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Interieur_alu
+Ka 0 0 0
+Kd 0.498039 0.498039 0.498039
+Ks 0.74902 0.74902 0.74902
+illum 2
+Ns 16
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Interieur_sol
+Ka 0 0 0
+Kd 0.192157 0.192157 0.192157
+Ks 0.643137 0.643137 0.643137
+illum 2
+Ns 25.9921
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl seats
+Ka 0 0 0
+Kd 0.694118 0.556863 0.435294
+Ks 0.662745 0.662745 0.662745
+illum 2
+Ns 39.3966
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Compteur
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+illum 2
+Ns 64
+map_Kd compteur.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Interieur_gris
+Ka 0 0 0
+Kd 0.74902 0.65098 0.615686
+Ks 1 1 1
+illum 2
+Ns 39.3966
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Console
+Ka 0.223529 0.223529 0.223529
+Kd 1 1 1
+Ks 0.862745 0.862745 0.862745
+illum 2
+Ns 25.9921
+map_Kd console.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Body
+Ka 0.298039 0.282353 0.262745
+Kd 0.298039 0.282353 0.262745
+Ks 0.639216 0.470588 0.376471
+illum 2
+Ns 27.8576
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl plate_front
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+illum 2
+Ns 90.5097
+map_Kd plate1.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl plate_rear
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+illum 2
+Ns 59.7141
+map_Kd plate1.tga
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl brake
+Ka 0 0 0
+Kd 0.301961 0.0784314 0.0784314
+Ks 0.913726 0.913726 0.913726
+illum 2
+Ns 16
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Disk
+Ka 0.270588 0.270588 0.270588
+Kd 0.270588 0.270588 0.270588
+Ks 1 1 1
+illum 2
+Ns 13.9288
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl tyre
+Ka 0 0 0
+Kd 1 1 1
+Ks 0.894118 0.894118 0.894118
+illum 2
+Ns 32
+map_Kd pneus.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl tyre0
+Ka 0.219608 0.219608 0.211765
+Kd 1 1 1
+Ks 0.886275 0.886275 0.886275
+illum 2
+Ns 64
+map_Kd pneus.png
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__62
+Ka 0.227451 0.227451 0.227451
+Kd 0.227451 0.227451 0.227451
+Ks 1 1 1
+illum 2
+Ns 34.2967
+map_Kd 
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
+
+newmtl Material__64
+Ka 0.588 0.588 0.588
+Kd 1 1 1
+Ks 0.9 0.9 0.9
+illum 2
+Ns 51.9842
+d 0.64
+map_Kd orange.jpg
+map_bump 
+bump 
+map_opacity 
+map_d 
+refl 
+map_kS 
+map_kA 
+map_Ns 
