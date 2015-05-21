@@ -2,6 +2,7 @@
 #define _MODEL_H_
 
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 class Triangle {
