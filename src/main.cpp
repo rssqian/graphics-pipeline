@@ -27,6 +27,7 @@ double thetaY = 0;
 /*mode*/
 int wireframe_filled = 0; //0-wireframe, 1-filled surface
 int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
+bool projection = 0; //0-orthogonal, 1-perspective
 
 int curModelIdx;
 bool culling;
@@ -61,6 +62,7 @@ void printHelp()
 	printf("  B/b: Toggle background color             \n");
 	printf("  L/l: Toggle lighting mode                \n");
 	printf("  W/w: Toggle wireframe mode               \n");
+	printf("  P/p: Toggle projection mode              \n");
 	printf("  S/s: Save image                          \n");
 	printf("  Q/q: Quit                                \n");
 	printf("===========================================\n\n");
@@ -155,6 +157,11 @@ void displayFunc()
 			toScreenSpace(triVertices[0],ix[0],iy[0],iz[0]);
 			toScreenSpace(triVertices[1],ix[1],iy[1],iz[1]);
 			toScreenSpace(triVertices[2],ix[2],iy[2],iz[2]);
+			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
+			//for (int k=0; k<3; k++) {
+			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
+			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
+			//}
 			triVertices[0] = vec3(ix[0],iy[0],iz[0]);
 			triVertices[1] = vec3(ix[1],iy[1],iz[1]);
 			triVertices[2] = vec3(ix[2],iy[2],iz[2]);
@@ -174,7 +181,6 @@ void displayFunc()
 			if (wireframe_filled==1) drawEdge(ix,iy,iz,vec3(0.f,0.f,0.5f));
 		}*/
 	}
-
 
     /* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
@@ -254,6 +260,11 @@ void keyboardFunc(unsigned char key, int x, int y)
 	case 'W':
 		if (wireframe_filled == 1) wireframe_filled = 0;
 		else wireframe_filled++;
+		break;
+	//Projection Mode
+	case 'p':
+	case 'P':
+		projection = !projection;
 		break;
 	// Background color
 	case 'b':

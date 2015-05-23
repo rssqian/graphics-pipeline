@@ -12,6 +12,8 @@ extern int screenHeight;
 extern int screenWidth_half;
 extern int screenHeight_half;
 
+extern bool projection;
+
 vec3 transform(vec3& prev)
 {
 	float curX,curY,curZ;
@@ -30,10 +32,18 @@ void toScreenSpace(vec3& v,int& ix,int& iy,float& iz)
 {
 	int screenSide = min(screenWidth, screenHeight);
 	float margin = 0.1f;
-	// to ScreenSpace
-	ix = int(((1.f-margin)*v.x)*screenSide) + screenWidth_half - 1;
-	iy = int(((1.f-margin)*v.y)*screenSide) + screenHeight_half - 1;
-	iz = v.z;
+	v.z += 1;
+	if (projection==0) {
+		// Orthogonal Projection
+		ix = int(((1.f-margin)*v.x)*screenSide) + screenWidth_half - 1;
+		iy = int(((1.f-margin)*v.y)*screenSide) + screenHeight_half - 1;
+		iz = v.z;
+	} else {
+		//Perspective Projection
+		ix = (((1.f-margin)*v.x/v.z*0.5)*screenSide) + screenWidth_half - 1;
+		iy = (((1.f-margin)*v.y/v.z*0.5)*screenSide) + screenHeight_half - 1;
+		iz = v.z;
+	}
 }
 
 bool backFaceCulling(vec3* triangleV)   //input 3 vertex of the triangle
