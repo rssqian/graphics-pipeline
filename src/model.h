@@ -3,7 +3,17 @@
 
 #include <iostream>
 #include <cstring>
+#include <glm/vec3.hpp>
 using namespace std;
+
+class ValueTriangle {
+public:
+	ValueTriangle() {};
+	~ValueTriangle() {};
+
+	glm::vec3 vertex[3];
+	glm::vec3 normal[3];
+};
 
 class Triangle {
 public:
