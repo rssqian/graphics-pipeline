@@ -1,4 +1,6 @@
 #include <GL/glut.h>
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 #include <iostream>
 #include <ctime>
 #include <cmath>
@@ -25,9 +27,9 @@ double thetaX = 0;
 double thetaY = 0;
 
 /*mode*/
-int wireframe_filled = 0; //0-wireframe, 1-filled surface
-int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
-bool projection = 0; //0-orthogonal, 1-perspective
+int wireframe_filled; //0-wireframe, 1-filled surface
+int shading; //0-no shading, 1-flat shading, 2-smooth shading
+bool projection; //0-orthogonal, 1-perspective
 
 int curModelIdx;
 bool culling;
@@ -55,16 +57,19 @@ void printHelp()
 {
 	printf("===========================================\n");
 	printf("  H/h: Show help menu                      \n");
-	printf("  M/m: Select model                        \n");
+	printf("  B/b: Toggle background color             \n");
+	printf("  F1: Save image                           \n");
+	printf("  F2/F3: Select model                      \n");
+	printf("  F4: Toggle back-face culling             \n");
+	printf("  F5: Toggle lighting mode                 \n");
+	printf("  F6: Toggle wireframe mode                \n");
+	printf("  F12: Quit                                \n");
+	printf("  q/e: scale                               \n");
+	printf("  w/s: Up and down                         \n");
+	printf("  a/d: Left and right                      \n");
 	printf("  UP/DOWN: Rotate along x-axis             \n");
 	printf("  LEFT/RIGHT: Rotate along y-axis          \n");
-	printf("  C/c: Toggle back-face culling            \n");
-	printf("  B/b: Toggle background color             \n");
-	printf("  L/l: Toggle lighting mode                \n");
-	printf("  W/w: Toggle wireframe mode               \n");
-	printf("  P/p: Toggle projection mode              \n");
-	printf("  S/s: Save image                          \n");
-	printf("  Q/q: Quit                                \n");
+	printf("  PU/PD: forward and backward              \n");
 	printf("===========================================\n\n");
 }
 
@@ -105,6 +110,9 @@ void init()
 	/* initialize parameters */
 	curModelIdx = 0;
 	culling = true;
+	int wireframe_filled = 0; //0-wireframe, 1-filled surface
+	int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
+	bool projection = 0; //0-orthogonal, 1-perspective
 }
 
 void displayFunc() 
@@ -113,35 +121,51 @@ void displayFunc()
 
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
 		//Reading vertices and normals of Triangle
-		Triangle* triangle = modelPtr[curModelIdx]->triangles;
-		float* vertice = modelPtr[curModelIdx]->vertices;
-		float* normal = modelPtr[curModelIdx]->normals;
+		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
+		float* verticePtr = modelPtr[curModelIdx]->vertices;
+		float* normalPtr = modelPtr[curModelIdx]->normals;
+		//ValueTriangle triangle;
 		vec3 triVertices[3];
 		vec3 triNormals[3];
 		for (int j=0; j<3; j++) {
-			triVertices[j].x = vertice[3*(triangle[i].vIndices[j])  ];
-			triVertices[j].y = vertice[3*(triangle[i].vIndices[j])+1];
-			triVertices[j].z = vertice[3*(triangle[i].vIndices[j])+2];
+			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
+			/*triangle.vertex[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+			triangle.vertex[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+			triangle.vertex[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			if (shading==2) {
-				triNormals[j].x = normal[3*(triangle[i].vIndices[j])  ];
-				triNormals[j].y = normal[3*(triangle[i].vIndices[j])+1];
-				triNormals[j].z = normal[3*(triangle[i].vIndices[j])+2];
+				triNormals[j].x = normalPtr[3*(trianglePtr[i].vIndices[j])  ];
+				triNormals[j].y = normalPtr[3*(trianglePtr[i].vIndices[j])+1];
+				triNormals[j].z = normalPtr[3*(trianglePtr[i].vIndices[j])+2];
+				/*triangle.normal[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+				triangle.normal[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+				triangle.normal[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			} else {
 				triNormals[j].x = 0;
 				triNormals[j].y = 0;
 				triNormals[j].z = 0;
+				//triangle.normal[j].x = 0;
+				//triangle.normal[j].y = 0;
+				//triangle.normal[j].z = 0;
 			}
 		}
 
-		//Transform
-		triVertices[0] = transform(triVertices[0]);
-		triVertices[1] = transform(triVertices[1]);
-		triVertices[2] = transform(triVertices[2]);
-		if (shading==2) {
-			triNormals[0] = transform(triNormals[0]);
-			triNormals[1] = transform(triNormals[1]);
-			triNormals[2] = transform(triNormals[2]);
-		}
+		//model to view space
+		//vertex: scaling->rotation->translation
+		//normal: rotation
+		model2view_rotation(triVertices[0]);
+		model2view_rotation(triVertices[1]);
+		model2view_rotation(triVertices[2]);
+		model2view_rotation(triNormals[0]);
+		model2view_rotation(triNormals[1]);
+		model2view_rotation(triNormals[2]);
+		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
+		//					  viewMatrix(glm::vec3(0.0f,0.0f,1.0f)) *
+		//					  modelMatrix(glm::vec3(0.0f),glm::vec3(thetaX,thetaY,0.0f),0.0f);
+
+
+
 
 		//Back Face Culling
 		if (!backFaceCulling(triVertices) || !culling || wireframe_filled==0) {
@@ -162,11 +186,12 @@ void displayFunc()
 			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
 			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
 			//}
-			triVertices[0] = vec3(ix[0],iy[0],iz[0]);
-			triVertices[1] = vec3(ix[1],iy[1],iz[1]);
-			triVertices[2] = vec3(ix[2],iy[2],iz[2]);
+			vec3 displayVertices[3];
+			displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
+			displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
+			displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
 			//drawTriangle(ix,iy,iz,c);
-			if (wireframe_filled==1) drawTriangle(triVertices,triNormals,c);
+			if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
 			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
 		}
 
@@ -215,17 +240,18 @@ void idleFunc()
 void keyboardFunc(unsigned char key, int x, int y) 
 {
 	switch (key) {
-	// Quit
+/*	// Quit
 	case 'q':
 	case 'Q':
 		exit(0);
-		break;
+		break;*/
+
 	// Help
 	case 'h':
 	case 'H':
 		printHelp();
 		break;
-	// Save image
+/*	// Save image
 	case 's':
 	case 'S':
 		static time_t t;
@@ -260,21 +286,50 @@ void keyboardFunc(unsigned char key, int x, int y)
 	case 'W':
 		if (wireframe_filled == 1) wireframe_filled = 0;
 		else wireframe_filled++;
-		break;
+		break;*/
 	//Projection Mode
 	case 'p':
 	case 'P':
 		projection = !projection;
 		break;
 	// Background color
+
+	// To right or left
+	case 'a':
+	case 'A':
+		deltaX-=0.01;
+		break;
+	//Projection Mode
+	case 'p':
+	case 'P':
+		projection = !projection;
+		break;
+	case 's':
+	case 'S':
+		deltaY-=0.01;
+		break;
+
+	// Scale
+	case 'Q':
+	case 'q':
+		deltaSize +=0.01;
+		break;
+	case 'E':
+	case 'e':
+		if(deltaSize>(0.01-1))
+			deltaSize -=0.01;
+		else
+			cout << "It can's be smaller! \n";
+		break;
+
+	// You can add more functions as you like before background.
+
 	case 'b':
 	case 'B':
 		static bool isBlack = true;
 		isBlack = !isBlack;
 		framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 		break;
-
-	// You can add more functions as you like.
 	}
 	glutPostRedisplay();
 }
@@ -295,12 +350,54 @@ void specialFunc(int key, int x, int y)
 	case GLUT_KEY_DOWN:
 		thetaX = (thetaX > PI*2)? 0 : (thetaX + rotateSpeed);
 		break;
+
+
+	// forward or backward
 	case GLUT_KEY_PAGE_UP:
-    
+        deltaZ-=0.01;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-    
+		deltaZ+=0.01;
 		break;
+
+
+	// Save image
+	case GLUT_KEY_F1:
+		static time_t t;
+		static char name[80];
+		time(&t);
+		strftime(name, sizeof(name), "%Y%m%d%H%M%S.ppm", localtime(&t));
+		printf("Save framebuffer to %s\n", name);
+		framebuffer.writePPM(name);
+		break;
+	// Select model
+	case GLUT_KEY_F2:
+		curModelIdx = (curModelIdx == numModels - 1)? 0 : (curModelIdx + 1);
+		printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+		break;
+	case GLUT_KEY_F3:
+		curModelIdx = (curModelIdx == 0)? (numModels - 1) : (curModelIdx - 1);
+		printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+		break;
+	// Back-face culling
+	case GLUT_KEY_F4:
+		culling = !culling;
+		break;
+	//Shading Mode
+	case GLUT_KEY_F5:
+		if (shading == 2) shading = 0;
+		else shading++;
+		break;
+	//Wireframe Mode
+	case GLUT_KEY_F6:
+		if (wireframe_filled == 1) wireframe_filled = 0;
+		else wireframe_filled++;
+		break;
+	// Quit
+	case GLUT_KEY_F12:
+		exit(0);
+		break;
+
 	}
 }
 
