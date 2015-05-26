@@ -24,6 +24,12 @@ double rotateSpeed = 0.05;
 double thetaX = 0;
 double thetaY = 0;
 
+double deltaSize=0;
+
+double deltaX=0;
+double deltaY=0;
+double deltaZ=0;
+
 /*mode*/
 int wireframe_filled = 0; //0-wireframe, 1-filled surface
 int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
@@ -37,10 +43,10 @@ vec3 color(1.f);
 /* model names */
 char* modelNames[] = {
 	"model/quad.obj",
-	"model/couch.obj",
-	"model/blaze.obj",
-	"model/ateneal.obj",
-	"model/venusm.obj",
+	//"model/couch.obj",
+	//"model/blaze.obj",
+	//"model/ateneal.obj",
+	//"model/venusm.obj",
 	"model/bunnyC.obj",
 	"model/duck4KN.obj",
 	"model/happy10KN.obj",
@@ -55,16 +61,19 @@ void printHelp()
 {
 	printf("===========================================\n");
 	printf("  H/h: Show help menu                      \n");
-	printf("  M/m: Select model                        \n");
 	printf("  UP/DOWN: Rotate along x-axis             \n");
 	printf("  LEFT/RIGHT: Rotate along y-axis          \n");
-	printf("  C/c: Toggle back-face culling            \n");
 	printf("  B/b: Toggle background color             \n");
-	printf("  L/l: Toggle lighting mode                \n");
-	printf("  W/w: Toggle wireframe mode               \n");
-	printf("  P/p: Toggle projection mode              \n");
-	printf("  S/s: Save image                          \n");
-	printf("  Q/q: Quit                                \n");
+	printf("  F1: Save image                           \n");
+	printf("  F2/F3: Select model                      \n");
+	printf("  F4: Toggle back-face culling             \n");
+	printf("  F5: Toggle lighting mode                 \n");
+	printf("  F6: Toggle wireframe mode                \n");
+	printf("  F12: Quit                                \n");
+	printf("  q/e: scale                               \n");
+	printf("  w/s: Up and down                         \n");
+	printf("  a/d: Left and right                      \n");
+	printf("  PU/PD: forward and backward              \n");
 	printf("===========================================\n\n");
 }
 
@@ -192,8 +201,8 @@ void displayFunc()
 	static char title[20];
 	static double refreshTime = 0.5;
 	static int count = 0;
-	++count;
-	curr = clock();
+	++count;	curr = clock();
+
 	double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
 	
 	if (t > refreshTime) {
@@ -215,11 +224,7 @@ void idleFunc()
 void keyboardFunc(unsigned char key, int x, int y) 
 {
 	switch (key) {
-	// Quit
-	case 'q':
-	case 'Q':
-		exit(0);
-		break;
+/*
 	// Help
 	case 'h':
 	case 'H':
@@ -260,12 +265,43 @@ void keyboardFunc(unsigned char key, int x, int y)
 	case 'W':
 		if (wireframe_filled == 1) wireframe_filled = 0;
 		else wireframe_filled++;
+		break;*/
+
+	// To right or left
+	case 'a':
+	case 'A':
+		deltaX-=0.01;
 		break;
-	//Projection Mode
-	case 'p':
-	case 'P':
-		projection = !projection;
+	case 'd':
+	case 'D':
+		deltaX+=0.01;
 		break;
+
+	// Up and down
+	case 'w':
+	case 'W':
+		deltaY +=0.01;
+		break;
+	case 's':
+	case 'S':
+		deltaY-=0.01;
+		break;
+
+	// Scale
+	case 'Q':
+	case 'q':
+		deltaSize +=0.01;
+		break;
+	case 'E':
+	case 'e':
+		if(deltaSize>(0.01-1))
+			deltaSize -=0.01;
+		else
+			cout << "It can's be smaller! \n";
+		break;
+
+	// You can add more functions as you like before background.
+
 	// Background color
 	case 'b':
 	case 'B':
@@ -274,7 +310,8 @@ void keyboardFunc(unsigned char key, int x, int y)
 		framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 		break;
 
-	// You can add more functions as you like.
+	
+
 	}
 	glutPostRedisplay();
 }
@@ -295,21 +332,65 @@ void specialFunc(int key, int x, int y)
 	case GLUT_KEY_DOWN:
 		thetaX = (thetaX > PI*2)? 0 : (thetaX + rotateSpeed);
 		break;
+
+	// forward or backward
 	case GLUT_KEY_PAGE_UP:
-    
+    	deltaZ-=0.01;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-    
+        deltaZ+=0.01;
 		break;
+
+	// Save image
+	case GLUT_KEY_F1:
+		static time_t t;
+		static char name[80];
+		time(&t);
+		strftime(name, sizeof(name), "%Y%m%d%H%M%S.ppm", localtime(&t));
+		printf("Save framebuffer to %s\n", name);
+		framebuffer.writePPM(name);
+		break;
+	// Select model
+	case GLUT_KEY_F2:
+		curModelIdx = (curModelIdx == numModels - 1)? 0 : (curModelIdx + 1);
+		printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+		break;
+	case GLUT_KEY_F3:
+		curModelIdx = (curModelIdx == 0)? (numModels - 1) : (curModelIdx - 1);
+		printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+		break;
+	// Back-face culling
+	case GLUT_KEY_F4:
+		culling = !culling;
+		break;
+	//Shading Mode
+	case GLUT_KEY_F5:
+		if (shading == 2) shading = 0;
+		else shading++;
+		break;
+	//Wireframe Mode
+	case GLUT_KEY_F6:
+		if (wireframe_filled == 1) wireframe_filled = 0;
+		else wireframe_filled++;
+		break;
+
+	// Quit
+	case GLUT_KEY_F12:
+		exit(0);
+		break;
+
 	}
 }
+
+
+
 
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(screenWidth, screenHeight);
-	glutCreateWindow("3DMM HW#1 Rasterization");
+	glutCreateWindow("3D Graphic Engine");
 
 	init();
 
