@@ -2,6 +2,8 @@
 
 A program to read and show given 3D model files (.obj) with rasterization and lighting.
 
+[3DMM Final Proposal on Google Slides](https://docs.google.com/presentation/d/1ktccoMu1ihUhZ7n7Hlv9xIq7cAkNMgr-hRX6ejyMrG4/edit?usp=sharing)
+
 ![Program Flow](program-flow.png)
 
 ### How to compile & execute
