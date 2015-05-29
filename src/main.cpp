@@ -26,6 +26,13 @@ double rotateSpeed = 0.05;
 double thetaX = 0;
 double thetaY = 0;
 
+/* delta */
+double deltaSize=0;
+
+double deltaX=0;
+double deltaY=0;
+double deltaZ=0;
+
 /*mode*/
 int wireframe_filled; //0-wireframe, 1-filled surface
 int shading; //0-no shading, 1-flat shading, 2-smooth shading
@@ -56,17 +63,22 @@ const int numModels = sizeof(modelNames) / sizeof(char*);
 void printHelp() 
 {
 	printf("===========================================\n");
-	printf("  H/h: Show help menu                      \n");
-	printf("  M/m: Select model                        \n");
-	printf("  UP/DOWN: Rotate along x-axis             \n");
-	printf("  LEFT/RIGHT: Rotate along y-axis          \n");
-	printf("  C/c: Toggle back-face culling            \n");
-	printf("  B/b: Toggle background color             \n");
-	printf("  L/l: Toggle lighting mode                \n");
-	printf("  W/w: Toggle wireframe mode               \n");
-	printf("  P/p: Toggle projection mode              \n");
-	printf("  S/s: Save image                          \n");
-	printf("  Q/q: Quit                                \n");
+	printf("  HELP MENU                                \n");
+	printf("===========================================\n");
+	printf("  h: Show help menu                      \n");
+	printf("  M/m: Select model                      \n");
+	printf("  UP/DOWN: Rotate along x-axis           \n");
+	printf("  LEFT/RIGHT: Rotate along y-axis        \n");
+	printf("  W/S/A/D: Moving around                 \n");
+	printf("  PAGEUP/PAGEDN: Moving forward/backward \n");
+	printf("  +/-: Zoom in/out                       \n");
+	printf("  c: Toggle back-face culling            \n");
+	printf("  b: Toggle background color             \n");
+	printf("  l: Toggle lighting mode                \n");
+	printf("  w: Toggle wireframe mode               \n");
+	printf("  p: Toggle projection mode              \n");
+	printf("  s: Save image                          \n");
+	printf("  q: Quit                                \n");
 	printf("===========================================\n\n");
 }
 
@@ -250,17 +262,14 @@ void keyboardFunc(unsigned char key, int x, int y)
 	switch (key) {
 	// Quit
 	case 'q':
-	case 'Q':
 		exit(0);
 		break;
 	// Help
 	case 'h':
-	case 'H':
 		printHelp();
 		break;
 	// Save image
 	case 's':
-	case 'S':
 		static time_t t;
 		static char name[80];
 		time(&t);
@@ -279,35 +288,52 @@ void keyboardFunc(unsigned char key, int x, int y)
 		break;
 	// Back-face culling
 	case 'c':
-	case 'C':
 		culling = !culling;
 		break;
 	//Shading Mode
 	case 'l':
-	case 'L':
 		if (shading == 2) shading = 0;
 		else shading++;
 		break;
 	//Wireframe Mode
 	case 'w':
-	case 'W':
 		if (wireframe_filled == 1) wireframe_filled = 0;
 		else wireframe_filled++;
 		break;
 	//Projection Mode
 	case 'p':
-	case 'P':
 		projection = !projection;
 		break;
 	// Background color
 	case 'b':
-	case 'B':
 		static bool isBlack = true;
 		isBlack = !isBlack;
 		framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 		break;
+  // Translate
+  case 'A':
+    deltaX -= 0.01;
+    break;
+  case 'D':
+    deltaX += 0.01;
+    break;
+  case 'W':
+    deltaY += 0.01;
+    break;
+  case 'S':
+    deltaY -= 0.01;
+    break;
+  // Scale
+  case '=':
+    deltaSize +=0.01;
+    break;
+  case '-':
+    if(deltaSize>(0.01-1))
+      deltaSize -=0.01;
+    else
+      cout << "It can's be smaller! \n";
+    break;
 
-	// You can add more functions as you like.
 	}
 	glutPostRedisplay();
 }
@@ -329,10 +355,10 @@ void specialFunc(int key, int x, int y)
 		thetaX = (thetaX > PI*2)? 0 : (thetaX + rotateSpeed);
 		break;
 	case GLUT_KEY_PAGE_UP:
-    
+    deltaZ -= 0.01;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-    
+    deltaZ += 0.01;
 		break;
 	}
 }

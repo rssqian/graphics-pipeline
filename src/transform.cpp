@@ -8,6 +8,11 @@ using namespace std;
 extern double thetaX;
 extern double thetaY;
 
+extern double deltaSize;
+extern double deltaX;
+extern double deltaY;
+extern double deltaZ;
+
 extern int screenWidth;
 extern int screenHeight;
 extern int screenWidth_half;
@@ -19,13 +24,13 @@ void model2view_rotation(vec3& prev)
 {
 	float curX,curY,curZ;
 	// rotate along x-axis
-	curY = prev.y*cos(thetaX)-prev.z*sin(thetaX);
+  curY = (prev.y*cos(thetaX)-prev.z*sin(thetaX))*(1+deltaSize)+deltaY;
 	curZ = prev.y*sin(thetaX)+prev.z*cos(thetaX);
 	// prevY = curY;
 	prev.z = curZ;
 	// rotate along y-axis
-	curX = prev.z*sin(thetaY)+prev.x*cos(thetaY);
-	curZ = prev.z*cos(thetaY)-prev.x*sin(thetaY);
+  curX = (prev.z*sin(thetaY)+prev.x*cos(thetaY))*(1+deltaSize)+deltaX;
+  curZ = (prev.z*cos(thetaY)-prev.x*sin(thetaY))*(1+deltaSize)+deltaZ;
 	prev.x = curX;
 	prev.y = curY;
 	prev.z = curZ;
