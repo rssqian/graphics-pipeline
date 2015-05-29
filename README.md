@@ -2,6 +2,8 @@
 
 A program to read and show given 3D model files (.obj) with rasterization and lighting.
 
+[3DMM Final Proposal on Google Slides](https://docs.google.com/presentation/d/1ktccoMu1ihUhZ7n7Hlv9xIq7cAkNMgr-hRX6ejyMrG4/edit?usp=sharing)
+
 ![Program Flow](program-flow.png)
 
 ### How to compile & execute
@@ -31,19 +33,5 @@ Run the program:
 5. Press F5 to start debugging.
 
 ### How to use the program
-- H/h: Show help menu
-- M/m: Select model
-- UP/DOWN: Rotate along x-axis
-- LEFT/RIGHT: Rotate along y-axis
-- C/c: Toggle back-face culling
-- B/b: Toggle background color
-- L/l: Toggle lighting mode
-- W/w: Toggle wireframe mode
-- S/s: Save image
-- Q/q: Quit
 
-### Notes
-
-* Wireframe mode doesn't display information for depth of the pixel.
-* Lighting mode contains three mode: Shading by depth, Flat shading, Smooth shading.
-* Some object file doesn't contain normal information for the vertices of triangles, so smooth shading can be weird on some of the models.
+After you start running the program, hit `h` to view the hotkeys.

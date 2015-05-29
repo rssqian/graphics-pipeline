@@ -1,4 +1,6 @@
 #include <GL/glut.h>
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 #include <iostream>
 #include <ctime>
 #include <cmath>
@@ -24,9 +26,17 @@ double rotateSpeed = 0.05;
 double thetaX = 0;
 double thetaY = 0;
 
+/* delta */
+double deltaSize=0;
+
+double deltaX=0;
+double deltaY=0;
+double deltaZ=0;
+
 /*mode*/
-int wireframe_filled = 0; //0-wireframe, 1-filled surface
-int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
+int wireframe_filled; //0-wireframe, 1-filled surface
+int shading; //0-no shading, 1-flat shading, 2-smooth shading
+bool projection; //0-orthogonal, 1-perspective
 
 int curModelIdx;
 bool culling;
@@ -35,11 +45,11 @@ vec3 color(1.f);
 
 /* model names */
 char* modelNames[] = {
-	//"model/quad.obj",
+	"model/quad.obj",
 	//"model/couch.obj",
 	//"model/blaze.obj",
 	//"model/ateneal.obj",
-	"model/venusm.obj",
+	//"model/venusm.obj",
 	"model/bunnyC.obj",
 	"model/duck4KN.obj",
 	"model/happy10KN.obj",
@@ -53,16 +63,22 @@ const int numModels = sizeof(modelNames) / sizeof(char*);
 void printHelp() 
 {
 	printf("===========================================\n");
-	printf("  H/h: Show help menu                      \n");
-	printf("  M/m: Select model                        \n");
-	printf("  UP/DOWN: Rotate along x-axis             \n");
-	printf("  LEFT/RIGHT: Rotate along y-axis          \n");
-	printf("  C/c: Toggle back-face culling            \n");
-	printf("  B/b: Toggle background color             \n");
-	printf("  L/l: Toggle lighting mode                \n");
-	printf("  W/w: Toggle wireframe mode               \n");
-	printf("  S/s: Save image                          \n");
-	printf("  Q/q: Quit                                \n");
+	printf("  HELP MENU                                \n");
+	printf("===========================================\n");
+	printf("  h: Show help menu                      \n");
+	printf("  M/m: Select model                      \n");
+	printf("  UP/DOWN: Rotate along x-axis           \n");
+	printf("  LEFT/RIGHT: Rotate along y-axis        \n");
+	printf("  W/S/A/D: Moving around                 \n");
+	printf("  PAGEUP/PAGEDN: Moving forward/backward \n");
+	printf("  +/-: Zoom in/out                       \n");
+	printf("  c: Toggle back-face culling            \n");
+	printf("  b: Toggle background color             \n");
+	printf("  l: Toggle lighting mode                \n");
+	printf("  w: Toggle wireframe mode               \n");
+	printf("  p: Toggle projection mode              \n");
+	printf("  s: Save image                          \n");
+	printf("  q: Quit                                \n");
 	printf("===========================================\n\n");
 }
 
@@ -103,6 +119,9 @@ void init()
 	/* initialize parameters */
 	curModelIdx = 0;
 	culling = true;
+	int wireframe_filled = 0; //0-wireframe, 1-filled surface
+	int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
+	bool projection = 0; //0-orthogonal, 1-perspective
 }
 
 void displayFunc() 
@@ -111,35 +130,51 @@ void displayFunc()
 
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
 		//Reading vertices and normals of Triangle
-		Triangle* triangle = modelPtr[curModelIdx]->triangles;
-		float* vertice = modelPtr[curModelIdx]->vertices;
-		float* normal = modelPtr[curModelIdx]->normals;
+		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
+		float* verticePtr = modelPtr[curModelIdx]->vertices;
+		float* normalPtr = modelPtr[curModelIdx]->normals;
+		//ValueTriangle triangle;
 		vec3 triVertices[3];
 		vec3 triNormals[3];
 		for (int j=0; j<3; j++) {
-			triVertices[j].x = vertice[3*(triangle[i].vIndices[j])  ];
-			triVertices[j].y = vertice[3*(triangle[i].vIndices[j])+1];
-			triVertices[j].z = vertice[3*(triangle[i].vIndices[j])+2];
+			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
+			/*triangle.vertex[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+			triangle.vertex[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+			triangle.vertex[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			if (shading==2) {
-				triNormals[j].x = normal[3*(triangle[i].vIndices[j])  ];
-				triNormals[j].y = normal[3*(triangle[i].vIndices[j])+1];
-				triNormals[j].z = normal[3*(triangle[i].vIndices[j])+2];
+				triNormals[j].x = normalPtr[3*(trianglePtr[i].vIndices[j])  ];
+				triNormals[j].y = normalPtr[3*(trianglePtr[i].vIndices[j])+1];
+				triNormals[j].z = normalPtr[3*(trianglePtr[i].vIndices[j])+2];
+				/*triangle.normal[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
+				triangle.normal[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+				triangle.normal[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			} else {
 				triNormals[j].x = 0;
 				triNormals[j].y = 0;
 				triNormals[j].z = 0;
+				//triangle.normal[j].x = 0;
+				//triangle.normal[j].y = 0;
+				//triangle.normal[j].z = 0;
 			}
 		}
 
-		//Transform
-		triVertices[0] = transform(triVertices[0]);
-		triVertices[1] = transform(triVertices[1]);
-		triVertices[2] = transform(triVertices[2]);
-		if (shading==2) {
-			triNormals[0] = transform(triNormals[0]);
-			triNormals[1] = transform(triNormals[1]);
-			triNormals[2] = transform(triNormals[2]);
-		}
+		//model to view space
+		//vertex: scaling->rotation->translation
+		//normal: rotation
+		model2view_rotation(triVertices[0]);
+		model2view_rotation(triVertices[1]);
+		model2view_rotation(triVertices[2]);
+		model2view_rotation(triNormals[0]);
+		model2view_rotation(triNormals[1]);
+		model2view_rotation(triNormals[2]);
+		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
+		//					  viewMatrix(glm::vec3(0.0f,0.0f,1.0f)) *
+		//					  modelMatrix(glm::vec3(0.0f),glm::vec3(thetaX,thetaY,0.0f),0.0f);
+
+
+
 
 		//Back Face Culling
 		if (!backFaceCulling(triVertices) || !culling || wireframe_filled==0) {
@@ -155,12 +190,29 @@ void displayFunc()
 			toScreenSpace(triVertices[0],ix[0],iy[0],iz[0]);
 			toScreenSpace(triVertices[1],ix[1],iy[1],iz[1]);
 			toScreenSpace(triVertices[2],ix[2],iy[2],iz[2]);
-			triVertices[0] = vec3(ix[0],iy[0],iz[0]);
-			triVertices[1] = vec3(ix[1],iy[1],iz[1]);
-			triVertices[2] = vec3(ix[2],iy[2],iz[2]);
+			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
+			//for (int k=0; k<3; k++) {
+			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
+			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
+			//}
+			glm::vec3* displayVertices = new glm::vec3[3];
+			//vec3 displayVertices[3];
+			displayVertices[0] = glm::vec3(ix[0],iy[0],iz[0]);
+			displayVertices[1] = glm::vec3(ix[1],iy[1],iz[1]);
+			displayVertices[2] = glm::vec3(ix[2],iy[2],iz[2]);
+			vector<glm::vec3*> displayNormals;
+
+			glm::vec3* temp_normal = new glm::vec3[3];
+			temp_normal[0] = glm::vec3(triNormals[0].x,triNormals[0].y,triNormals[0].z);
+			temp_normal[1] = glm::vec3(triNormals[1].x,triNormals[1].y,triNormals[1].z);
+			temp_normal[2] = glm::vec3(triNormals[2].x,triNormals[2].y,triNormals[2].z);
+			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
-			if (wireframe_filled==1) drawTriangle(triVertices,triNormals,c);
+			//if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
+			if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
 			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			delete [] displayVertices;
+			delete [] temp_normal;
 		}
 
 		//for Debug purpose (will draw back face culling wireframe)
@@ -174,7 +226,6 @@ void displayFunc()
 			if (wireframe_filled==1) drawEdge(ix,iy,iz,vec3(0.f,0.f,0.5f));
 		}*/
 	}
-
 
     /* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
@@ -193,7 +244,7 @@ void displayFunc()
 	if (t > refreshTime) {
 		//cout << "curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << endl;
 		//cout << "fps = " << 
-		sprintf(title, "3DMM HW#1 Rasterization: %.2lf fps",  (double)count/t);
+		sprintf(title, "3D Graphic Engine: %.2lf fps",  (double)count/t);
 		glutSetWindowTitle(title);
 		prev = curr;
 		count = 0;
@@ -211,17 +262,14 @@ void keyboardFunc(unsigned char key, int x, int y)
 	switch (key) {
 	// Quit
 	case 'q':
-	case 'Q':
 		exit(0);
 		break;
 	// Help
 	case 'h':
-	case 'H':
 		printHelp();
 		break;
 	// Save image
 	case 's':
-	case 'S':
 		static time_t t;
 		static char name[80];
 		time(&t);
@@ -240,30 +288,52 @@ void keyboardFunc(unsigned char key, int x, int y)
 		break;
 	// Back-face culling
 	case 'c':
-	case 'C':
 		culling = !culling;
 		break;
 	//Shading Mode
 	case 'l':
-	case 'L':
 		if (shading == 2) shading = 0;
 		else shading++;
 		break;
 	//Wireframe Mode
 	case 'w':
-	case 'W':
 		if (wireframe_filled == 1) wireframe_filled = 0;
 		else wireframe_filled++;
 		break;
+	//Projection Mode
+	case 'p':
+		projection = !projection;
+		break;
 	// Background color
 	case 'b':
-	case 'B':
 		static bool isBlack = true;
 		isBlack = !isBlack;
 		framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 		break;
+  // Translate
+  case 'A':
+    deltaX -= 0.01;
+    break;
+  case 'D':
+    deltaX += 0.01;
+    break;
+  case 'W':
+    deltaY += 0.01;
+    break;
+  case 'S':
+    deltaY -= 0.01;
+    break;
+  // Scale
+  case '=':
+    deltaSize +=0.01;
+    break;
+  case '-':
+    if(deltaSize>(0.01-1))
+      deltaSize -=0.01;
+    else
+      cout << "It can's be smaller! \n";
+    break;
 
-	// You can add more functions as you like.
 	}
 	glutPostRedisplay();
 }
@@ -285,10 +355,10 @@ void specialFunc(int key, int x, int y)
 		thetaX = (thetaX > PI*2)? 0 : (thetaX + rotateSpeed);
 		break;
 	case GLUT_KEY_PAGE_UP:
-    
+    deltaZ -= 0.01;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-    
+    deltaZ += 0.01;
 		break;
 	}
 }
@@ -298,7 +368,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(screenWidth, screenHeight);
-	glutCreateWindow("3DMM HW#1 Rasterization");
+	glutCreateWindow("3D Graphic Engine");
 
 	init();
 
