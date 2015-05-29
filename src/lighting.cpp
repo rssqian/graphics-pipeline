@@ -16,6 +16,9 @@ vec3 lighting(vec3 normal)     //input 3 triangle vertex
 	normalize(light_direction);
 	float diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * dotProduct(normal,light_direction);
 	//specular
+	float specular_reflection_coefficient = 0.3;
+	float specular_reflection_exponent = 3;
+
 	float specular = 0; //sum ()
 	float intensity = ambient + diffuse + specular;
 	vec3 c = color;
