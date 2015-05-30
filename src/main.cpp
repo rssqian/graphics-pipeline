@@ -183,24 +183,28 @@ void displayFunc()
 			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
 			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
 			//}
-			glm::vec3* displayVertices = new glm::vec3[3];
+			//====non-glm type====
 			//vec3 displayVertices[3];
+			//displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
+			//displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
+			//displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
+			//=====glm type=======
+			glm::vec3* displayVertices = new glm::vec3[3];
 			displayVertices[0] = glm::vec3(ix[0],iy[0],iz[0]);
 			displayVertices[1] = glm::vec3(ix[1],iy[1],iz[1]);
 			displayVertices[2] = glm::vec3(ix[2],iy[2],iz[2]);
 			vector<glm::vec3*> displayNormals;
-
 			glm::vec3* temp_normal = new glm::vec3[3];
 			temp_normal[0] = glm::vec3(triNormals[0].x,triNormals[0].y,triNormals[0].z);
 			temp_normal[1] = glm::vec3(triNormals[1].x,triNormals[1].y,triNormals[1].z);
 			temp_normal[2] = glm::vec3(triNormals[2].x,triNormals[2].y,triNormals[2].z);
 			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
-			//if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
-			if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
+			//====non glm type====if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
+			/*====glm type====*/if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
 			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
-			delete [] displayVertices;
-			delete [] temp_normal;
+			//delete [] displayVertices;
+			//delete [] temp_normal;
 		}
 
 		//for Debug purpose (will draw back face culling wireframe)
