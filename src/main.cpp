@@ -32,10 +32,10 @@ double deltaX=0;
 double deltaY=0;
 double deltaZ=0;*/
 glm::vec3 theta (0.0f,0.0f,0.0f);
-glm::vec3 size (1.0f,1.0f,1.0f);
-glm::vec3 translate (0.0f,0.0f,0.0f);
+glm::vec3 size (100.0f,100.0f,100.0f);
+glm::vec3 translate (400.0f,300.0f,0.0f);
 
-glm::vec3 cameraPos (0.0f,0.0f,-1.0f);
+glm::vec3 cameraPos (0.0f,0.0f,1.0f);
 glm::vec3 cameraTarget (0.0f,0.0f,0.0f);
 glm::vec3 upVector (0.0f,1.0f,0.0f);
 float FoV;
@@ -52,8 +52,8 @@ vec3 color(1.f);
 
 /* model names */
 char* modelNames[] = {
-	"model/quad.obj"/*,
-	"model/couch.obj",
+	"model/quad.obj",
+	"model/couch.obj"/*,
 	"model/blaze.obj",
 	"model/ateneal.obj",
 	"model/venusm.obj",
@@ -276,11 +276,23 @@ void displayFunc()
 			//drawTriangle(ix,iy,iz,c);
 			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
 			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
-			else 
-				drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			else {
+				drawLine(viewVertices[0],viewVertices[1],vec3(1.f,0.f,0.f));
+				drawLine(viewVertices[1],viewVertices[2],vec3(1.f,0.f,0.f));
+				drawLine(viewVertices[2],viewVertices[0],vec3(1.f,0.f,0.f));
+			}
+			//else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
 			//delete [] displayVertices;
 			//delete [] temp_normal;
+
+			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
+			//for (int k=0; k<3; k++) {
+			//	cout << viewVertices[k].x << "," << viewVertices[k].y << "," << viewVertices[k].z << endl;
+			//}
 		}
+
+
+
 
 		//for Debug purpose (will draw back face culling wireframe)
 		/*else {
@@ -385,37 +397,37 @@ void keyboardFunc(unsigned char key, int x, int y)
 	case 'a':
 	case 'A':
 		cout << "Toward left \n";
-		translate.x-=0.01;
+		translate.x-=10;
 		break;
 	case 'd':
 	case 'D':
 		cout << "Toward right \n";
-		translate.x+=0.01;
+		translate.x+=10;
 		break;
 
 	// Up and down
 	case 'w':
 	case 'W':
 		cout << "Toward up \n";
-		translate.y +=0.01;
+		translate.y +=10;
 		break;
 	case 's':
 	case 'S':
 		cout << "Toward down \n";
-		translate.y-=0.01;
+		translate.y-=10;
 		break;
 
 	// Scale
 	case 'Q':
 	case 'q':
 		cout << "bigger \n";
-		size.x +=0.01;
+		size.x +=10;
 		break;
 	case 'E':
 	case 'e':
 		if(size.x>(0.01-1)){
 			cout << "smaller \n";
-			size.x -=0.01;
+			size.x -=10;
 		}
 		else
 			cout << "It can's be smaller! \n";
@@ -454,11 +466,11 @@ void specialFunc(int key, int x, int y)
 	// forward or backward
 	case GLUT_KEY_PAGE_UP:
 		cout << "Forward \n";
-        translate.z-=0.01;
+        translate.z-=10;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
 		cout << "Backward \n";
-		translate.z+=0.01;
+		translate.z+=10;
 		break;
 
 

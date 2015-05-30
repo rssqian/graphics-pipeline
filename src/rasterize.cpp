@@ -139,8 +139,7 @@ void drawTriangle(vec3* triVertices,vec3* triNormals,vec3 c)  //triVertices & tr
 	}
 }
 */
-
-
+/*
 void drawEdge(int* ix,int* iy,float* iz,vec3 c)  //ix,iy,iz must have 3 element
 {
 	float m[3],B[3];
@@ -182,6 +181,51 @@ void drawEdge(int* ix,int* iy,float* iz,vec3 c)  //ix,iy,iz must have 3 element
 		}
 	}
 }
+*/
+
+void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
+{
+	float m,B;
+	//for (int j=0; j<3; j++) {
+		//int k = j+1;
+		//if (k==3) k = 0;
+		if (abs(p2.y-p1.y) <= abs(p2.x-p1.x)) {	//use y=mx+B
+			m = float(p2.y-p1.y)/float(p2.x-p1.x);
+			B = p1.y - m * p1.x;
+			if (p1.x<p2.x) {
+				for (int x_=p1.x; x_<=p2.x; x_++) {
+					int y_ = x_*m+B;
+					float z_ = p1.z + (p2.z-p1.z)/(p2.x-p1.x)*(x_-p1.x);
+					framebuffer.draw(x_,y_,z_,c);
+				}
+			} else {
+				for (int x_=p2.x; x_<=p1.x; x_++) {
+					int y_ = x_*m+B;
+					float z_ = p2.z + (p1.z-p2.z)/(p1.x-p2.x)*(x_-p2.x);
+					framebuffer.draw(x_,y_,z_,c);
+				}
+			}
+		} else {									//use x=my+B
+			m = float(p2.x-p1.x)/float(p2.y-p1.y);
+			B = p1.x-m*p1.y;
+			if (p1.y<p2.y) {
+				for (int y_=p1.y; y_<=p2.y; y_++) {
+					int x_ = y_*m+B;
+					float z_ = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
+					framebuffer.draw(x_,y_,z_,c);
+				}
+			} else {
+				for (int y_=p2.y; y_<=p1.y; y_++) {
+					int x_ = y_*m+B;
+					float z_ = p2.z + (p1.z-p2.z)/(p1.y-p2.y)*(y_-p2.y);
+					framebuffer.draw(x_,y_,z_,c);
+				}
+			}
+		}
+	//}
+}
+
+
 
 void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 {

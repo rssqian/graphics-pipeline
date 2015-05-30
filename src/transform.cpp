@@ -88,7 +88,7 @@ bool backFaceCulling(glm::vec3 faceNormals)   //input 3 vertex of the triangle
 	vec3 v2(triangleV[0].x-triangleV[2].x,triangleV[0].y-triangleV[2].y,triangleV[0].z-triangleV[2].z);
 	vec3 v3 = crossProduct(v1,v2);
 	normalize(v3);*/
-	glm::vec3 front(0.f,0.f,-1.f);
+	glm::vec3 front(0.f,0.f,1.f);
 	if ( glm::dot(faceNormals,front) < 0) return true;
 	else return false;
 }

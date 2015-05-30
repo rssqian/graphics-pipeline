@@ -19,6 +19,8 @@ void drawEdge(int* ix,int* iy,float* iz,vec3 c);  //ix,iy,iz must have 3 element
 
 typedef glm::vec3* Primitive;
 
+void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c);
+
 void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c);
 void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c);
 //(2D screen coord,3D camera coord,color for flat lighting)
