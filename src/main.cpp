@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <ctime>
 #include <cmath>
@@ -130,9 +131,14 @@ void displayFunc()
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
 		float* normalPtr = modelPtr[curModelIdx]->normals;
+
 		//ValueTriangle triangle;
-		vec3 triVertices[3];
-		vec3 triNormals[3];
+/*		vec3 triVertices[3];
+		vec3 triNormals[3];*/
+
+		glm::vec3 triVertices[3];
+		glm::vec3 triNormals[3];
+
 		for (int j=0; j<3; j++) {
 			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
@@ -158,35 +164,57 @@ void displayFunc()
 		}
 
 		//model to view space
+
+/*		model2view_rotation(triVertices[0]);
+		model2view_rotation(triVertices[1]);
+		model2view_rotation(triVertices[2]);*/
+
+/*		model2view_rotation(triNormals[0]);
+		model2view_rotation(triNormals[1]);
+		model2view_rotation(triNormals[2]);*/
+
+		glm::mat4 modelMatrix = model_translation(glm::vec3(0.0f)) * model_scale(1.0f) * model_rotation(glm::vec3(thetaX,thetaY,0.0f));
+		
+		glm::vec4 modelVertices[3];
+		glm::vec4 modelNormals[3];
+		vec3 modelVertices_nglm[3];
+		vec3 modelNormals_nglm[3];
+
+		glm::vec3 v1 ( modelVertices[0].x-modelVertices[1].x , 
+					   modelVertices[0].y-modelVertices[1].y , 
+					   modelVertices[0].z-modelVertices[1].z );
+		glm::vec3 v2 ( modelVertices[0].x-modelVertices[2].x , 
+					   modelVertices[0].y-modelVertices[2].y ,
+					   modelVertices[0].z-modelVertices[2].z );
+		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
+
 		//vertex: scaling->rotation->translation
 		//normal: rotation
-		model2view_rotation(triVertices[0]);
-		model2view_rotation(triVertices[1]);
-		model2view_rotation(triVertices[2]);
-		model2view_rotation(triNormals[0]);
-		model2view_rotation(triNormals[1]);
-		model2view_rotation(triNormals[2]);
+		for(int i=0;i<3;i++){
+			modelVertices[i] = modelMatrix * glm::vec4(triVertices[i],1.0f);
+			modelVertices_nglm[i] =(modelVertices[i].x, modelVertices[i].y, modelVertices[i].z);
+			modelNormals[i] = model_rotation(glm::vec3(thetaX,thetaY,0.0f)) * glm::vec4(triNormals[i],1.0f);
+			modelNormals_nglm[i] =(modelNormals[i].x, modelNormals[i].y, modelNormals[i].z);
+		}
+
 		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
 		//					  viewMatrix(glm::vec3(0.0f,0.0f,1.0f)) *
 		//					  modelMatrix(glm::vec3(0.0f),glm::vec3(thetaX,thetaY,0.0f),0.0f);
 
-
-
-
 		//Back Face Culling
-		if (!backFaceCulling(triVertices) || !culling || wireframe_filled==0) {
+		if (!backFaceCulling(faceNormals) || !culling || wireframe_filled == 0) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
 			if (shading==1) {
-				vec3 v1(triVertices[0].x-triVertices[1].x,triVertices[0].y-triVertices[1].y,triVertices[0].z-triVertices[1].z);
+/*				vec3 v1(triVertices[0].x-triVertices[1].x,triVertices[0].y-triVertices[1].y,triVertices[0].z-triVertices[1].z);
 				vec3 v2(triVertices[0].x-triVertices[2].x,triVertices[0].y-triVertices[2].y,triVertices[0].z-triVertices[2].z);
-				vec3 normal = crossProduct(v1,v2);
-				c = lighting(normal);
+				vec3 normal = crossProduct(v1,v2);*/
+				c = lighting(faceNormals);
 			} else c = color;
-			toScreenSpace(triVertices[0],ix[0],iy[0],iz[0]);
-			toScreenSpace(triVertices[1],ix[1],iy[1],iz[1]);
-			toScreenSpace(triVertices[2],ix[2],iy[2],iz[2]);
+			toScreenSpace(modelVertices_nglm[0],ix[0],iy[0],iz[0]);
+			toScreenSpace(modelVertices_nglm[1],ix[1],iy[1],iz[1]);
+			toScreenSpace(modelVertices_nglm[2],ix[2],iy[2],iz[2]);
 			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
 			//for (int k=0; k<3; k++) {
 			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
@@ -197,7 +225,7 @@ void displayFunc()
 			displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
 			displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
 			//drawTriangle(ix,iy,iz,c);
-			if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
+			if (wireframe_filled==1) drawTriangle(displayVertices,modelNormals_nglm,c);
 			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
 		}
 

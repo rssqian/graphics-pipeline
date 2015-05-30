@@ -74,7 +74,7 @@ void drawStandingTriangle(const vec3& p1,const vec3& p2,const vec3& p3,
 				nx_ = nx1 + (nx2-nx1)/(x2-x1)*(x_-x1);
 				ny_ = ny1 + (ny2-ny1)/(x2-x1)*(x_-x1);
 			}
-			if (shading==2) c = lighting(vec3(nx_,ny_,nz_));
+			if (shading==2) c = lighting(glm::vec3(nx_,ny_,nz_));
 			framebuffer.draw(x_,y_,z_,c);
 		}
 		y_--;

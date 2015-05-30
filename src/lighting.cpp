@@ -1,6 +1,7 @@
 #include "lighting.h"
+#include <glm/glm.hpp>
 
-vec3 lighting(vec3 normal)     //input 3 triangle vertex
+vec3 lighting(glm::vec3 normal)     //input 3 triangle vertex
 {
 	//ambient
 	float ambient_light_intensity =  1;
@@ -11,11 +12,14 @@ vec3 lighting(vec3 normal)     //input 3 triangle vertex
 	float point_light_intensity = 1;
 	float diffuse_reflection_coefficient = 0.8;
 
-	normalize(normal);
-	vec3 light_direction(1.f,1.f,-2.f);
-	normalize(light_direction);
-	float diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * dotProduct(normal,light_direction);
+	normal = glm::normalize(normal);
+	glm::vec3 light_direction(1.f,1.f,-2.f);
+	light_direction = glm::normalize(light_direction);
+	float diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * glm::dot(normal,light_direction);
 	//specular
+	float specular_reflection_coefficient = 0.3;
+	float specular_reflection_exponent = 3;
+
 	float specular = 0; //sum ()
 	float intensity = ambient + diffuse + specular;
 	vec3 c = color;
