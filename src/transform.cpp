@@ -10,11 +10,11 @@ using namespace std;
 extern double thetaX;
 extern double thetaY;
 
-extern double deltaSize;
+//extern double deltaSize;
 
-extern double deltaX;
-extern double deltaY;
-extern double deltaZ;
+//extern double deltaX;
+//extern double deltaY;
+//extern double deltaZ;
 
 extern int screenWidth;
 extern int screenHeight;
@@ -23,6 +23,7 @@ extern int screenHeight_half;
 
 extern bool projection;
 
+/*
 void model2view_rotation(vec3& prev)
 {
 	float curX,curY,curZ;
@@ -38,7 +39,7 @@ void model2view_rotation(vec3& prev)
 	prev.y = curY;
 	prev.z = curZ;
 }
-
+*/
 /*
 glm::mat4 modelMatrix(glm::vec3 translation,glm::vec3 rotation,double scale) {
 	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f),rotation.x,glm::vec3(1.0f,0.0f,0.0f));
@@ -55,8 +56,8 @@ glm::mat4 model_translation(glm::vec3 translation) {
 	return translateMatrix;
 }
 
-glm::mat4 model_scale(double scale) {
-	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(scale));
+glm::mat4 model_scale(glm::vec3 scale) {
+	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f),scale);
 	return scaleMatrix;
 }
 

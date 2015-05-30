@@ -24,14 +24,16 @@ int screenHeight_half = 300;
 
 /* theta */
 double rotateSpeed = 0.05;
-double thetaX = 0;
+/*double thetaX = 0;
 double thetaY = 0;
-
 double deltaSize=0;
-
 double deltaX=0;
 double deltaY=0;
-double deltaZ=0;
+double deltaZ=0;*/
+glm::vec3 theta (0.0f,0.0f,0.0f);
+glm::vec3 size (1.0f,1.0f,1.0f);
+glm::vec3 translate (0.0f,0.0f,0.0f);
+
 
 /*mode*/
 int wireframe_filled; //0-wireframe, 1-filled surface
@@ -173,7 +175,9 @@ void displayFunc()
 		model2view_rotation(triNormals[1]);
 		model2view_rotation(triNormals[2]);*/
 
-		glm::mat4 modelMatrix = model_translation(glm::vec3(0.0f)) * model_scale(1.0f) * model_rotation(glm::vec3(thetaX,thetaY,0.0f));
+		glm::mat4 modelMatrix = model_translation(translate) 
+								* model_scale(size) 
+								* model_rotation(theta);
 		
 		glm::vec4 modelVertices[3];
 		glm::vec4 modelNormals[3];
@@ -190,11 +194,11 @@ void displayFunc()
 
 		//vertex: scaling->rotation->translation
 		//normal: rotation
-		for(int i=0;i<3;i++){
-			modelVertices[i] = modelMatrix * glm::vec4(triVertices[i],1.0f);
-			modelVertices_nglm[i] =(modelVertices[i].x, modelVertices[i].y, modelVertices[i].z);
-			modelNormals[i] = model_rotation(glm::vec3(thetaX,thetaY,0.0f)) * glm::vec4(triNormals[i],1.0f);
-			modelNormals_nglm[i] =(modelNormals[i].x, modelNormals[i].y, modelNormals[i].z);
+		for(int j=0;j<3;j++){
+			modelVertices[j] = modelMatrix * glm::vec4(triVertices[j],1.0f);
+			modelVertices_nglm[j] =(modelVertices[j].x, modelVertices[j].y, modelVertices[j].z);
+			modelNormals[j] = model_rotation(theta) * glm::vec4(triNormals[j],1.0f);
+			modelNormals_nglm[j] =(modelNormals[j].x, modelNormals[j].y, modelNormals[j].z);
 		}
 
 		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
@@ -215,18 +219,35 @@ void displayFunc()
 			toScreenSpace(modelVertices_nglm[0],ix[0],iy[0],iz[0]);
 			toScreenSpace(modelVertices_nglm[1],ix[1],iy[1],iz[1]);
 			toScreenSpace(modelVertices_nglm[2],ix[2],iy[2],iz[2]);
+
 			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
 			//for (int k=0; k<3; k++) {
 			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
 			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
 			//}
-			vec3 displayVertices[3];
-			displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
-			displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
-			displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
+
+			//====non-glm type====
+			//vec3 displayVertices[3];
+			//displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
+			//displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
+			//displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
+			//=====glm type=======
+			glm::vec3* displayVertices = new glm::vec3[3];
+			displayVertices[0] = glm::vec3(ix[0],iy[0],iz[0]);
+			displayVertices[1] = glm::vec3(ix[1],iy[1],iz[1]);
+			displayVertices[2] = glm::vec3(ix[2],iy[2],iz[2]);
+			vector<glm::vec3*> displayNormals;
+			glm::vec3* temp_normal = new glm::vec3[3];
+			temp_normal[0] = glm::vec3(triNormals[0].x,triNormals[0].y,triNormals[0].z);
+			temp_normal[1] = glm::vec3(triNormals[1].x,triNormals[1].y,triNormals[1].z);
+			temp_normal[2] = glm::vec3(triNormals[2].x,triNormals[2].y,triNormals[2].z);
+			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
-			if (wireframe_filled==1) drawTriangle(displayVertices,modelNormals_nglm,c);
+			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
+			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
 			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			//delete [] displayVertices;
+			//delete [] temp_normal;
 		}
 
 		//for Debug purpose (will draw back face culling wireframe)
@@ -331,32 +352,39 @@ void keyboardFunc(unsigned char key, int x, int y)
 	// To right or left
 	case 'a':
 	case 'A':
-		deltaX-=0.01;
+		cout << "Toward left \n";
+		translate.x-=0.01;
 		break;
 	case 'd':
 	case 'D':
-		deltaX+=0.01;
+		cout << "Toward right \n";
+		translate.x+=0.01;
 		break;
 
 	// Up and down
 	case 'w':
 	case 'W':
-		deltaY +=0.01;
+		cout << "Toward up \n";
+		translate.y +=0.01;
 		break;
 	case 's':
 	case 'S':
-		deltaY-=0.01;
+		cout << "Toward down \n";
+		translate.y-=0.01;
 		break;
 
 	// Scale
 	case 'Q':
 	case 'q':
-		deltaSize +=0.01;
+		cout << "bigger \n";
+		size.x +=0.01;
 		break;
 	case 'E':
 	case 'e':
-		if(deltaSize>(0.01-1))
-			deltaSize -=0.01;
+		if(size.x>(0.01-1)){
+			cout << "smaller \n";
+			size.x -=0.01;
+		}
 		else
 			cout << "It can's be smaller! \n";
 		break;
@@ -378,25 +406,27 @@ void specialFunc(int key, int x, int y)
 {
 	switch (key) {
 	case GLUT_KEY_RIGHT:
-		thetaY = (thetaY > PI*2)? 0 : (thetaY + rotateSpeed);
+		theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
 		break;
 	case GLUT_KEY_LEFT:
-		thetaY = (thetaY < 0)? (PI*2) : (thetaY - rotateSpeed);
+		theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
 		break;
 	case GLUT_KEY_UP:
-		thetaX = (thetaX < 0)? (PI*2) : (thetaX - rotateSpeed);
+		theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
 		break;
 	case GLUT_KEY_DOWN:
-		thetaX = (thetaX > PI*2)? 0 : (thetaX + rotateSpeed);
+		theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
 		break;
 
 
 	// forward or backward
 	case GLUT_KEY_PAGE_UP:
-        deltaZ-=0.01;
+		cout << "Forward \n";
+        translate.z-=0.01;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-		deltaZ+=0.01;
+		cout << "Backward \n";
+		translate.z+=0.01;
 		break;
 
 

@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+/*
 void drawStandingTriangle(const vec3& p1,const vec3& p2,const vec3& p3,
 						  const vec3& n1,const vec3& n2,const vec3& n3,vec3 c) //p1.y >= p2.y >= p3.y
 {
@@ -74,13 +75,14 @@ void drawStandingTriangle(const vec3& p1,const vec3& p2,const vec3& p3,
 				nx_ = nx1 + (nx2-nx1)/(x2-x1)*(x_-x1);
 				ny_ = ny1 + (ny2-ny1)/(x2-x1)*(x_-x1);
 			}
-			if (shading==2) c = lighting(glm::vec3(nx_,ny_,nz_));
+			if (shading==2) c = lighting(vec3(nx_,ny_,nz_));
 			framebuffer.draw(x_,y_,z_,c);
 		}
 		y_--;
 	}
 }
-
+*/
+/*
 void drawTriangle(vec3* triVertices,vec3* triNormals,vec3 c)  //triVertices & triNormal must have 3 element
 {
 	//use insertion sort to sort 3 Vertices with Y order
@@ -88,7 +90,7 @@ void drawTriangle(vec3* triVertices,vec3* triNormals,vec3 c)  //triVertices & tr
 	for (int i=0; i<3; i++)
 		vYSort[i] = i;
 	for (int i=1; i<3; i++) {
-		int key = triVertices[vYSort[i]].y;
+		float key = triVertices[vYSort[i]].y;
 		int temp = vYSort[i];
 		int j = i-1;
 		while (j>=0 && triVertices[vYSort[j]].y>key) {
@@ -136,6 +138,8 @@ void drawTriangle(vec3* triVertices,vec3* triNormals,vec3 c)  //triVertices & tr
 		drawStandingTriangle(p1,p2,p3,n1,n2,n3,c);
 	}
 }
+*/
+
 
 void drawEdge(int* ix,int* iy,float* iz,vec3 c)  //ix,iy,iz must have 3 element
 {
@@ -178,3 +182,259 @@ void drawEdge(int* ix,int* iy,float* iz,vec3 c)  //ix,iy,iz must have 3 element
 		}
 	}
 }
+
+void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
+{
+	//Primitive MV_value(v_MV_value[i]);
+	glm::vec3 p1 = MVP_vertex[0];
+	glm::vec3 p2 = MVP_vertex[1];
+	glm::vec3 p3 = MVP_vertex[2];
+	//glm::vec3 n1 = MV_value[0];
+	int x_,y_=p1.y;
+	float x1,x2,z1,z2;
+	float z_;
+	float nx_,ny_,nz_;
+	vector<float> nx1(v_MV_value.size());
+	vector<float> nx2(v_MV_value.size());
+	vector<float> ny1(v_MV_value.size());
+	vector<float> ny2(v_MV_value.size());
+	vector<float> nz1(v_MV_value.size());
+	vector<float> nz2(v_MV_value.size());
+	vector<glm::vec3*> result_vertex;
+	vector<glm::vec3*> result_value;
+	float a1,b1,a2,b2;
+	while (y_ >= p3.y) {
+		//if (projection==0) {
+			if (p1.y == p2.y) {
+				if (p1.x < p2.x) {
+					x1 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
+					z1 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
+					x2 = p2.x + (p3.x-p2.x)/(p3.y-p2.y)*(y_-p2.y);
+					z2 = p2.z + (p3.z-p2.z)/(p3.y-p2.y)*(y_-p2.y);
+					for (size_t i=0; i<v_MV_value.size(); i++) {
+						Primitive MV_value(v_MV_value[i]);
+						glm::vec3 n1 = MV_value[0];
+						glm::vec3 n2 = MV_value[1];
+						glm::vec3 n3 = MV_value[2];
+						nx1[i] = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
+						ny1[i] = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
+						nz1[i] = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
+						nx2[i] = n2.x + (n3.x-n2.x)/(p3.y-p2.y)*(y_-p2.y);
+						ny2[i] = n2.y + (n3.y-n2.y)/(p3.y-p2.y)*(y_-p2.y);
+						nz2[i] = n2.z + (n3.z-n2.z)/(p3.y-p2.y)*(y_-p2.y);
+					}
+				} else {
+					x1 = p2.x + (p3.x-p2.x)/(p3.y-p2.y)*(y_-p2.y);
+					z1 = p2.z + (p3.z-p2.z)/(p3.y-p2.y)*(y_-p2.y);
+					x2 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
+					z2 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
+					for (size_t i=0; i<v_MV_value.size(); i++) {
+						Primitive MV_value(v_MV_value[i]);
+						glm::vec3 n1 = MV_value[0];
+						glm::vec3 n2 = MV_value[1];
+						glm::vec3 n3 = MV_value[2];
+						nx2[i] = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
+						ny2[i] = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
+						nz2[i] = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
+						nx1[i] = n2.x + (n3.x-n2.x)/(p3.y-p2.y)*(y_-p2.y);
+						ny1[i] = n2.y + (n3.y-n2.y)/(p3.y-p2.y)*(y_-p2.y);
+						nz1[i] = n2.z + (n3.z-n2.z)/(p3.y-p2.y)*(y_-p2.y);
+					}
+				}
+			} else if (p2.y == p3.y){ 
+				if (p2.x < p3.x) {
+					x1 = p1.x + (p2.x-p1.x)/(p2.y-p1.y)*(y_-p1.y);
+					z1 = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
+					x2 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
+					z2 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
+					for (size_t i=0; i<v_MV_value.size(); i++) {
+						Primitive MV_value(v_MV_value[i]);
+						glm::vec3 n1 = MV_value[0];
+						glm::vec3 n2 = MV_value[1];
+						glm::vec3 n3 = MV_value[2];
+						nx1[i] = n1.x + (n2.x-n1.x)/(p2.y-p1.y)*(y_-p1.y);
+						ny1[i] = n1.y + (n2.y-n1.y)/(p2.y-p1.y)*(y_-p1.y);
+						nz1[i] = n1.z + (n2.z-n1.z)/(p2.y-p1.y)*(y_-p1.y);
+						nx2[i] = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
+						ny2[i] = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
+						nz2[i] = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
+					}
+				} else {
+					x1 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
+					z1 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
+					x2 = p1.x + (p2.x-p1.x)/(p2.y-p1.y)*(y_-p1.y);
+					z2 = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
+					for (size_t i=0; i<v_MV_value.size(); i++) {
+						Primitive MV_value(v_MV_value[i]);
+						glm::vec3 n1 = MV_value[0];
+						glm::vec3 n2 = MV_value[1];
+						glm::vec3 n3 = MV_value[2];
+						nx1[i] = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
+						ny1[i] = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
+						nz1[i] = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
+						nx2[i] = n1.x + (n2.x-n1.x)/(p2.y-p1.y)*(y_-p1.y);
+						ny2[i] = n1.y + (n2.y-n1.y)/(p2.y-p1.y)*(y_-p1.y);
+						nz2[i] = n1.z + (n2.z-n1.z)/(p2.y-p1.y)*(y_-p1.y);
+					}
+				}
+			}
+			for (x_=(int(x1)==x1)?x1:int(x1)+1; x_<=x2; x_++) {
+				z_ = z1 + (z2-z1)/(x2-x1)*(x_-x1);
+				//Primitive result = new glm::vec3[v_MV_value.size()];
+				for (size_t i=0; i<v_MV_value.size(); i++) {
+					nz_ = nz1[i] + (nz2[i]-nz1[i])/(x2-x1)*(x_-x1);
+					nx_ = nx1[i] + (nx2[i]-nx1[i])/(x2-x1)*(x_-x1);
+					ny_ = ny1[i] + (ny2[i]-ny1[i])/(x2-x1)*(x_-x1);
+					//result[i] = glm::vec3(nx_,ny_,nz_);
+				}
+				//result_vertex.push_back(new glm::vec3(x_,y_,z_));
+				//result_value.push_back(result);
+				if (shading==2) c = lighting(glm::vec3(nx_,ny_,nz_));
+				framebuffer.draw(x_,y_,z_,c);
+			}
+		//} else {
+		//}
+		y_--;
+	}
+}
+
+void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c) 
+{
+	//use insertion sort to sort 3 Vertices in w_vert with Y order
+	int vYSort[3];
+	for (int i=0; i<3; i++)
+		vYSort[i] = i;
+	for (int i=1; i<3; i++) {
+		float key = MVP_vertex[vYSort[i]].y;
+		int temp = vYSort[i];
+		int j = i-1;
+		while (j>=0 && MVP_vertex[vYSort[j]].y>key) {
+			vYSort[j+1] = vYSort[j];
+			j--;
+		}
+		vYSort[j+1] = temp;
+	}
+	//now MVP_vertex[vYSort[0]].y <= MVP_vertex[vYSort[1]].y <= MVP_vertex[vYSort[2]].y
+
+	glm::vec3 temp;
+	float temp_x,temp_y,temp_z,a,b;
+	if ((MVP_vertex[vYSort[0]].y != MVP_vertex[vYSort[1]].y) && 
+		(MVP_vertex[vYSort[1]].y != MVP_vertex[vYSort[2]].y) && 
+		(MVP_vertex[vYSort[2]].y != MVP_vertex[vYSort[0]].y)) {
+		//interpolating the 4th point on the triangle(same y as point No. 2)
+
+		b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+		a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
+		temp = b / (a+b) * MVP_vertex[vYSort[2]] + a / (a+b) * MVP_vertex[vYSort[0]];
+		/*temp_x = //b / (a+b) * MVP_vertex[vYSort[0]].x + a / (a+b) * MVP_vertex[vYSort[2]].x;
+				 MVP_vertex[vYSort[0]].x + (MVP_vertex[vYSort[2]].x-MVP_vertex[vYSort[0]].x) / 
+			     (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+		temp_z = //b / (a+b) * MVP_vertex[vYSort[0]].z + a / (a+b) * MVP_vertex[vYSort[2]].z;
+				 MVP_vertex[vYSort[0]].z + (MVP_vertex[vYSort[2]].z-MVP_vertex[vYSort[0]].z) / 
+			     (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);*/
+		//glm::vec3 s_MVP_v1(MVP_vertex[vYSort[2]].x,MVP_vertex[vYSort[2]].y,MVP_vertex[vYSort[2]].z);
+		//glm::vec3 s_MVP_v2(MVP_vertex[vYSort[1]].x,MVP_vertex[vYSort[1]].y,MVP_vertex[vYSort[1]].z);
+		//glm::vec3 s_MVP_v3(temp.x,MVP_vertex[vYSort[1]].y,temp.z);
+		//glm::vec3 s_MVP_v4(MVP_vertex[vYSort[0]].x,MVP_vertex[vYSort[0]].y,MVP_vertex[vYSort[0]].z);
+		Primitive s1_MVP_vertex = new glm::vec3[3];
+		s1_MVP_vertex[0] = glm::vec3(MVP_vertex[vYSort[2]]);
+		s1_MVP_vertex[1] = glm::vec3(MVP_vertex[vYSort[1]]);
+		s1_MVP_vertex[2] = glm::vec3(temp.x,MVP_vertex[vYSort[1]].y,temp.z);
+		Primitive s2_MVP_vertex = new glm::vec3[3];
+		s2_MVP_vertex[0] = glm::vec3(MVP_vertex[vYSort[1]]);
+		s2_MVP_vertex[1] = glm::vec3(temp.x,MVP_vertex[vYSort[1]].y,temp.z);
+		s2_MVP_vertex[2] = glm::vec3(MVP_vertex[vYSort[0]]);
+
+		//interpolating for MV_value
+		vector<Primitive> s1_v_MV_value,s2_v_MV_value; //v_MV_value for standing triangle 1&2
+		//glm::vec3 s_MV_v1,s_MV_v2,s_MV_v3,s_MV_v4;
+		if (projection==0) {
+			for (size_t i=0; i<v_MV_value.size(); i++) {
+				Primitive MV_value(v_MV_value[i]);
+				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+				a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
+				temp = b / (a+b) * MV_value[vYSort[2]] + a / (a+b) * MV_value[vYSort[0]];
+				//temp_x = b / (a+b) * MV_value[vYSort[2]].x + a / (a+b) * MV_value[vYSort[0]].x;
+				//temp_y = b / (a+b) * MV_value[vYSort[2]].y + a / (a+b) * MV_value[vYSort[0]].y;
+				//temp_z = b / (a+b) * MV_value[vYSort[2]].z + a / (a+b) * MV_value[vYSort[0]].z;
+				temp_x = MV_value[vYSort[0]].x + (MV_value[vYSort[2]].x-MV_value[vYSort[0]].x) / 
+						 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				temp_y = MV_value[vYSort[0]].y + (MV_value[vYSort[2]].y-MV_value[vYSort[0]].y) / 
+						 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				temp_z = MV_value[vYSort[0]].z + (MV_value[vYSort[2]].z-MV_value[vYSort[0]].z) / 
+						 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				//glm::vec3 s_MV_v1(MV_value[vYSort[2]].x,MV_value[vYSort[2]].y,MV_value[vYSort[2]].z);
+				//glm::vec3 s_MV_v2(MV_value[vYSort[1]].x,MV_value[vYSort[1]].y,MV_value[vYSort[1]].z);
+				//glm::vec3 s_MV_v3(temp);
+				//glm::vec3 s_MV_v4(MV_value[vYSort[0]].x,MV_value[vYSort[0]].y,MV_value[vYSort[0]].z);
+				Primitive s1 = new glm::vec3[3];
+				s1[0] = glm::vec3(MV_value[vYSort[2]]);
+				s1[1] = glm::vec3(MV_value[vYSort[1]]);
+				s1[2] = glm::vec3(temp);
+				Primitive s2 = new glm::vec3[3];
+				s2[0] = glm::vec3(MV_value[vYSort[1]]);
+				s2[1] = glm::vec3(temp);
+				s2[2] = glm::vec3(MV_value[vYSort[0]]);
+				s1_v_MV_value.push_back(s1);
+				s2_v_MV_value.push_back(s2);
+			}
+		} else {
+			for (size_t i=0; i<v_MV_value.size(); i++) {
+				Primitive MV_value(v_MV_value[i]);
+				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+				a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
+				temp.z = 1 / (b/(a+b)*(1/MV_value[vYSort[2]].z) + a/(a+b)*(1/MV_value[vYSort[0]].z));
+				temp.x = (b/(a+b)*(MV_value[vYSort[2]].x/MV_value[vYSort[2]].z) + a/(a+b)*(MV_value[vYSort[0]].x/MV_value[vYSort[0]].z))
+							* temp.z;
+				temp.y = (b/(a+b)*(MV_value[vYSort[2]].y/MV_value[vYSort[2]].y) + a/(a+b)*(MV_value[vYSort[0]].y/MV_value[vYSort[0]].y))
+							* temp.z;
+				//temp = b / (a+b) * MV_value[vYSort[2]] + a / (a+b) * MV_value[vYSort[0]];
+				//temp_x = MV_value[vYSort[0]].x + (MV_value[vYSort[2]].x-MV_value[vYSort[0]].x) / 
+				//		 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				//temp_y = MV_value[vYSort[0]].y + (MV_value[vYSort[2]].y-MV_value[vYSort[0]].y) / 
+				//		 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				//temp_z = MV_value[vYSort[0]].z + (MV_value[vYSort[2]].z-MV_value[vYSort[0]].z) / 
+				//		 (MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y) * (MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y);
+				//glm::vec3 s_MV_v1(MV_value[vYSort[2]].x,MV_value[vYSort[2]].y,MV_value[vYSort[2]].z);
+				//glm::vec3 s_MV_v2(MV_value[vYSort[1]].x,MV_value[vYSort[1]].y,MV_value[vYSort[1]].z);
+				//glm::vec3 s_MV_v3(temp_x,temp_y,temp_z);
+				//glm::vec3 s_MV_v4(MV_value[vYSort[0]].x,MV_value[vYSort[0]].y,MV_value[vYSort[0]].z);
+				Primitive s1 = new glm::vec3[3];
+				s1[0] = glm::vec3(MV_value[vYSort[2]]);
+				s1[1] = glm::vec3(MV_value[vYSort[1]]);
+				s1[2] = glm::vec3(temp);
+				Primitive s2 = new glm::vec3[3];
+				s2[0] = glm::vec3(MV_value[vYSort[1]]);
+				s2[1] = glm::vec3(temp);
+				s2[2] = glm::vec3(MV_value[vYSort[0]]);
+				s1_v_MV_value.push_back(s1);
+				s2_v_MV_value.push_back(s2);
+			}
+		}
+		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,c);
+		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,c);
+		delete [] s1_MVP_vertex;
+		delete [] s2_MVP_vertex;
+		for (size_t i=0; i<s1_v_MV_value.size(); i++) delete [] s1_v_MV_value[i];
+		for (size_t i=0; i<s2_v_MV_value.size(); i++) delete [] s2_v_MV_value[i];
+	} else if ((MVP_vertex[vYSort[0]].y==MVP_vertex[vYSort[1]].y) && (MVP_vertex[vYSort[1]].y==MVP_vertex[vYSort[2]].y)) {
+	} else {
+		Primitive s_MVP_vertex = new glm::vec3[3];
+		s_MVP_vertex[0] = glm::vec3(MVP_vertex[vYSort[2]]);
+		s_MVP_vertex[1] = glm::vec3(MVP_vertex[vYSort[1]]);
+		s_MVP_vertex[2] = glm::vec3(MVP_vertex[vYSort[0]]);
+		vector<Primitive> s_v_MV_value;
+		for (size_t i=0; i<v_MV_value.size(); i++) {
+			Primitive s_MV_value = new glm::vec3[3];
+			s_MV_value[0] = glm::vec3(v_MV_value[i][vYSort[2]]);
+			s_MV_value[1] = glm::vec3(v_MV_value[i][vYSort[1]]);
+			s_MV_value[2] = glm::vec3(v_MV_value[i][vYSort[0]]);
+			s_v_MV_value.push_back(s_MV_value);
+		}
+		rasterStandingTriangle(s_MVP_vertex,s_v_MV_value,c);
+		delete [] s_MVP_vertex;
+		for (size_t i=0; i<s_v_MV_value.size(); i++) delete [] s_v_MV_value[i];
+	}
+}
+
+
