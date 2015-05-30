@@ -39,17 +39,23 @@ vec3 color(1.f);
 /* model names */
 char* modelNames[] = {
 	"model/quad.obj",
-	"model/couch.obj",
-	"model/blaze.obj",
+	"model/couch.obj"//,
+	//"model/cessna7KC.obj",
+	//"model/santa7KC.obj",
+	//"model/laurana2KC.obj"//,
+	//"model/shuttle.obj",
+	//"model/sphere.obj"
+	//"model/Miku.obj"
+	/*"model/blaze.obj",
 	"model/ateneal.obj",
 	"model/venusm.obj",
 	"model/bunnyC.obj",
 	"model/duck4KN.obj",
 	"model/happy10KN.obj",
 	"model/dragon10KN.obj",
-	"model/elephant16KN.obj",
-	"model/Statue_of_Liberty.obj",
-	"model/Nissan_Pathfinder.obj"
+	"model/elephant16KN.obj"*///,
+	//"model/Statue_of_Liberty.obj",
+	//"model/Nissan_Pathfinder.obj"
 };
 const int numModels = sizeof(modelNames) / sizeof(char*);
 
@@ -184,10 +190,10 @@ void displayFunc()
 			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
 			//}
 			//====non-glm type====
-			//vec3 displayVertices[3];
-			//displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
-			//displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
-			//displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
+			/*vec3 displayVertices[3];
+			displayVertices[0] = vec3(ix[0],iy[0],iz[0]);
+			displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
+			displayVertices[2] = vec3(ix[2],iy[2],iz[2]);*/
 			//=====glm type=======
 			glm::vec3* displayVertices = new glm::vec3[3];
 			displayVertices[0] = glm::vec3(ix[0],iy[0],iz[0]);
@@ -200,9 +206,14 @@ void displayFunc()
 			temp_normal[2] = glm::vec3(triNormals[2].x,triNormals[2].y,triNormals[2].z);
 			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
-			//====non glm type====if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
+			/*====non glm type====if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);*/
 			/*====glm type====*/if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
-			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			else {
+				drawLine(glm::vec3(ix[0],iy[0],iz[0]),glm::vec3(ix[1],iy[1],iz[1]),vec3(1.f,0.f,0.f));
+				drawLine(glm::vec3(ix[1],iy[1],iz[1]),glm::vec3(ix[2],iy[2],iz[2]),vec3(1.f,0.f,0.f));
+				drawLine(glm::vec3(ix[2],iy[2],iz[2]),glm::vec3(ix[0],iy[0],iz[0]),vec3(1.f,0.f,0.f));
+			}
+			//else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
 			//delete [] displayVertices;
 			//delete [] temp_normal;
 		}
