@@ -129,6 +129,8 @@ void displayFunc()
 	framebuffer.clear();
 
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
+	//for (int i=0; i<2; i++) {
+		//cout << "Triangel #" << i << "\n";
 		//Reading vertices and normals of Triangle
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
@@ -184,6 +186,17 @@ void displayFunc()
 		vec3 modelVertices_nglm[3];
 		vec3 modelNormals_nglm[3];
 
+		//vertex: scaling->rotation->translation
+		//normal: rotation
+		for(int j=0;j<3;j++){
+			//cout << triVertices[j].x << triVertices[j].y << triVertices[j].z << "\n" ;
+			modelVertices[j] = modelMatrix * glm::vec4(triVertices[j],1.0f);
+			//cout << modelVertices[j].x << modelVertices[j].y << modelVertices[j].z << "\n" ;
+			//cout << "(" << modelVertices[j].x << "," << modelVertices[j].y << "," << modelVertices[j].z << ")" << endl;
+			modelVertices_nglm[j] = vec3(modelVertices[j].x, modelVertices[j].y, modelVertices[j].z);
+			modelNormals[j] = model_rotation(theta) * glm::vec4(triNormals[j],1.0f);
+			modelNormals_nglm[j] = vec3(modelNormals[j].x, modelNormals[j].y, modelNormals[j].z);
+		}
 		glm::vec3 v1 ( modelVertices[0].x-modelVertices[1].x , 
 					   modelVertices[0].y-modelVertices[1].y , 
 					   modelVertices[0].z-modelVertices[1].z );
@@ -192,14 +205,7 @@ void displayFunc()
 					   modelVertices[0].z-modelVertices[2].z );
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
-		//vertex: scaling->rotation->translation
-		//normal: rotation
-		for(int j=0;j<3;j++){
-			modelVertices[j] = modelMatrix * glm::vec4(triVertices[j],1.0f);
-			modelVertices_nglm[j] =(modelVertices[j].x, modelVertices[j].y, modelVertices[j].z);
-			modelNormals[j] = model_rotation(theta) * glm::vec4(triNormals[j],1.0f);
-			modelNormals_nglm[j] =(modelNormals[j].x, modelNormals[j].y, modelNormals[j].z);
-		}
+
 
 		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
 		//					  viewMatrix(glm::vec3(0.0f,0.0f,1.0f)) *
@@ -222,7 +228,7 @@ void displayFunc()
 
 			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
 			//for (int k=0; k<3; k++) {
-			//	cout << "(" << triVertices[k].x << "," << triVertices[k].y << "," << triVertices[k].z << ")";
+			//	cout << "(" << modelVertices_nglm[k].x << "," << modelVertices_nglm[k].y << "," << modelVertices_nglm[k].z << ")";
 			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
 			//}
 
@@ -238,14 +244,16 @@ void displayFunc()
 			displayVertices[2] = glm::vec3(ix[2],iy[2],iz[2]);
 			vector<glm::vec3*> displayNormals;
 			glm::vec3* temp_normal = new glm::vec3[3];
-			temp_normal[0] = glm::vec3(triNormals[0].x,triNormals[0].y,triNormals[0].z);
-			temp_normal[1] = glm::vec3(triNormals[1].x,triNormals[1].y,triNormals[1].z);
-			temp_normal[2] = glm::vec3(triNormals[2].x,triNormals[2].y,triNormals[2].z);
+			temp_normal[0] = glm::vec3(modelNormals_nglm[0].x,modelNormals_nglm[0].y,modelNormals_nglm[0].z);
+			temp_normal[1] = glm::vec3(modelNormals_nglm[1].x,modelNormals_nglm[1].y,modelNormals_nglm[1].z);
+			temp_normal[2] = glm::vec3(modelNormals_nglm[2].x,modelNormals_nglm[2].y,modelNormals_nglm[2].z);
 			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
 			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
 			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
-			else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			else 
+				drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
+			//cout << ix << "," << iy << "," << iz << "\n";
 			//delete [] displayVertices;
 			//delete [] temp_normal;
 		}
