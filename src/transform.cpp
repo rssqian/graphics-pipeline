@@ -2,8 +2,6 @@
 #include "transform.h"
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_precision.hpp>
 
 using namespace std;
 
@@ -67,11 +65,12 @@ glm::mat4 model_rotation(glm::vec3 rotation) {
 			  rotationMatrix = glm::rotate(rotationMatrix,rotation.z,glm::vec3(0.0f,0.0f,1.0f));
 	return rotationMatrix;
 }
-
+/*
 glm::mat4 viewMatrix(glm::vec3 cameraPos,glm::vec3 cameraTarget,glm::vec3 upVector) {
 	glm::mat4 cameraMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
 	return cameraMatrix;
 }
+
 
 glm::mat4 projectionMatrix(float FoV) {
 	glm::mat4 projectionMatrix(1.0f);
@@ -82,7 +81,7 @@ glm::mat4 projectionMatrix(float FoV) {
 	}
 	return projectionMatrix;
 }
-
+*/
 bool backFaceCulling(glm::vec3 faceNormals)   //input 3 vertex of the triangle
 {
 /*	vec3 v1(triangleV[0].x-triangleV[1].x,triangleV[0].y-triangleV[1].y,triangleV[0].z-triangleV[1].z);
@@ -93,7 +92,7 @@ bool backFaceCulling(glm::vec3 faceNormals)   //input 3 vertex of the triangle
 	if ( glm::dot(faceNormals,front) < 0) return true;
 	else return false;
 }
-
+/*
 void toScreenSpace(vec3& v,int& ix,int& iy,float& iz)
 {
 	int screenSide = min(screenWidth, screenHeight);
@@ -111,3 +110,4 @@ void toScreenSpace(vec3& v,int& ix,int& iy,float& iz)
 		iz = v.z;
 	}
 }
+*/
