@@ -9,6 +9,7 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 	int numVertices = 0;
 	int numNormals = 0;
 	int numTriangles = 0;
+	int numTexCoords = 0;
 
 	char ch;
 	char buf[256];
@@ -31,6 +32,7 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 				++numNormals;
 				break;
 			case 't':				/* texcoord, ignored now */
+				++numTexCoords;
 				break;
 			default:
 				cout << "readObjFirstPass(): Unknown token ignored: " << ch << buf << endl;
@@ -60,16 +62,19 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 	model->numVertices  = numVertices;
 	model->numNormals   = numNormals;
 	model->numTriangles = numTriangles;
+	model->numTexCoords = numTexCoords;
 }
 
 void readObjSecondPass(Model* model, ifstream& ifs)
 {
-	int vIdx = 1;	/* vertex and normal indices start from 1 */
+	int vIdx = 1;	/* vertex and normal and texCoord indices start from 1 */
 	int nIdx = 1;
+	int tcIdx= 1;
 	int tIdx = 0;
 	int v0, v1, v2, n0, n1, n2, t0, t1, t2;
 	float* vertices = model->vertices;
-	float* normals = model->normals;
+	float* normals  = model->normals;
+	float* texCoords = model->texCoords;
 	Triangle* triangles = model->triangles;
 
 	char ch;
@@ -95,7 +100,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				sscanf(buf, "%s %f %f %f",s , &normals[3*nIdx], &normals[3*nIdx+1], &normals[3*nIdx+2]);
 				++nIdx;
 				break;
-			case 't':				/* texcoord, ignored now */
+			case 't':				/* texcoord */
+				sscanf(buf, "%s %f %f", s, &texCoords[2*tcIdx], &texCoords[2*tcIdx+1]);
+				++tcIdx;
 				break;
 			default:
 				cout << "readObjFirstPass(): Unknown token ignored: " << ch << buf << endl;
@@ -129,6 +136,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
+					triangles[tIdx].tcIndices[0] = v0;
+					triangles[tIdx].tcIndices[1] = v1;
+					triangles[tIdx].tcIndices[2] = v2;
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
@@ -138,6 +148,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
+					triangles[tIdx].tcIndices[0]= t0;
+					triangles[tIdx].tcIndices[1]= t1;
+					triangles[tIdx].tcIndices[2]= t2;
 				}
 				else {		/* v */
 					sscanf(buf, "%d %d %d", &v0, &v1, &v2);
@@ -176,6 +189,7 @@ Model* readObj(const string filename)
 	/* allocate memory */
 	model->vertices = new float[model->numVertices*3+1];
 	model->normals = new float[model->numNormals*3+1];
+	model->texCoords = new float[model->numTexCoords*2+1];
 	model->triangles = new Triangle[model->numTriangles];
 
 	/* go back to the beginning of the stream and read data in the second pass */
