@@ -13,7 +13,7 @@ vec3 lighting(glm::vec3 normal)     //input 3 triangle vertex
 	float diffuse_reflection_coefficient = 0.8;
 
 	normal = glm::normalize(normal);
-	glm::vec3 light_direction(1.f,1.f,-2.f);
+	glm::vec3 light_direction(1.f,1.f,1.f);
 	light_direction = glm::normalize(light_direction);
 	float diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * glm::dot(normal,light_direction);
 	//specular

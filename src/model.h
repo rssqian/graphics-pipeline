@@ -8,11 +8,17 @@ using namespace std;
 
 class ValueTriangle {
 public:
-	ValueTriangle() {};
-	~ValueTriangle() {};
+	ValueTriangle() {
+		vertex = new glm::vec3[3];
+		normal = new glm::vec3[3];
+	}
+	~ValueTriangle() {
+		delete vertex;
+		delete normal;
+	}
 
-	glm::vec3 vertex[3];
-	glm::vec3 normal[3];
+	glm::vec3* vertex;
+	glm::vec3* normal;
 };
 
 class Triangle {
@@ -37,8 +43,8 @@ public:
 	Model(): numVertices(0), numNormals(0), numTriangles(0), numTexCoords(0),
 			 vertices(nullptr), normals(nullptr), texCoords(nullptr), triangles(nullptr) {}
 	~Model() { 
-		if(vertices) delete [] vertices;
-		if(normals) delete [] normals;
+		if(vertices)  delete [] vertices;
+		if(normals)   delete [] normals;
 		if(texCoords) delete [] texCoords;
 		if(triangles) delete [] triangles;
 	}
@@ -53,6 +59,6 @@ public:
 	Triangle* triangles;	/* array of triangles */
 };
 
-Model* readObj(const string filename);
+Model* readObj(const string& filename);
 
 #endif // _MODEL_H_

@@ -1,5 +1,7 @@
 #include "model.h"
+//#include "image.h"
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <cassert>
 using namespace std;
@@ -73,7 +75,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	int tIdx = 0;
 	int v0, v1, v2, n0, n1, n2, t0, t1, t2;
 	float* vertices = model->vertices;
-	float* normals = model->normals;
+	float* normals  = model->normals;
 	float* texCoords = model->texCoords;
 	Triangle* triangles = model->triangles;
 
@@ -103,6 +105,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 			case 't':				/* texcoord */
 				sscanf(buf, "%s %f %f", s, &texCoords[2*tcIdx], &texCoords[2*tcIdx+1]);
 				++tcIdx;
+				break;
 			default:
 				cout << "readObjFirstPass(): Unknown token ignored: " << ch << buf << endl;
 				break;
@@ -123,15 +126,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
-					triangles[tIdx].tcIndices[0] = v0;
-					triangles[tIdx].tcIndices[1] = v1;
-					triangles[tIdx].tcIndices[2] = v2;
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
-					triangles[tIdx].tcIndices[0]= t0;
-					triangles[tIdx].tcIndices[1]= t1;
-					triangles[tIdx].tcIndices[2]= t2;
 					//cout << "writing normal 0:x= " << normals[3*n0] << "\ty= " << normals[3*n0+1] << "\tz= " << normals[3*n0+2] << endl;
 					//cout << "writing normal 1:x= " << normals[3*n1] << "\ty= " << normals[3*n1+1] << "\tz= " << normals[3*n1+2] << endl;
 					//cout << "writing normal 2:x= " << normals[3*n2] << "\ty= " << normals[3*n2+1] << "\tz= " << normals[3*n2+2] << endl;
@@ -141,6 +138,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
+					triangles[tIdx].tcIndices[0] = v0;
+					triangles[tIdx].tcIndices[1] = v1;
+					triangles[tIdx].tcIndices[2] = v2;
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
@@ -150,6 +150,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
+					triangles[tIdx].tcIndices[0]= t0;
+					triangles[tIdx].tcIndices[1]= t1;
+					triangles[tIdx].tcIndices[2]= t2;
 				}
 				else {		/* v */
 					sscanf(buf, "%d %d %d", &v0, &v1, &v2);
@@ -168,7 +171,90 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	}	// end of while
 }
 
-Model* readObj(const string filename) 
+/*void eat_comment(ifstream& f)
+{
+	char linebuf[1024];
+	char ppp;
+	while (ppp = f.peek(), ppp == '\n' || ppp == '\r') {
+		f.get();
+	}
+	if (ppp == '#')
+		f.getline(linebuf,1023);
+}
+
+void readMTL(const string& filename,RGBImage& img)
+{
+	ifstream ifs(filename.c_str(), ios::binary);
+	if (ifs.fail()) {
+		cerr << "Error opening " << filename.c_str() << endl;
+		return;
+	}
+
+	//get file type
+	eat_comment(ifs);
+	int mode = 0;
+	string s;
+	ifs >> s;
+	if (s == "P3") {
+		mode = 3; //ASCII mode
+	} else if (s == "P6") {
+		mode = 6; //binary mode
+	} 
+
+	//get width
+	eat_comment(ifs);
+	ifs >> img.w;
+
+	//get height
+	eat_comment(ifs);
+	ifs >> img.h;
+
+	//get bits
+	eat_comment(ifs);
+	ifs >> img.bits;
+
+	//error checking
+	if (mode != 3 && mode != 6) {
+		cerr << "Unsupported magic number" << endl;
+		ifs.close();
+		return;
+	}
+	if (img.w<1) {
+		cerr << "Unsupported width: " << img.w << endl;
+		ifs.close();
+		return;
+	}
+	if (img.h<1) {
+		cerr << "Unsupported height: " << img.h << endl;
+		ifs.close();
+		return;
+	}
+	if (img.bits < 1 || img.bits > 255) {
+		cerr << "Unsupported number of bits: " << img.bits << endl;
+		ifs.close();
+		return;
+	}
+
+	//load image data
+	img.data = new RGB[img.w*img.h];
+	if (mode == 6) {
+		ifs.get();
+		ifs.read((char*)&img.data[0],img.w*img.h);
+	} else if (mode == 3) {
+		for (int i = 0; i < img.w*img.h; i++) {
+			int v;
+			ifs >> v;
+			img.data[i].r = v;
+			ifs >> v;
+			img.data[i].g = v;
+			ifs >> v;
+			img.data[i].b = v;
+		}
+	}
+	ifs.close();
+}*/
+
+Model* readObj(const string& filename) 
 {	
 	ifstream ifs(filename.c_str(), ios::in);
 	if(!ifs) {
@@ -188,8 +274,8 @@ Model* readObj(const string filename)
 	/* allocate memory */
 	model->vertices = new float[model->numVertices*3+1];
 	model->normals = new float[model->numNormals*3+1];
-	model->triangles = new Triangle[model->numTriangles];
 	model->texCoords = new float[model->numTexCoords*2+1];
+	model->triangles = new Triangle[model->numTriangles];
 
 	/* go back to the beginning of the stream and read data in the second pass */
 	ifs.close();
