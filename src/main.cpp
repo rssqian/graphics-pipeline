@@ -32,7 +32,7 @@ double deltaX=0;
 double deltaY=0;
 double deltaZ=0;*/
 glm::vec3 theta (0.0f,0.0f,0.0f);
-glm::vec3 size (100.0f,100.0f,100.0f);
+glm::vec3 size (500.0f,500.0f,500.0f);
 glm::vec3 translate (400.0f,300.0f,0.0f);
 
 glm::vec3 cameraPos (0.0f,0.0f,1.0f);
@@ -53,7 +53,13 @@ vec3 color(1.f);
 /* model names */
 char* modelNames[] = {
 	"model/quad.obj",
-	"model/couch.obj"/*,
+	"model/couch.obj",
+	"model/cessna7KC.obj",
+	"model/santa7KC.obj",
+	"model/laurana2KC.obj",
+	"model/shuttle.obj",
+	"model/sphere.obj",
+	"model/Miku.obj"/*,
 	"model/blaze.obj",
 	"model/ateneal.obj",
 	"model/venusm.obj",
