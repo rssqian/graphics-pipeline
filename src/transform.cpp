@@ -70,6 +70,8 @@ glm::mat4 viewMatrix(glm::vec3 cameraPos,glm::vec3 cameraTarget,glm::vec3 upVect
 	glm::mat4 cameraMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
 	return cameraMatrix;
 }
+
+
 glm::mat4 projectionMatrix(float FoV) {
 	glm::mat4 projectionMatrix(1.0f);
 	if (projection==0) {

@@ -242,7 +242,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	vector<glm::vec3*> result_vertex;
 	vector<glm::vec3*> result_value;
 	while (y_ >= p3.y) {
-		c = vec3(1.f,1.f,1.f);
+		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
 			if (p1.x<p2.x) {
 				float b1 = y_-p3.y, b2 = y_-p3.y;
@@ -271,7 +271,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					}
 				}
 			} else {
-				c=vec3(0.f,1.f,0.f);
+				//c=vec3(0.f,1.f,0.f);
 				int idx[3] = {0,1,2};
 				float b1 = y_-p3.y, b2 = y_-p3.y;
 				float a1 = p2.y-p3.y-b1, a2 = p1.y-p3.y-b2;

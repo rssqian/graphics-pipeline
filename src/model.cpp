@@ -1,5 +1,7 @@
 #include "model.h"
+//#include "image.h"
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <cassert>
 using namespace std;
@@ -169,7 +171,90 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	}	// end of while
 }
 
-Model* readObj(const string filename) 
+/*void eat_comment(ifstream& f)
+{
+	char linebuf[1024];
+	char ppp;
+	while (ppp = f.peek(), ppp == '\n' || ppp == '\r') {
+		f.get();
+	}
+	if (ppp == '#')
+		f.getline(linebuf,1023);
+}
+
+void readMTL(const string& filename,RGBImage& img)
+{
+	ifstream ifs(filename.c_str(), ios::binary);
+	if (ifs.fail()) {
+		cerr << "Error opening " << filename.c_str() << endl;
+		return;
+	}
+
+	//get file type
+	eat_comment(ifs);
+	int mode = 0;
+	string s;
+	ifs >> s;
+	if (s == "P3") {
+		mode = 3; //ASCII mode
+	} else if (s == "P6") {
+		mode = 6; //binary mode
+	} 
+
+	//get width
+	eat_comment(ifs);
+	ifs >> img.w;
+
+	//get height
+	eat_comment(ifs);
+	ifs >> img.h;
+
+	//get bits
+	eat_comment(ifs);
+	ifs >> img.bits;
+
+	//error checking
+	if (mode != 3 && mode != 6) {
+		cerr << "Unsupported magic number" << endl;
+		ifs.close();
+		return;
+	}
+	if (img.w<1) {
+		cerr << "Unsupported width: " << img.w << endl;
+		ifs.close();
+		return;
+	}
+	if (img.h<1) {
+		cerr << "Unsupported height: " << img.h << endl;
+		ifs.close();
+		return;
+	}
+	if (img.bits < 1 || img.bits > 255) {
+		cerr << "Unsupported number of bits: " << img.bits << endl;
+		ifs.close();
+		return;
+	}
+
+	//load image data
+	img.data = new RGB[img.w*img.h];
+	if (mode == 6) {
+		ifs.get();
+		ifs.read((char*)&img.data[0],img.w*img.h);
+	} else if (mode == 3) {
+		for (int i = 0; i < img.w*img.h; i++) {
+			int v;
+			ifs >> v;
+			img.data[i].r = v;
+			ifs >> v;
+			img.data[i].g = v;
+			ifs >> v;
+			img.data[i].b = v;
+		}
+	}
+	ifs.close();
+}*/
+
+Model* readObj(const string& filename) 
 {	
 	ifstream ifs(filename.c_str(), ios::in);
 	if(!ifs) {

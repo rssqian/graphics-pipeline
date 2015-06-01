@@ -32,16 +32,17 @@ double deltaX=0;
 double deltaY=0;
 double deltaZ=0;*/
 glm::vec3 theta (0.0f,0.0f,0.0f);
-glm::vec3 size (500.0f,500.0f,500.0f);
-glm::vec3 translate (400.0f,300.0f,0.0f);
+glm::vec3 size (100.0f,100.0f,100.0f);
+glm::vec3 translate (0.0f,0.0f,0.0f);
 
 glm::vec3 cameraPos (0.0f,0.0f,1.0f);
 glm::vec3 cameraTarget (0.0f,0.0f,0.0f);
 glm::vec3 upVector (0.0f,1.0f,0.0f);
-float FoV;
+float FoV=45.0f;
 
 /*mode*/
-int wireframe_filled; //0-wireframe, 1-filled surface
+//int wireframe_filled; //0-wireframe, 1-filled surface
+bool wireframe_filled; //0-wireframe, 1-filled surface
 int shading; //0-no shading, 1-flat shading, 2-smooth shading
 bool projection; //0-orthogonal, 1-perspective
 
@@ -53,13 +54,13 @@ vec3 color(1.f);
 /* model names */
 char* modelNames[] = {
 	"model/quad.obj",
-	"model/couch.obj",
+	"model/couch.obj"/*,
 	"model/cessna7KC.obj",
 	"model/santa7KC.obj",
 	"model/laurana2KC.obj",
 	"model/shuttle.obj",
 	"model/sphere.obj",
-	"model/Miku.obj"/*,
+	"model/Miku.obj",
 	"model/blaze.obj",
 	"model/ateneal.obj",
 	"model/venusm.obj",
@@ -130,9 +131,9 @@ void init()
 	/* initialize parameters */
 	curModelIdx = 0;
 	culling = true;
-	int wireframe_filled = 0; //0-wireframe, 1-filled surface
-	int shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
-	bool projection = 0; //0-orthogonal, 1-perspective
+	wireframe_filled = 0; //0-wireframe, 1-filled surface
+	shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
+	projection = 0; //0-orthogonal, 1-perspective
 }
 
 void displayFunc() 
@@ -144,11 +145,11 @@ void displayFunc()
 						* model_scale(size) 
 						* model_rotation(theta);
 	glm::mat4 viewMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
-	glm::mat4 projectionMatrix(1.0f);
-	if (projection==0) {
+	glm::mat4 projectionMatrix;
+	if (projection==1) {
 		projectionMatrix = glm::perspective(FoV,1.0f/1.0f,0.1f,100.0f);
 	} else {
-		projectionMatrix = glm::ortho(10.0f,10.0f,10.0f,10.0f,0.1f,100.0f);
+		projectionMatrix = glm::ortho(-1.0f,1.0f,-1.0f,1.0f,-1.0f,1.0f);
 	}
 
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
@@ -168,25 +169,16 @@ void displayFunc()
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
-			/*triangle.vertex[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
-			triangle.vertex[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
-			triangle.vertex[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			if (shading==2) {
 				triNormals[j].x = normalPtr[3*(trianglePtr[i].vIndices[j])  ];
 				triNormals[j].y = normalPtr[3*(trianglePtr[i].vIndices[j])+1];
 				triNormals[j].z = normalPtr[3*(trianglePtr[i].vIndices[j])+2];
 				triNormals[j].w = 1;
-				/*triangle.normal[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
-				triangle.normal[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
-				triangle.normal[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];*/
 			} else {
 				triNormals[j].x = 0;
 				triNormals[j].y = 0;
 				triNormals[j].z = 0;
 				triNormals[j].w = 1; // unsure
-				//triangle.normal[j].x = 0;
-				//triangle.normal[j].y = 0;
-				//triangle.normal[j].z = 0;
 			}
 		}
 
@@ -206,25 +198,19 @@ void displayFunc()
 		
 		glm::vec4 modelVertices[3];
 		glm::vec4 viewVertices[3];
+		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
-		vec3 MVVertices_nglm[3];
-		vec3 modelNormals_nglm[3];
 
 		//vertex: scaling->rotation->translation
 		//normal: rotation
 		for(int j=0;j<3;j++){
 			modelVertices[j] = modelMatrix * triVertices[j];
 			viewVertices[j] = viewMatrix * modelVertices[j];
-			MVVertices_nglm[j] = vec3(viewVertices[j].x, viewVertices[j].y, viewVertices[j].z);
+			MVPVertices[j] = projectionMatrix * viewVertices[j];
 			modelNormals[j] = model_rotation(theta) * triNormals[j];
-			modelNormals_nglm[j] = vec3(modelNormals[j].x, modelNormals[j].y, modelNormals[j].z);
 		}
-		glm::vec3 v1 ( modelVertices[0].x-modelVertices[1].x , 
-					   modelVertices[0].y-modelVertices[1].y , 
-					   modelVertices[0].z-modelVertices[1].z );
-		glm::vec3 v2 ( modelVertices[0].x-modelVertices[2].x , 
-					   modelVertices[0].y-modelVertices[2].y ,
-					   modelVertices[0].z-modelVertices[2].z );
+		glm::vec3 v1 ( modelVertices[0]-modelVertices[1] );
+		glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
 		//glm::mat4 MVPmatrix = projectionMatrix(45.0f) * 
@@ -232,7 +218,7 @@ void displayFunc()
 		//					  modelMatrix(glm::vec3(0.0f),glm::vec3(thetaX,thetaY,0.0f),0.0f);
 
 		//Back Face Culling
-		if (!backFaceCulling(faceNormals) || !culling || wireframe_filled == 0) {
+		if (!backFaceCulling(faceNormals) || !culling) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
@@ -245,18 +231,6 @@ void displayFunc()
 			//toScreenSpace(modelVertices_nglm[0],ix[0],iy[0],iz[0]);
 			//toScreenSpace(modelVertices_nglm[1],ix[1],iy[1],iz[1]);
 			//toScreenSpace(modelVertices_nglm[2],ix[2],iy[2],iz[2]);
-			/*
-			glm::vec4 viewVertices[3];
-			for(int j=0;j<3;j++){
-				viewVertices[j] = viewMatrix(cameraPos,cameraTarget,upVector) * modelVertices[j];
-			}
-			*/
-
-			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
-			//for (int k=0; k<3; k++) {
-			//	cout << "(" << modelVertices_nglm[k].x << "," << modelVertices_nglm[k].y << "," << modelVertices_nglm[k].z << ")";
-			//	cout << "\t-->\t" << "(" << ix[k] << "," << iy[k] << "," << iz[k] << ")" << endl;
-			//}
 
 			//====non-glm type====
 			//vec3 displayVertices[3];
@@ -264,28 +238,22 @@ void displayFunc()
 			//displayVertices[1] = vec3(ix[1],iy[1],iz[1]);
 			//displayVertices[2] = vec3(ix[2],iy[2],iz[2]);
 			//=====glm type=======
-			glm::vec3* displayVertices = new glm::vec3[3];/*
-			displayVertices[0] = glm::vec3(ix[0],iy[0],iz[0]);
-			displayVertices[1] = glm::vec3(ix[1],iy[1],iz[1]);
-			displayVertices[2] = glm::vec3(ix[2],iy[2],iz[2]);*/
-
+			glm::vec3* displayVertices = new glm::vec3[3];
 			for (int j=0; j<3;j++)
-				displayVertices[0] = glm::vec3(MVVertices_nglm[j].x,MVVertices_nglm[j].y,MVVertices_nglm[j].z);
+				displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,viewVertices[j].z);
 			
 			vector<glm::vec3*> displayNormals;
-
 			glm::vec3* temp_normal = new glm::vec3[3];
-			temp_normal[0] = glm::vec3(modelNormals_nglm[0].x,modelNormals_nglm[0].y,modelNormals_nglm[0].z);
-			temp_normal[1] = glm::vec3(modelNormals_nglm[1].x,modelNormals_nglm[1].y,modelNormals_nglm[1].z);
-			temp_normal[2] = glm::vec3(modelNormals_nglm[2].x,modelNormals_nglm[2].y,modelNormals_nglm[2].z);
+			for (int j=0; j<3;j++)
+				temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
 			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
 			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
 			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
 			else {
-				drawLine(viewVertices[0],viewVertices[1],vec3(1.f,0.f,0.f));
-				drawLine(viewVertices[1],viewVertices[2],vec3(1.f,0.f,0.f));
-				drawLine(viewVertices[2],viewVertices[0],vec3(1.f,0.f,0.f));
+				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
+				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
+				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
 			}
 			//else drawEdge(ix,iy,iz,vec3(1.f,0.f,0.f));
 			//delete [] displayVertices;
@@ -293,12 +261,9 @@ void displayFunc()
 
 			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
 			//for (int k=0; k<3; k++) {
-			//	cout << viewVertices[k].x << "," << viewVertices[k].y << "," << viewVertices[k].z << endl;
+			//	cout << MVPVertices[k].x << "," << MVPVertices[k].y << "," << viewVertices[k].z << endl;
 			//}
 		}
-
-
-
 
 		//for Debug purpose (will draw back face culling wireframe)
 		/*else {
@@ -395,6 +360,7 @@ void keyboardFunc(unsigned char key, int x, int y)
 	//Projection Mode
 	case 'p':
 	case 'P':
+		cout << "change the projection mode \n";
 		projection = !projection;
 		break;
 	// Background color
@@ -509,8 +475,9 @@ void specialFunc(int key, int x, int y)
 		break;
 	//Wireframe Mode
 	case GLUT_KEY_F6:
-		if (wireframe_filled == 1) wireframe_filled = 0;
-		else wireframe_filled++;
+//		if (wireframe_filled == 1) wireframe_filled = 0;
+//		else wireframe_filled++;
+		wireframe_filled = !wireframe_filled;
 		break;
 	// Quit
 	case GLUT_KEY_F12:

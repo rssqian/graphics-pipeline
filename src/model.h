@@ -59,6 +59,6 @@ public:
 	Triangle* triangles;	/* array of triangles */
 };
 
-Model* readObj(const string filename);
+Model* readObj(const string& filename);
 
 #endif // _MODEL_H_
