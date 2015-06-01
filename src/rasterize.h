@@ -10,6 +10,7 @@
 extern Framebuffer framebuffer;
 extern int shading;
 extern bool projection;
+extern Lighting light;
 
 //void drawStandingTriangle(const vec3& p1,const vec3& p2,const vec3& p3,
 //						  const vec3& n1,const vec3& n2,const vec3& n3,vec3 c); //p1.y >= p2.y >= p3.y

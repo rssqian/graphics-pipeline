@@ -359,6 +359,8 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			//Primitive result = new glm::vec3[v_MV_value.size()];
 			float a = (x_-p_left.x);
 			float b = (p_right.x-p_left.x)-b;
+      glm::vec3 lightingVertex;
+      glm::vec3 lightingNormal;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				if (projection==0) {
 					n_.z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
@@ -369,8 +371,10 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
 					n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
 				}
+        if (i == 0) lightingVertex = glm::vec3(n_.x, n_.y, n_.z);
+        else if (i == 1) lightingNormal = glm::vec3(n_.x, n_.y, n_.z);
 			}
-			if (shading==2) c = lighting(glm::vec3(n_.x,n_.y,n_.z));
+      if (shading==2) c = light.shading(lightingVertex, lightingNormal);
 			framebuffer.draw(x_,y_,z_,c);
 		}
 	

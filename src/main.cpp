@@ -33,13 +33,13 @@ double deltaSize=0;
 double deltaX=0;
 double deltaY=0;
 double deltaZ=0;*/
-glm::vec3 theta (0.0f,0.0f,0.0f);
-glm::vec3 size (100.0f,100.0f,100.0f);
-glm::vec3 translate (0.0f,0.0f,0.0f);
+glm::vec3 theta (0.0f, 0.0f, 0.0f);
+glm::vec3 size (400.0f, 400.0f, 400.0f);
+glm::vec3 translate (float(screenWidth_half), float(screenHeight_half), 0.0f);
 
-glm::vec3 cameraPos (0.0f,0.0f,1.0f);
-glm::vec3 cameraTarget (0.0f,0.0f,0.0f);
-glm::vec3 upVector (0.0f,1.0f,0.0f);
+glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
+glm::vec3 cameraTarget (0.0f, 0.0f, 0.0f);
+glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
@@ -52,6 +52,8 @@ int curModelIdx;
 bool culling;
 Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
+
+Lighting light;
 
 /* model names */
 const char* modelNames[] = {
@@ -208,7 +210,8 @@ void displayFunc()
 /*				vec3 v1(triVertices[0].x-triVertices[1].x,triVertices[0].y-triVertices[1].y,triVertices[0].z-triVertices[1].z);
   			vec3 v2(triVertices[0].x-triVertices[2].x,triVertices[0].y-triVertices[2].y,triVertices[0].z-triVertices[2].z);
   			vec3 normal = crossProduct(v1,v2);*/
-  			c = lighting(faceNormals);
+        glm::vec3 centerVertex = glm::vec3(viewVertices[0]+viewVertices[1]+viewVertices[2]) / 3.f;
+  			c = light.shading(centerVertex, faceNormals);
   		} else c = color;
   		//toScreenSpace(modelVertices_nglm[0],ix[0],iy[0],iz[0]);
   		//toScreenSpace(modelVertices_nglm[1],ix[1],iy[1],iz[1]);
@@ -229,6 +232,12 @@ void displayFunc()
   		for (int j=0; j<3;j++)
   			temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
   		displayNormals.push_back(temp_normal);
+
+  		glm::vec3* temp_vertex = new glm::vec3[3];
+  		for (int j=0; j<3;j++)
+  			temp_vertex[j] = glm::vec3(viewVertices[j].x,viewVertices[j].y,viewVertices[j].z);
+  		displayNormals.push_back(temp_vertex);
+
   		//drawTriangle(ix,iy,iz,c);
   		//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
   		/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
@@ -276,207 +285,24 @@ void displayFunc()
   if (t > refreshTime) {
   	//cout << "curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << endl;
   	//cout << "fps = " << 
-  	sprintf(title, "3DMM HW#1 Rasterization: %.2lf fps",  (double)count/t);
+  	sprintf(title, "3D Graphics Engine: %.2lf fps",  (double)count/t);
   	glutSetWindowTitle(title);
   	prev = curr;
   	count = 0;
   }
 }
 
-
 void idleFunc() 
 {
   glutPostRedisplay();
 }
-
-/*
-void keyboardFunc(unsigned char key, int x, int y) 
-{
-  switch (key) {
-  // Quit
-  case 'q':
-  case 'Q':
-  	exit(0);
-  	break;
-
-  // Help
-  case 'h':
-  case 'H':
-  	printHelp();
-  	break;
-  // Save image
-  case 's':
-  case 'S':
-  	static time_t t;
-  	static char name[80];
-  	time(&t);
-  	strftime(name, sizeof(name), "%Y%m%d%H%M%S.ppm", localtime(&t));
-  	printf("Save framebuffer to %s\n", name);
-  	framebuffer.writePPM(name);
-  	break;
-  // Select model
-  case 'm':
-  	curModelIdx = (curModelIdx == numModels - 1)? 0 : (curModelIdx + 1);
-  	printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
-  	break;
-  case 'M':
-  	curModelIdx = (curModelIdx == 0)? (numModels - 1) : (curModelIdx - 1);
-  	printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
-  	break;
-  // Back-face culling
-  case 'c':
-  case 'C':
-  	culling = !culling;
-  	break;
-  //Shading Mode
-  case 'l':
-  case 'L':
-  	if (shading == 2) shading = 0;
-  	else shading++;
-  	break;
-  //Wireframe Mode
-  case 'w':
-  case 'W':
-  	if (wireframe_filled == 1) wireframe_filled = 0;
-  	else wireframe_filled++;
-  	break;
-  //Projection Mode
-  case 'p':
-  case 'P':
-  	cout << "change the projection mode \n";
-  	projection = !projection;
-  	break;
-  // Background color
-
-  // To right or left
-  case 'a':
-  case 'A':
-  	cout << "Toward left \n";
-  	translate.x-=10;
-  	break;
-  case 'd':
-  case 'D':
-  	cout << "Toward right \n";
-  	translate.x+=10;
-  	break;
-
-  // Up and down
-  case 'w':
-  case 'W':
-  	cout << "Toward up \n";
-  	translate.y +=10;
-  	break;
-  case 's':
-  case 'S':
-  	cout << "Toward down \n";
-  	translate.y-=10;
-  	break;
-
-  // Scale
-  case 'Q':
-  case 'q':
-  	cout << "bigger \n";
-  	size.x +=10;
-  	break;
-  case 'E':
-  case 'e':
-  	if(size.x>(0.01-1)){
-  		cout << "smaller \n";
-  		size.x -=10;
-  	}
-  	else
-  		cout << "It can's be smaller! \n";
-  	break;
-
-  // You can add more functions as you like before background.
-
-  case 'b':
-  case 'B':
-  	static bool isBlack = true;
-  	isBlack = !isBlack;
-  	framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
-  	break;
-  }
-  glutPostRedisplay();
-}
-
-// Special keys
-void specialFunc(int key, int x, int y) 
-{
-  switch (key) {
-  case GLUT_KEY_RIGHT:
-  	theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
-  	break;
-  case GLUT_KEY_LEFT:
-  	theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
-  	break;
-  case GLUT_KEY_UP:
-  	theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
-  	break;
-  case GLUT_KEY_DOWN:
-  	theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
-  	break;
-
-
-  // forward or backward
-  case GLUT_KEY_PAGE_UP:
-  	cout << "Forward \n";
-        translate.z-=10;
-  	break;
-  case GLUT_KEY_PAGE_DOWN:
-  	cout << "Backward \n";
-  	translate.z+=10;
-  	break;
-
-
-  // Save image
-  case GLUT_KEY_F1:
-  	static time_t t;
-  	static char name[80];
-  	time(&t);
-  	strftime(name, sizeof(name), "%Y%m%d%H%M%S.ppm", localtime(&t));
-  	printf("Save framebuffer to %s\n", name);
-  	framebuffer.writePPM(name);
-  	break;
-  // Select model
-  case GLUT_KEY_F2:
-  	curModelIdx = (curModelIdx == numModels - 1)? 0 : (curModelIdx + 1);
-  	printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
-  	break;
-  case GLUT_KEY_F3:
-  	curModelIdx = (curModelIdx == 0)? (numModels - 1) : (curModelIdx - 1);
-  	printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
-  	break;
-  // Back-face culling
-  case GLUT_KEY_F4:
-  	culling = !culling;
-  	break;
-  //Shading Mode
-  case GLUT_KEY_F5:
-  	if (shading == 2) shading = 0;
-  	else shading++;
-  	break;
-  //Wireframe Mode
-  case GLUT_KEY_F6:
-//		if (wireframe_filled == 1) wireframe_filled = 0;
-//		else wireframe_filled++;
-  	wireframe_filled = !wireframe_filled;
-  	break;
-  // Quit
-  case GLUT_KEY_F12:
-  	exit(0);
-  	break;
-
-  }
-}
-*/
 
 int main(int argc, char** argv)
 {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(screenWidth, screenHeight);
-  glutCreateWindow("3DMM HW#1 Rasterization");
+  glutCreateWindow("3D Graphics Engine");
 
   init();
 
