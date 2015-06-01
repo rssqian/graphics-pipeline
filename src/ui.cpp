@@ -50,16 +50,16 @@ inline void selectPrevModel() {
 }
 
 inline void toggleWireframe() {
-  cout << "Toggle wireframe" << endl;
   wireframe_filled = !wireframe_filled;
+  cout << "Toggle wireframe: " << wireframe_filled << endl;
 }
 inline void toggleProjection() {
-  cout << "Toggle projection view" << endl;
   projection = !projection;
+  cout << "Toggle projection view: " << projection << endl;
 }
 inline void toggleCulling() {
-  cout << "Toggle back-face culling" << endl;
   culling = !culling;
+  cout << "Toggle back-face culling: " << culling << endl;
 }
 inline void toggleBackground() {
   cout << "Toggle background color" << endl;
@@ -68,7 +68,7 @@ inline void toggleBackground() {
   framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 }
 inline void changeShading() {
-  cout << "Change shading mode" << endl;
+  cout << "Change shading mode: " << shading << endl;
   if (shading == 2) shading = 0;
   else shading++;
 }
