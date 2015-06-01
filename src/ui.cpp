@@ -25,9 +25,16 @@ void printHelp()
 	printf("  l: Toggle lighting mode                \n");
 	printf("  w: Toggle wireframe mode               \n");
 	printf("  p: Toggle projection mode              \n");
-	printf("  s: Save image                          \n");
+	printf("  r: Reset model                         \n");
+	printf("  s: Save image as ppm format            \n");
 	printf("  q: Quit                                \n");
 	printf("===========================================\n\n");
+}
+
+inline void reset() {
+  theta = glm::vec3(0.f, 0.f, 0.f);
+  size = glm::vec3(400.f, 400.f, 400.f);
+  translate = glm::vec3(float(screenWidth_half), float(screenHeight_half), 0.f);
 }
 
 inline void saveAsImage() {
@@ -51,15 +58,15 @@ inline void selectPrevModel() {
 
 inline void toggleWireframe() {
   wireframe_filled = !wireframe_filled;
-  cout << "Toggle wireframe: " << wireframe_filled << endl;
+  cout << "Toggle wireframe to: " << wireframe_filled << endl;
 }
 inline void toggleProjection() {
   projection = !projection;
-  cout << "Toggle projection view: " << projection << endl;
+  cout << "Toggle projection view to: " << projection << endl;
 }
 inline void toggleCulling() {
   culling = !culling;
-  cout << "Toggle back-face culling: " << culling << endl;
+  cout << "Toggle back-face culling to: " << culling << endl;
 }
 inline void toggleBackground() {
   cout << "Toggle background color" << endl;
@@ -68,9 +75,9 @@ inline void toggleBackground() {
   framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 }
 inline void changeShading() {
-  cout << "Change shading mode: " << shading << endl;
   if (shading == 2) shading = 0;
   else shading++;
+  cout << "Change to shading mode to: " << shading << endl;
 }
 inline void rotateUp() {
   cout << "Rotate up" << endl;
@@ -88,21 +95,21 @@ inline void rotateRight() {
   cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
 }
-inline void panUp() {
+inline void panUp(int pace) {
   cout << "Pan up" << endl;
-  translate.y +=10;
+  translate.y += pace;
 }
-inline void panDown() {
+inline void panDown(int pace) {
   cout << "Pan down" << endl;
-  translate.y -= 10;
+  translate.y -= pace;
 }
-inline void panLeft() {
+inline void panLeft(int pace) {
   cout << "Pan left" << endl;
-  translate.x -= 10;
+  translate.x -= pace;
 }
-inline void panRight() {
+inline void panRight(int pace) {
   cout << "Pan right" << endl;
-	translate.x += 10;
+	translate.x += pace;
 }
 inline void zoomIn() {
   cout << "Zoom in" << endl;
@@ -143,14 +150,18 @@ void motionFunc(int x, int y) {
   if ( panning ) {
     int deltaMouseX = x - prevMouseX;
     int deltaMouseY = y - prevMouseY;
-    if ( deltaMouseY < -100 )
-      panUp();
-    if ( deltaMouseY > 100 )
-      panDown();
-    if ( deltaMouseX < -100 )
-      panLeft();
-    if ( deltaMouseX > 100 )
-      panRight();
+    int paceX = deltaMouseX > 0 ? deltaMouseX : -deltaMouseX;
+    int paceY = deltaMouseY > 0 ? deltaMouseY : -deltaMouseY;
+    paceX = paceX / 40;
+    paceY = paceY / 40;
+    if ( deltaMouseY < -20 )
+      panUp(paceY);
+    if ( deltaMouseY > 20 )
+      panDown(paceY);
+    if ( deltaMouseX < -20 )
+      panLeft(paceX);
+    if ( deltaMouseX > 20 )
+      panRight(paceX);
   }
 }
 
@@ -191,6 +202,8 @@ void keyboardFunc(unsigned char key, int x, int y)
 		exit(0); break;
 	case 'h':
 		printHelp(); break;
+	case 'r':
+		reset(); break;
 	case 's':
     saveAsImage(); break;
 	case 'm':
@@ -208,13 +221,13 @@ void keyboardFunc(unsigned char key, int x, int y)
 	case 'b':
     toggleBackground(); break;
   case 'A':
-    panLeft(); break;
+    panLeft(10); break;
   case 'D':
-    panRight(); break;
+    panRight(10); break;
   case 'W':
-    panUp(); break;
+    panUp(10); break;
   case 'S':
-    panDown(); break;
+    panDown(10); break;
   case '=':
     zoomIn(); break;
   case '-':

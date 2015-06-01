@@ -10,6 +10,9 @@
 
 #ifndef _GLOBAL_VAR
 
+extern int screenWidth_half;
+extern int screenHeight_half;
+
 extern int curModelIdx;
 extern Framebuffer framebuffer;
 extern char* modelNames[];
@@ -30,6 +33,7 @@ extern bool projection;
 
 /* Basic functions */
 void printHelp(); 
+inline void reset();
 inline void saveImage();
 inline void selectNextModel();
 inline void selectPrevModel();
