@@ -156,23 +156,27 @@ void displayFunc()
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
 		float* normalPtr = modelPtr[curModelIdx]->normals;
-
+		//float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
 		//ValueTriangle triangle;
 /*		vec3 triVertices[3];
 		vec3 triNormals[3];*/
 
 		glm::vec4 triVertices[3];
 		glm::vec4 triNormals[3];
+		//glm::vec3 triTexCoord[3];
 
 		for (int j=0; j<3; j++) {
 			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
+			//triTexCoord[j].x = texCoordPtr[3*(trianglePtr[i].tcIndices[j])  ];
+			//triTexCoord[j].y = texCoordPtr[3*(trianglePtr[i].tcIndices[j])+1];
+			//triTexCoord[j].z = 1;
 			if (shading==2) {
-				triNormals[j].x = normalPtr[3*(trianglePtr[i].vIndices[j])  ];
-				triNormals[j].y = normalPtr[3*(trianglePtr[i].vIndices[j])+1];
-				triNormals[j].z = normalPtr[3*(trianglePtr[i].vIndices[j])+2];
+				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])  ];
+				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
+				triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
 				triNormals[j].w = 1;
 			} else {
 				triNormals[j].x = 0;
@@ -181,6 +185,7 @@ void displayFunc()
 				triNormals[j].w = 1; // unsure
 			}
 		}
+		Material* mtl;// = trianglePtr -> mtlptr;
 
 		//model to view space
 
@@ -253,7 +258,7 @@ void displayFunc()
 			displayNormals.push_back(temp_normal);
 			//drawTriangle(ix,iy,iz,c);
 			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
-			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c);
+			/*====glm type====*/ if (wireframe_filled==1) rasterTriangle(displayVertices,displayNormals,c,mtl);
 			else {
 				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));

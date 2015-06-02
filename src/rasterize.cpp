@@ -226,7 +226,7 @@ void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 	//}
 }
 
-void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
+void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c,Material* mtl)
 {
 	//Primitive MV_value(v_MV_value[i]);
 	glm::vec3 p1 = MVP_vertex[0];
@@ -383,16 +383,16 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				c.x = debug_c.x * light_c.x;
 				c.y = debug_c.y * light_c.y;
 				c.z = debug_c.z * light_c.z;
-				c.x = int(c.x/0.2) * 0.2;
-				c.y = int(c.y/0.2) * 0.2;
-				c.z = int(c.z/0.2) * 0.2;
+				//c.x = int(c.x/0.2) * 0.2;
+				//c.y = int(c.y/0.2) * 0.2;
+				//c.z = int(c.z/0.2) * 0.2;
 			}
 			framebuffer.draw(x_,y_,z_,c);
 
-			//glm::vec3 ambient_c;
-			//glm::vec3 diffuse_c;
-			//glm::vec3 specular_c;
-			//getTexture(,,ambient_c,diffuse_c,specular_c);
+			glm::vec3 ambient_c;
+			glm::vec3 diffuse_c;
+			glm::vec3 specular_c;
+			//getTexture(mtl,,ambient_c,diffuse_c,specular_c);
 			/*if (shading==2) { 	
 				//c = lighting(glm::vec3(n_.x,n_.y,n_.z),);
 			} else {
@@ -410,7 +410,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	}
 }
 
-void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c) 
+void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c,Material* mtl) 
 {
 	//use insertion sort to sort 3 Vertices in w_vert with Y order
 	int vYSort[3];
@@ -488,8 +488,8 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 				s2_v_MV_value.push_back(s2);
 			}
 		}
-		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,c);
-		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,c);
+		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,c,mtl);
+		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,c,mtl);
 		delete [] s1_MVP_vertex;
 		delete [] s2_MVP_vertex;
 		for (size_t i=0; i<s1_v_MV_value.size(); i++) delete [] s1_v_MV_value[i];
@@ -508,7 +508,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 			s_MV_value[2] = glm::vec3(v_MV_value[i][vYSort[0]]);
 			s_v_MV_value.push_back(s_MV_value);
 		}
-		rasterStandingTriangle(s_MVP_vertex,s_v_MV_value,c);
+		rasterStandingTriangle(s_MVP_vertex,s_v_MV_value,c,mtl);
 		delete [] s_MVP_vertex;
 		for (size_t i=0; i<s_v_MV_value.size(); i++) delete [] s_v_MV_value[i];
 	}
