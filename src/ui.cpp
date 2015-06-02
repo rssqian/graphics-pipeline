@@ -20,6 +20,7 @@ void printHelp()
 	printf("  W/S/A/D / MOUSE LEFT DRAG: Moving aroun\n");
 	printf("  PAGEUP/PAGEDN: Moving forward/backward \n");
 	printf("  +/- / MOUSE WHEEL: Zoom in/out         \n");
+	printf("  MOUSE RIGHT CLICK: Set light source position\n");
 	printf("  c: Toggle back-face culling            \n");
 	printf("  b: Toggle background color             \n");
 	printf("  l: Toggle lighting mode                \n");
@@ -133,6 +134,10 @@ inline void moveBackward() {
   cout << "Move backward" << endl;
   translate.z += 10;
 }
+inline void setLightSourcePosition(int x, int y) {
+  light.source = glm::vec3(float(x), float(screenHeight - y), 500.f);
+  cout << "Set light source to (" << x << ", " << screenHeight - y << ", 500)"<< endl;
+} 
 
 void motionFunc(int x, int y) {
   if ( rotating ) {
@@ -177,17 +182,20 @@ void mouseFunc(int button, int direction, int x, int y)
   prevMouseY = y;
 
   switch (button) {
-  case 0:
+  case 0: // Left button
     rotating = true;
     panning = false;
     break;
-  case 1:
+  case 1: // Middle button
     rotating = false;
     panning = true;
     break;
-  case 4:
+  case 2: // Right button
+    setLightSourcePosition(x, y);
+    break;
+  case 4: // Scroll down
     zoomIn(); break;
-  case 3:
+  case 3: // Scroll up
     zoomOut(); break;
   default:
     rotating = false;

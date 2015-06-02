@@ -5,11 +5,14 @@
 #include <glm/vec3.hpp>
 #include <iostream>
 #include "framebuffer.h"
+#include "lighting.h"
 
 #define PI 3.14159265
 
 #ifndef _GLOBAL_VAR
 
+extern int screenWidth;
+extern int screenHeight;
 extern int screenWidth_half;
 extern int screenHeight_half;
 
@@ -28,6 +31,8 @@ extern int shading;
 extern bool wireframe_filled;
 extern bool culling;
 extern bool projection;
+
+extern Lighting light;
 
 #endif
 
@@ -54,6 +59,7 @@ inline void zoomIn();
 inline void zoomOut();
 inline void moveForward();
 inline void moveBackward();
+inline void setLightSourcePosition();
 
 /* User interfaces */
 void motionFunc(int x, int y);
