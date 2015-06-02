@@ -39,7 +39,7 @@ void Framebuffer::draw(int ix, int iy, float z, vec3 c) const {
 		return;
 	}
 	int idx = iy * width + ix;
-	if (z <= depthBuffer[idx]) {
+	if (z >= depthBuffer[idx]) {
 		if (shading==0) { 
 			c = color;
 			c.x *= ((-z+500)/1.0)/500;

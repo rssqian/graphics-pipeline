@@ -1,4 +1,5 @@
 #include "rasterize.h"
+#include "texture.h"
 #include <iostream>
 using namespace std;
 
@@ -242,7 +243,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	vector<glm::vec3*> result_vertex;
 	vector<glm::vec3*> result_value;
 	while (y_ >= p3.y) {
-		c = vec3(1.f,1.f,1.f);
+		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
 			if (p1.x<p2.x) {
 				float b1 = y_-p3.y, b2 = y_-p3.y;
@@ -271,7 +272,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					}
 				}
 			} else {
-				c=vec3(0.f,1.f,0.f);
+				//c=vec3(0.f,1.f,0.f);
 				int idx[3] = {0,1,2};
 				float b1 = y_-p3.y, b2 = y_-p3.y;
 				float a1 = p2.y-p3.y-b1, a2 = p1.y-p3.y-b2;
@@ -372,6 +373,17 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			}
 			if (shading==2) c = lighting(glm::vec3(n_.x,n_.y,n_.z));
 			framebuffer.draw(x_,y_,z_,c);
+
+			//glm::vec3 ambient_c;
+			//glm::vec3 diffuse_c;
+			//glm::vec3 specular_c;
+			//getTexture(,,ambient_c,diffuse_c,specular_c);
+			/*if (shading==2) { 	
+				//c = lighting(glm::vec3(n_.x,n_.y,n_.z),);
+			} else {
+
+			}
+			framebuffer.draw(x_,y_,z_,c);*/
 		}
 	
 		y_--;

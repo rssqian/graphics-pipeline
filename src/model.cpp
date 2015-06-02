@@ -1,15 +1,105 @@
 #include "model.h"
+
 #include <iostream>
+#include <string>
+#include <cstring>
 #include <fstream>
 #include <cassert>
 using namespace std;
 
+void readMtlLib(Model* model, const string& filename)
+{
+	cout << "reading " << filename << endl;
+	ifstream ifs(filename.c_str(), ios::in);
+	if(!ifs) {
+		cout << "Error opening " << filename.c_str() << endl;
+		return;
+	}
+
+	string h;
+	char buf[256];
+	char fileName[256];
+	Material* mtlptr;
+	string fileName_s;
+
+	while (!ifs.eof()) {
+		ifs >> h;
+		cout << "h = " << h << endl;
+		if (h == "newmtl") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			model->materials.push_back(new Material(fileName));
+			mtlptr = model->materials.back();
+			cout << "material " << mtlptr->mtlName << " created " << endl;
+		} else if (h == "Ka") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%f %f %f", &mtlptr->Ka.x, &mtlptr->Ka.y, &mtlptr->Ka.z);
+		} else if (h == "Kd") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%f %f %f", &mtlptr->Kd.x, &mtlptr->Kd.y, &mtlptr->Kd.z);
+		} else if (h == "Ks") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%f %f %f", &mtlptr->Ks.x, &mtlptr->Ks.y, &mtlptr->Ks.z);
+		} else if (h == "Ns") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%f", &mtlptr->Ns);
+		} else if (h == "d" ) {
+			ifs.getline(buf,256);
+			sscanf(buf, "%f", &mtlptr->d);
+		} else if (h == "illum") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%d", &mtlptr->illuModel);
+		} else if (h == "map_Ka") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			mtlptr->map_Ka = new RGBImage;
+			mtlptr->map_Ka->readPPM(fileName_s);
+		} else if (h == "map_Kd") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			mtlptr->map_Kd = new RGBImage;
+			mtlptr->map_Kd->readPPM(fileName_s);
+		} else if (h == "map_Ks") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			mtlptr->map_Ks = new RGBImage;
+			mtlptr->map_Ks->readPPM(fileName_s);
+		} else if (h == "map_bump") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			mtlptr->map_bump = new RGBImage;
+			mtlptr->map_bump->readPPM(fileName_s);
+		} else if (h == "map_d") {
+			ifs.getline(buf,256);
+			sscanf(buf, "%s", fileName);
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			mtlptr->map_d = new RGBImage;
+			mtlptr->map_d->readPPM(fileName_s);
+		} else {
+			cout << "readMtlLib(): Unknow token ignored" << endl;
+			ifs.getline(buf,256);
+		}
+	}
+
+	//model->materials.push_back();
+}
+
 void readObjFirstPass(Model* model, ifstream& ifs)
 {
-	int numVertices = 0;
-	int numNormals = 0;
+	int numVertices  = 0;
+	int numNormals   = 0;
 	int numTriangles = 0;
 	int numTexCoords = 0;
+	int numMaterials = 0;
 
 	char ch;
 	char buf[256];
@@ -39,7 +129,13 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 				break;
 			}
 			break;
-		case 'm':				/* material lib, ignored now */
+		case 'm':				/* material lib */
+			/* eat up rest of line */
+			/*ifs.getline(buf, 256);
+			if (buf[0]=='t' && buf[1]=='l' && buf[2]=='l' && buf[3]=='i' && buf[4]=='b') {
+				++numMaterials;
+			}
+			break;*/
 		case 'u':				/* use material, ignored now */
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
@@ -63,6 +159,7 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 	model->numNormals   = numNormals;
 	model->numTriangles = numTriangles;
 	model->numTexCoords = numTexCoords;
+	//model->numMaterials = numMaterials;
 }
 
 void readObjSecondPass(Model* model, ifstream& ifs)
@@ -70,16 +167,20 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	int vIdx = 1;	/* vertex and normal and texCoord indices start from 1 */
 	int nIdx = 1;
 	int tcIdx= 1;
-	int tIdx = 0;
+	int tIdx = 0;   /* triangle index */
 	int v0, v1, v2, n0, n1, n2, t0, t1, t2;
 	float* vertices = model->vertices;
 	float* normals  = model->normals;
 	float* texCoords = model->texCoords;
 	Triangle* triangles = model->triangles;
 
+	Material* faceMtl;
+
 	char ch;
-	char s[2];
+	char s[10];
+	char fileName[256];
 	char buf[256];
+	string fileName_s;
 
 	while(!ifs.eof()) {
 		ifs >> ch;
@@ -91,6 +192,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 		case 'v':				/* v, vn, vt */
 			/* eat up rest of line */
 			ifs.getline(buf, 256);
+			//cout << "buf = " << buf << endl;
 			switch(buf[0]) {
 			case ' ':			/* vertex */
 				sscanf(buf, "%f %f %f", &vertices[3*vIdx], &vertices[3*vIdx+1], &vertices[3*vIdx+2]);
@@ -98,6 +200,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				break;
 			case 'n':				/* normal */
 				sscanf(buf, "%s %f %f %f",s , &normals[3*nIdx], &normals[3*nIdx+1], &normals[3*nIdx+2]);
+				//cout << "s = " << s << endl;
 				++nIdx;
 				break;
 			case 't':				/* texcoord */
@@ -109,8 +212,35 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				break;
 			}
 			break;
-		case 'm':				/* material lib, ignored now */
-		case 'u':				/* use material, ignored now */
+		case 'm':				/* material lib */
+			/*ifs.getline(buf, 256);
+			sscanf(buf, "%s %s", s, fileName);
+			//cout << "buf = " << buf << endl;
+			//cout << "libname = " << libname << endl;
+			cout << "reading mtllib: " << fileName << endl;
+			fileName_s = fileName;
+			fileName_s = "model/" + fileName_s;
+			//cout << fileName_s << endl;
+			//temp = "model/" + temp;
+			readMtlLib(model,fileName_s);
+			cout << "mtllib read success." << endl;
+			break;*/
+		case 'u':				/* use material */
+			/*ifs.getline(buf, 256);
+			sscanf(buf, "%s %s", s, fileName);
+			faceMtl = nullptr;
+			cout << "Searching material " << fileName << endl;
+			for (size_t i=0; i<model->materials.size(); i++) {
+				cout << model->materials[i]->mtlName << endl;
+				if (model->materials[i]->mtlName == string(fileName)) 
+					faceMtl = model->materials[i];
+			}
+			if (faceMtl == nullptr) {
+				cout << "Cannot found material: " << fileName << endl;
+				return;
+			}
+			cout << "using material: "<< fileName << endl;
+			break;*/
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
 			ifs.getline(buf, 256);
@@ -142,6 +272,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
+					triangles[tIdx].mtlptr = faceMtl;
 				}
 				else if(sscanf(buf, "%d/%d", &v0, &t0) == 2) {	/* v/t */
 					sscanf(buf, "%d/%d %d/%d %d/%d", &v0, &t0, &v1, &t1, &v2, &t2);
@@ -151,6 +282,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].tcIndices[0]= t0;
 					triangles[tIdx].tcIndices[1]= t1;
 					triangles[tIdx].tcIndices[2]= t2;
+					triangles[tIdx].mtlptr = faceMtl;
 				}
 				else {		/* v */
 					sscanf(buf, "%d %d %d", &v0, &v1, &v2);
@@ -169,7 +301,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	}	// end of while
 }
 
-Model* readObj(const string filename) 
+Model* readObj(const string& filename) 
 {	
 	ifstream ifs(filename.c_str(), ios::in);
 	if(!ifs) {
