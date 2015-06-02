@@ -242,10 +242,12 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	vector<glm::vec3> n_right(v_MV_value.size());
 	vector<glm::vec3*> result_vertex;
 	vector<glm::vec3*> result_value;
+	vec3 debug_c(1.f,1.f,1.f);
 	while (y_ >= p3.y) {
 		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
 			if (p1.x<p2.x) {
+				//debug_c = vec3(1.f,0.f,0.f);
 				float b1 = y_-p3.y, b2 = y_-p3.y;
 				float a1 = p1.y-p3.y-b1, a2 = p2.y-p3.y-b2;
 				p_left.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p3.x;
@@ -272,16 +274,17 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					}
 				}
 			} else {
+				//debug_c = vec3(0.f,1.f,0.f);
 				//c=vec3(0.f,1.f,0.f);
 				int idx[3] = {0,1,2};
 				float b1 = y_-p3.y, b2 = y_-p3.y;
 				float a1 = p2.y-p3.y-b1, a2 = p1.y-p3.y-b2;
-				p_left.x = b1/(a1+b1)*p2.x + a1/(a1+b1)*p3.x;
-				p_left.y = y_;
-				p_left.z = b1/(a1+b1)*p2.z + a1/(a1+b1)*p3.z;
-				p_right.x = b2/(a2+b2)*p1.x + a2/(a2+b2)*p3.x;
+				p_right.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p3.x;
 				p_right.y = y_;
-				p_right.z = b2/(a2+b2)*p1.z + a2/(a2+b2)*p3.z;
+				p_right.z = b1/(a1+b1)*p1.z + a1/(a1+b1)*p3.z;
+				p_left.x = b2/(a2+b2)*p2.x + a2/(a2+b2)*p3.x;
+				p_left.y = y_;
+				p_left.z = b2/(a2+b2)*p2.z + a2/(a2+b2)*p3.z;
 				for (size_t i=0; i<v_MV_value.size(); i++) {
 					Primitive MV_value(v_MV_value[i]);
 					glm::vec3 n1 = MV_value[0];
@@ -302,6 +305,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			}
 		} else if (p2.y == p3.y){
 			if (p2.x<p3.x) {
+				//debug_c = vec3(0.f,0.f,1.f);
 				float b1 = y_-p2.y, b2 = y_-p3.y;
 				float a1 = p1.y-p2.y-b1, a2 = p1.y-p3.y-b2;
 				p_left.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p2.x;
@@ -328,6 +332,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					}
 				}
 			} else {
+				//debug_c = vec3(0.f,1.f,1.f);
 				float b1 = y_-p2.y, b2 = y_-p3.y;
 				float a1 = p1.y-p2.y-b1, a2 = p1.y-p3.y-b2;
 				p_right.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p2.x;
@@ -342,8 +347,8 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					glm::vec3 n2 = MV_value[1];
 					glm::vec3 n3 = MV_value[2];
 					if (projection==0) {
-						n_right[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n3;
-						n_left[i] = b2/(a2+b2)*n2 + a2/(a2+b2)*n3;
+						n_right[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n2;
+						n_left[i] = b2/(a2+b2)*n1 + a2/(a2+b2)*n3;
 					} else {
 						n_right[i].z = 1 / (b1/(a1+b1)*(1/n1.z) + a1/(a1+b1)*(1/n2.z));
 						n_right[i].x = (b1/(a1+b1)*(n1.x/n1.z) + a1/(a1+b1)*(n2.x/n2.z)) * n_right[i].z;
@@ -359,7 +364,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			z_ = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(x_-p_left.x);
 			//Primitive result = new glm::vec3[v_MV_value.size()];
 			float a = (x_-p_left.x);
-			float b = (p_right.x-p_left.x)-b;
+			float b = (p_right.x-p_left.x)-a;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				if (projection==0) {
 					n_.z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
@@ -371,7 +376,14 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
 				}
 			}
-			if (shading==2) c = lighting(glm::vec3(n_.x,n_.y,n_.z));
+			if (shading==2) { 
+				vec3 light_c = lighting(glm::vec3(n_.x,n_.y,n_.z)); 
+				//if (light_c.x <= 0.9f && light_c.y <= 0.9f && light_c.z <= 0.9f)
+				//	debug_c = vec3(1.f, 0.f, 1.f);
+				c.x = debug_c.x * light_c.x;
+				c.y = debug_c.y * light_c.y;
+				c.z = debug_c.z * light_c.z;
+			}
 			framebuffer.draw(x_,y_,z_,c);
 
 			//glm::vec3 ambient_c;
@@ -385,7 +397,12 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			}
 			framebuffer.draw(x_,y_,z_,c);*/
 		}
-	
+		/*int edge_x = (int(p_left.x)==p_left.x) ? p_left.x  :int(p_left.x)+1;
+		int edge_z = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(edge_x-p_left.x);
+		framebuffer.draw(edge_x,y_,edge_z,vec3(1.f,1.f,0.f));
+		edge_x = int(p_right.x);
+		edge_z = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(edge_x-p_left.x);
+		framebuffer.draw(edge_x,y_,edge_z,vec3(1.f,1.f,0.f));*/
 		y_--;
 	}
 }
