@@ -383,6 +383,9 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				c.x = debug_c.x * light_c.x;
 				c.y = debug_c.y * light_c.y;
 				c.z = debug_c.z * light_c.z;
+				c.x = int(c.x/0.2) * 0.2;
+				c.y = int(c.y/0.2) * 0.2;
+				c.z = int(c.z/0.2) * 0.2;
 			}
 			framebuffer.draw(x_,y_,z_,c);
 
