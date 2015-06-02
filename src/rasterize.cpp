@@ -371,8 +371,8 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
 					n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
 				}
-        if (i == 0) lightingVertex = glm::vec3(n_.x, n_.y, n_.z);
-        else if (i == 1) lightingNormal = glm::vec3(n_.x, n_.y, n_.z);
+        if (i == 0) lightingNormal = glm::vec3(n_.x, n_.y, n_.z);
+        else if (i == 1) lightingVertex = glm::vec3(n_.x, n_.y, n_.z);
 			}
       if (shading==2) c = light.shading(lightingVertex, lightingNormal);
 			framebuffer.draw(x_,y_,z_,c);

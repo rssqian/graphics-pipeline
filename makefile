@@ -22,7 +22,7 @@ model.o		: src/model.cpp src/model.h
 			$(CC) $(CFLAGS) $(C11) $< -o $@
 framebuffer.o: src/framebuffer.cpp src/framebuffer.h
 			$(CC) $(CFLAGS) $(C11) $< -o $@
-ui.o: src/ui.cpp src/ui.h
+ui.o: src/ui.cpp src/ui.h src/lighting.h
 			$(CC) $(CFLAGS) $(C11) $< -o $@
 			
 debug:3d-graphics-engine_dbg

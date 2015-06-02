@@ -14,10 +14,10 @@ class Lighting
 {
 public:
   Lighting() {
-    source = glm::vec3(1.f, 1.f, 1.f);
-    ka = glm::vec3(0.1f);
-    kd = glm::vec3(0.3f);
-    ks = glm::vec3(0.8f);
+    source = glm::vec3(500.f, 500.f, 500.f);
+    ka = glm::vec3(0.f);
+    kd = glm::vec3(1.f);
+    ks = glm::vec3(0.f);
     ns = 1;
   };
   ~Lighting() {};
