@@ -7,6 +7,8 @@ bool panning = false;
 int prevMouseX;
 int prevMouseY;
 
+int lightswitch = 0;
+
 void printHelp() 
 {
 	printf("===========================================\n");
@@ -24,6 +26,7 @@ void printHelp()
 	printf("  c: Toggle back-face culling            \n");
 	printf("  b: Toggle background color             \n");
 	printf("  l: Toggle lighting mode                \n");
+	printf("  k: Toggle ambient/diffuse/specular lights\n");
 	printf("  w: Toggle wireframe mode               \n");
 	printf("  p: Toggle projection mode              \n");
 	printf("  r: Reset model                         \n");
@@ -78,7 +81,47 @@ inline void toggleBackground() {
 inline void changeShading() {
   if (shading == 2) shading = 0;
   else shading++;
-  cout << "Change to shading mode to: " << shading << endl;
+  switch(shading) {
+    case 0:
+      cout << "Change to shading mode to: No shading" << endl;
+      break;
+    case 1:
+      cout << "Change to shading mode to: Flat shading" << endl;
+      break;
+    case 2:
+      cout << "Change to shading mode to: Phong shading" << endl;
+      break;
+  }
+}
+inline void switchKaKdKsLighting(){
+  if (lightswitch == 3)  lightswitch= 0;
+  else lightswitch++;
+  switch(lightswitch) {
+    case 0:
+      cout << "Change to lights to: Full lighting" << endl;
+      light.ka = ka;
+      light.kd = kd;
+      light.ks = ks;
+      break;
+    case 1:
+      cout << "Change to lights to: Ambient light only" << endl;
+      light.ka = ka;
+      light.kd = glm::vec3(0.f);
+      light.ks = glm::vec3(0.f);
+      break;
+    case 2:
+      cout << "Change to lights to: Diffuse light only" << endl;
+      light.ka = glm::vec3(0.f);
+      light.kd = kd;
+      light.ks = glm::vec3(0.f);
+      break;
+    case 3:
+      cout << "Change to lights to: Specular light only" << endl;
+      light.ka = glm::vec3(0.f);
+      light.kd = glm::vec3(0.f);
+      light.ks = ks;
+      break;
+  }
 }
 inline void rotateUp() {
   cout << "Rotate up" << endl;
@@ -222,6 +265,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     toggleCulling(); break;
 	case 'l':
     changeShading(); break;
+  case 'k':
+    switchKaKdKsLighting(); break;
 	case 'w':
     toggleWireframe(); break;
 	case 'p':

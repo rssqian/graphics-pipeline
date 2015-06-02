@@ -33,6 +33,9 @@ extern bool culling;
 extern bool projection;
 
 extern Lighting light;
+extern glm::vec3 ka;
+extern glm::vec3 kd;
+extern glm::vec3 ks;
 
 #endif
 
@@ -47,6 +50,7 @@ inline void toggleProjection();
 inline void toggleCulling();
 inline void toggleBackground();
 inline void changeShading();
+inline void switchKaKdKsLighting();
 inline void rotateUp();
 inline void rotateDown();
 inline void rotateLeft();

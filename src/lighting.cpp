@@ -14,7 +14,7 @@ vec3 Lighting::shading(glm::vec3 vertex, glm::vec3 normal)
   diffuse = diffuse > 0 ? diffuse : 0;
   //specular
   glm::vec3 viewDirection = cameraTarget - cameraPos;
-  glm::vec3 reflectDirection(glm::reflect(glm::normalize(-lightDirection), glm::normalize(normal))); 
+  glm::vec3 reflectDirection(glm::reflect(glm::normalize(lightDirection), glm::normalize(normal))); 
   float specularDot = glm::dot(reflectDirection, viewDirection);
   specularDot = specularDot > 0 ? specularDot : 0;
   float specular = glm::pow(specularDot, ns);

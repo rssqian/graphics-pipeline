@@ -54,6 +54,9 @@ Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
 
 Lighting light;
+glm::vec3 ka(0.2f);
+glm::vec3 kd(0.5f);
+glm::vec3 ks(0.8f);
 
 /* model names */
 const char* modelNames[] = {
