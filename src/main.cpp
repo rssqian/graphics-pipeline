@@ -157,9 +157,9 @@ void displayFunc()
   		triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
   		triVertices[j].w = 1;
   		if (shading==2) {
-  			triNormals[j].x = normalPtr[3*(trianglePtr[i].vIndices[j])  ];
-  			triNormals[j].y = normalPtr[3*(trianglePtr[i].vIndices[j])+1];
-  			triNormals[j].z = normalPtr[3*(trianglePtr[i].vIndices[j])+2];
+  			triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])  ];
+  			triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
+  			triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
   			triNormals[j].w = 1;
   		} else {
   			triNormals[j].x = 0;
