@@ -7,6 +7,8 @@
 #include <cassert>
 using namespace std;
 
+
+
 void readMtlLib(Model* model, const string& filename)
 {
 	cout << "reading " << filename << endl;

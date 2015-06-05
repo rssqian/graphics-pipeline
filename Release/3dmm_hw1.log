@@ -1,65 +1,124 @@
-﻿Build started 2015/5/21 上午 11:28:29.
+﻿Build started 2015/6/4 下午 12:20:24.
      1>Project "D:\Github\graphics-pipeline\3dmm_hw1.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
-         Creating "Release\3dmm_hw1.unsuccessfulbuild" because "AlwaysCreate" was specified.
+         Touching "Release\3dmm_hw1.unsuccessfulbuild".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\framebuffer.cpp src\lighting.cpp src\main.cpp src\model.cpp src\rasterize.cpp src\transform.cpp
-         framebuffer.cpp
-     1>src\framebuffer.cpp(28): warning C4305: '=' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
-     1>src\framebuffer.cpp(45): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\framebuffer.cpp(46): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\framebuffer.cpp(47): warning C4244: '*=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-         lighting.cpp
-     1>src\lighting.cpp(7): warning C4305: '正在初始化' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
-     1>src\lighting.cpp(12): warning C4305: '正在初始化' : 從 'double' 轉換為 'float'，是由較大的型別轉換為較小的型別，可能導致資料遺失
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\main.cpp
          main.cpp
-     1>src\main.cpp(158): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(158): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(159): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(159): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(160): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(160): warning C4244: '引數' : 將 'int' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\main.cpp(209): warning C4100: 'y' : 未參考的型式參數
-     1>src\main.cpp(209): warning C4100: 'x' : 未參考的型式參數
-     1>src\main.cpp(272): warning C4100: 'y' : 未參考的型式參數
-     1>src\main.cpp(272): warning C4100: 'x' : 未參考的型式參數
-     1>d:\github\graphics-pipeline\include\gl\freeglut_std.h(624): warning C4505: 'glutCreateMenu_ATEXIT_HACK' : 已移除未參考的區域函式
-         model.cpp
-         rasterize.cpp
-     1>src\rasterize.cpp(8): warning C4244: '正在初始化' : 將 'const float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(70): warning C4244: '=' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(91): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(151): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(157): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(167): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-     1>src\rasterize.cpp(173): warning C4244: '正在初始化' : 將 'float' 轉換為 'int'，由於型別不同，可能導致資料遺失
-         transform.cpp
-     1>src\transform.cpp(19): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\transform.cpp(20): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\transform.cpp(24): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
-     1>src\transform.cpp(25): warning C4244: '=' : 將 'double' 轉換為 'float'，由於型別不同，可能導致資料遺失
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(118): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(364) : see reference to class template instantiation 'glm::tvec4<T,P>' being compiled
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(119): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(120): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(242) : see reference to class template instantiation 'glm::tvec2<T,P>' being compiled
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(264) : see reference to class template instantiation 'glm::tvec3<T,P>' being compiled
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(41) : see reference to class template instantiation 'glm::tvec2<T,P>' being compiled
+                 with
+                 [
+                     T=float,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(41) : see reference to class template instantiation 'glm::tvec2<T,P>' being compiled
+                 with
+                 [
+                     T=glm::u16,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(53) : see reference to class template instantiation 'glm::tvec2<T,P>' being compiled
+                 with
+                 [
+                     T=glm::i16,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(118): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(67) : see reference to class template instantiation 'glm::tvec4<T,P>' being compiled
+                 with
+                 [
+                     T=float,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(119): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(120): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(118): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(67) : see reference to class template instantiation 'glm::tvec4<T,P>' being compiled
+                 with
+                 [
+                     T=glm::u8,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(119): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(120): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(118): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(79) : see reference to class template instantiation 'glm::tvec4<T,P>' being compiled
+                 with
+                 [
+                     T=glm::i8,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(119): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail\type_vec4.hpp(120): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\include\glm\detail\func_packing.inl(97) : see reference to class template instantiation 'glm::tvec2<T,P>' being compiled
+                 with
+                 [
+                     T=glm::uint,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec2.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(64): warning C4201: nonstandard extension used : nameless struct/union
+                 d:\github\graphics-pipeline\src\material.h(37) : see reference to class template instantiation 'glm::tvec3<T,P>' being compiled
+                 with
+                 [
+                     T=float,
+                     P=0
+                 ]
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(65): warning C4201: nonstandard extension used : nameless struct/union
+     1>d:\github\graphics-pipeline\include\glm\detail/type_vec3.hpp(66): warning C4201: nonstandard extension used : nameless struct/union
+     1>src\main.cpp(216): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(217): warning C4244: '*=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(231): warning C4101: 'ix' : unreferenced local variable
+     1>src\main.cpp(231): warning C4101: 'iy' : unreferenced local variable
+     1>src\main.cpp(232): warning C4101: 'iz' : unreferenced local variable
+     1>src\main.cpp(382): warning C4305: '-=' : truncation from 'double' to 'float'
+     1>src\main.cpp(387): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>src\main.cpp(394): warning C4305: '+=' : truncation from 'double' to 'float'
+     1>src\main.cpp(399): warning C4305: '-=' : truncation from 'double' to 'float'
+     1>src\main.cpp(320): warning C4100: 'y' : unreferenced formal parameter
+     1>src\main.cpp(320): warning C4100: 'x' : unreferenced formal parameter
+     1>src\main.cpp(435): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(438): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(441): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(444): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>src\main.cpp(431): warning C4100: 'y' : unreferenced formal parameter
+     1>src\main.cpp(431): warning C4100: 'x' : unreferenced formal parameter
+     1>d:\github\graphics-pipeline\include\gl\freeglut_std.h(624): warning C4505: 'glutCreateMenu_ATEXIT_HACK' : unreferenced local function has been removed
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Github\graphics-pipeline\Release\3dmm_hw1.exe" /INCREMENTAL:NO /NOLOGO freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\3dmm_hw1.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Github\graphics-pipeline\Release\3dmm_hw1.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Github\graphics-pipeline\Release\3dmm_hw1.lib" /MACHINE:X86 Release\framebuffer.obj
+         Release\material.obj
          Release\lighting.obj
          Release\main.obj
          Release\model.obj
          Release\rasterize.obj
+         Release\texture.obj
          Release\transform.obj
-         正在產生程式碼
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(70): warning C4701: 使用了可能未初始化的區域變數 'x1'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(71): warning C4701: 使用了可能未初始化的區域變數 'z1'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(70): warning C4701: 使用了可能未初始化的區域變數 'x2'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(71): warning C4701: 使用了可能未初始化的區域變數 'z2'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(74): warning C4701: 使用了可能未初始化的區域變數 'nx1'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(75): warning C4701: 使用了可能未初始化的區域變數 'ny1'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(73): warning C4701: 使用了可能未初始化的區域變數 'nz1'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(74): warning C4701: 使用了可能未初始化的區域變數 'nx2'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(75): warning C4701: 使用了可能未初始化的區域變數 'ny2'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(73): warning C4701: 使用了可能未初始化的區域變數 'nz2'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(77): warning C4701: 使用了可能未初始化的區域變數 'nz_'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(77): warning C4701: 使用了可能未初始化的區域變數 'nx_'
-     1>d:\github\graphics-pipeline\src\rasterize.cpp(77): warning C4701: 使用了可能未初始化的區域變數 'ny_'
-         已完成程式碼產生
+         Generating code
+     1>d:\github\graphics-pipeline\src\model.cpp(277): warning C4700: uninitialized local variable 'faceMtl' used
+         Finished generating code
          3dmm_hw1.vcxproj -> D:\Github\graphics-pipeline\Release\3dmm_hw1.exe
        Manifest:
          C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Github\graphics-pipeline\Release\3dmm_hw1.exe;#1" /manifest Release\3dmm_hw1.exe.intermediate.manifest
@@ -68,6 +127,6 @@
          Touching "Release\3dmm_hw1.lastbuildstate".
      1>Done Building Project "D:\Github\graphics-pipeline\3dmm_hw1.vcxproj" (build target(s)).
 
-建置成功。
+Build succeeded.
 
-Time Elapsed 00:00:02.93
+Time Elapsed 00:00:02.74
