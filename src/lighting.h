@@ -10,6 +10,6 @@ using namespace std;
 extern vec3 color;
 
 //glm::vec3 lighting(glm::vec3 normal,Material* mtl,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c);     //input 3 triangle vertex
-vec3 lighting(glm::vec3);
+void lighting(glm::vec3& normal,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c);
 
 #endif

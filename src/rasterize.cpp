@@ -243,6 +243,11 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	vector<glm::vec3*> result_vertex;
 	vector<glm::vec3*> result_value;
 	vec3 debug_c(1.f,1.f,1.f);
+	vector<glm::vec3> mv_result;
+	mv_result.resize(v_MV_value.size());
+	glm::vec3 ambient_c(c.x,c.y,c.z);
+	glm::vec3 diffuse_c(c.x,c.y,c.z);
+	glm::vec3 specular_c(c.x,c.y,c.z);
 	while (y_ >= p3.y) {
 		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
@@ -360,38 +365,55 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				}
 			}
 		}
+
 		for (x_=(int(p_left.x)==p_left.x)?p_left.x:int(p_left.x)+1; x_<=p_right.x; x_++) {
 			z_ = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(x_-p_left.x);
 			//Primitive result = new glm::vec3[v_MV_value.size()];
 			float a = (x_-p_left.x);
 			float b = (p_right.x-p_left.x)-a;
+			//glm::vec3 mvp_result(x_,y_,z_);
+			mv_result.clear();
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				if (projection==0) {
-					n_.z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
-					n_.x = b/(a+b)*n_left[i].x + a/(a+b)*n_right[i].x;
-					n_.y = b/(a+b)*n_left[i].y + a/(a+b)*n_right[i].y;
+					mv_result[i].z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
+					mv_result[i].x = b/(a+b)*n_left[i].x + a/(a+b)*n_right[i].x;
+					mv_result[i].y = b/(a+b)*n_left[i].y + a/(a+b)*n_right[i].y;
+					//n_.z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
+					//n_.x = b/(a+b)*n_left[i].x + a/(a+b)*n_right[i].x;
+					//n_.y = b/(a+b)*n_left[i].y + a/(a+b)*n_right[i].y;
 				} else {
-					n_.z = b/(a+b)*(1/n_left[i].z) + a/(a+b)*(1/n_right[i].z);
-					n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
-					n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
+					mv_result[i].z = b/(a+b)*(1/n_left[i].z) + a/(a+b)*(1/n_right[i].z);
+					mv_result[i].x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
+					mv_result[i].y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
+					//n_.z = b/(a+b)*(1/n_left[i].z) + a/(a+b)*(1/n_right[i].z);
+					//n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
+					//n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
 				}
+				//mv_result.push_back(n_);
 			}
-			if (shading==2) { 
-				vec3 light_c = lighting(glm::vec3(n_.x,n_.y,n_.z)); 
+			if (shading==2 && modelPtr[curModelIdx]->numNormals!=0) { 
+				/*vec3 light_c = */lighting(mv_result[0],ambient_c,diffuse_c,specular_c); 
+				//vec3 light_c = lighting(glm::vec3(n_.x,n_.y,n_.z));
 				//if (light_c.x <= 0.9f && light_c.y <= 0.9f && light_c.z <= 0.9f)
 				//	debug_c = vec3(1.f, 0.f, 1.f);
-				c.x = debug_c.x * light_c.x;
+				/*c.x = debug_c.x * light_c.x;
 				c.y = debug_c.y * light_c.y;
-				c.z = debug_c.z * light_c.z;
+				c.z = debug_c.z * light_c.z;*/
 				//c.x = int(c.x/0.2) * 0.2;
 				//c.y = int(c.y/0.2) * 0.2;
 				//c.z = int(c.z/0.2) * 0.2;
 			}
+			getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c);
+			/*cout << "===Printing Point Data===" << endl;
+			cout << "2D Screen Coord = (" << x_ << "," << y_ << "," << z_ << ")" << endl;
+			cout << "3D Normal Coord = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
+			cout << "3D Texture Coord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ")" << endl;*/
+			ambient_c = glm::vec3(0.f);
+			c.x = ambient_c.x + diffuse_c.x;
+			c.y = ambient_c.y + diffuse_c.y;
+			c.z = ambient_c.z + diffuse_c.z;
 			framebuffer.draw(x_,y_,z_,c);
 
-			glm::vec3 ambient_c;
-			glm::vec3 diffuse_c;
-			glm::vec3 specular_c;
 			//getTexture(mtl,,ambient_c,diffuse_c,specular_c);
 			/*if (shading==2) { 	
 				//c = lighting(glm::vec3(n_.x,n_.y,n_.z),);

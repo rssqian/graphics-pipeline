@@ -38,7 +38,7 @@
 	return c;
 }*/
 
-vec3 lighting(glm::vec3 normal)     //input 3 triangle vertex
+void lighting(glm::vec3& normal,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c)     //input 3 triangle vertex
 {
 	//ambient
 	float ambient_light_intensity =  1;
@@ -58,10 +58,13 @@ vec3 lighting(glm::vec3 normal)     //input 3 triangle vertex
 	float specular_reflection_exponent = 3;
 
 	float specular = 0; //sum ()
-	float intensity = ambient + diffuse + specular;
-	vec3 c = color;
-	c.x *= intensity;
-	c.y *= intensity;
-	c.z *= intensity;
-	return c;
+	ambient_c = glm::vec3(ambient);
+	diffuse_c = glm::vec3(diffuse);
+	specular_c = glm::vec3(specular);
+	//float intensity = ambient + diffuse + specular;
+	//vec3 c = color;
+	//c.x *= intensity;
+	//c.y *= intensity;
+	//c.z *= intensity;
+	//return c;
 }

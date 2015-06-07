@@ -23,10 +23,9 @@ void readMtlLib(Model* model, const string& filename)
 	char fileName[256];
 	Material* mtlptr;
 	string fileName_s;
-
+	ifs >> h;
 	while (!ifs.eof()) {
-		ifs >> h;
-		cout << "h = " << h << endl;
+		//cout << "h = " << h << endl;
 		if (h == "newmtl") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -65,6 +64,8 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_Kd = new RGBImage;
 			mtlptr->map_Kd->readPPM(fileName_s);
+			mtlptr->map_Kd->writePPM("debugPPM.ppm");
+			cout << "w = " << mtlptr->map_Kd->w << ", h = " << mtlptr->map_Kd->h << ", bits = " << mtlptr->map_Kd->bits << endl;
 		} else if (h == "map_Ks") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -87,9 +88,10 @@ void readMtlLib(Model* model, const string& filename)
 			mtlptr->map_d = new RGBImage;
 			mtlptr->map_d->readPPM(fileName_s);
 		} else {
-			cout << "readMtlLib(): Unknow token ignored" << endl;
+			cout << "readMtlLib(): Unknow token \"" << h << "\" ignored" << endl;
 			ifs.getline(buf,256);
 		}
+		ifs >> h;
 	}
 
 	//model->materials.push_back();
@@ -133,11 +135,11 @@ void readObjFirstPass(Model* model, ifstream& ifs)
 			break;
 		case 'm':				/* material lib */
 			/* eat up rest of line */
-			/*ifs.getline(buf, 256);
+			ifs.getline(buf, 256);
 			if (buf[0]=='t' && buf[1]=='l' && buf[2]=='l' && buf[3]=='i' && buf[4]=='b') {
 				++numMaterials;
 			}
-			break;*/
+			break;
 		case 'u':				/* use material, ignored now */
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
@@ -215,7 +217,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 			}
 			break;
 		case 'm':				/* material lib */
-			/*ifs.getline(buf, 256);
+			ifs.getline(buf, 256);
 			sscanf(buf, "%s %s", s, fileName);
 			//cout << "buf = " << buf << endl;
 			//cout << "libname = " << libname << endl;
@@ -226,14 +228,14 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 			//temp = "model/" + temp;
 			readMtlLib(model,fileName_s);
 			cout << "mtllib read success." << endl;
-			break;*/
+			break;
 		case 'u':				/* use material */
-			/*ifs.getline(buf, 256);
+			ifs.getline(buf, 256);
 			sscanf(buf, "%s %s", s, fileName);
 			faceMtl = nullptr;
 			cout << "Searching material " << fileName << endl;
 			for (size_t i=0; i<model->materials.size(); i++) {
-				cout << model->materials[i]->mtlName << endl;
+				//cout << model->materials[i]->mtlName << endl;
 				if (model->materials[i]->mtlName == string(fileName)) 
 					faceMtl = model->materials[i];
 			}
@@ -242,7 +244,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				return;
 			}
 			cout << "using material: "<< fileName << endl;
-			break;*/
+			break;
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
 			ifs.getline(buf, 256);

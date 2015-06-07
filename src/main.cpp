@@ -156,24 +156,27 @@ void displayFunc()
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
 		float* normalPtr = modelPtr[curModelIdx]->normals;
-		float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
+		/*===texCoord===*/float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
 		//ValueTriangle triangle;
 /*		vec3 triVertices[3];
 		vec3 triNormals[3];*/
 
 		glm::vec4 triVertices[3];
 		glm::vec4 triNormals[3];
-		glm::vec3 triTexCoord[3];
+		/*===texCoord===*/glm::vec3 triTexCoord[3];
 
 		for (int j=0; j<3; j++) {
 			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])  ];
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
-			triTexCoord[j].x = texCoordPtr[3*(trianglePtr[i].tcIndices[j])  ];
-			triTexCoord[j].y = texCoordPtr[3*(trianglePtr[i].tcIndices[j])+1];
-			triTexCoord[j].z = 1;
-			if (shading==2) {
+			/*===texCoord===*/
+			//if (wireframe_filled==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
+				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])  ];
+				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
+				triTexCoord[j].z = 1;
+			//}
+			if (shading==2 && modelPtr[curModelIdx]->numNormals!=0) {
 				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])  ];
 				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
 				triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
@@ -231,11 +234,15 @@ void displayFunc()
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
-			if (shading==1) {
+			glm::vec3 ambient_c,diffuse_c,specular_c;
+			if (shading!=0) {
 /*				vec3 v1(triVertices[0].x-triVertices[1].x,triVertices[0].y-triVertices[1].y,triVertices[0].z-triVertices[1].z);
 				vec3 v2(triVertices[0].x-triVertices[2].x,triVertices[0].y-triVertices[2].y,triVertices[0].z-triVertices[2].z);
 				vec3 normal = crossProduct(v1,v2);*/
-				c = lighting(faceNormals);
+				lighting(faceNormals,ambient_c,diffuse_c,specular_c);
+				c.x = ambient_c.x + diffuse_c.x + specular_c.x;
+				c.y = ambient_c.y + diffuse_c.y + specular_c.y;
+				c.z = ambient_c.z + diffuse_c.z + specular_c.z;
 			} else c = color;
 			//toScreenSpace(modelVertices_nglm[0],ix[0],iy[0],iz[0]);
 			//toScreenSpace(modelVertices_nglm[1],ix[1],iy[1],iz[1]);
@@ -256,7 +263,12 @@ void displayFunc()
 			for (int j=0; j<3;j++)
 				temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
 			displayNormals.push_back(temp_normal);
-			displayNormals.push_back(triTexCoord);
+			/*===texCoord===*/displayNormals.push_back(triTexCoord);
+			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
+			//for (int k=0; k<3; k++) {
+			//	cout << MVPVertices[k].x << "," << MVPVertices[k].y << "," << viewVertices[k].z << endl;
+			//	cout << triTexCoord[k].x << "," << triTexCoord[k].y << "," << triTexCoord[k].z << endl;
+ 			//}
 
 			//drawTriangle(ix,iy,iz,c);
 			//====non glm type==== if (wireframe_filled==1) drawTriangle(displayVertices,triNormals,c);
@@ -379,37 +391,37 @@ void keyboardFunc(unsigned char key, int x, int y)
 	// To right or left
 	case 'a':
 	case 'A':
-		cout << "Toward left \n";
+		//cout << "Toward left \n";
 		translate.x-=0.01;
 		break;
 	case 'd':
 	case 'D':
-		cout << "Toward right \n";
+		//cout << "Toward right \n";
 		translate.x+=0.01;
 		break;
 
 	// Up and down
 	case 'w':
 	case 'W':
-		cout << "Toward up \n";
+		//cout << "Toward up \n";
 		translate.y +=0.01;
 		break;
 	case 's':
 	case 'S':
-		cout << "Toward down \n";
+		//cout << "Toward down \n";
 		translate.y-=0.01;
 		break;
 
 	// Scale
 	case 'Q':
 	case 'q':
-		cout << "bigger \n";
+		//cout << "bigger \n";
 		size.x +=10;
 		break;
 	case 'E':
 	case 'e':
 		if(size.x>(0.01-1)){
-			cout << "smaller \n";
+			//cout << "smaller \n";
 			size.x -=10;
 		}
 		else
@@ -448,11 +460,11 @@ void specialFunc(int key, int x, int y)
 
 	// forward or backward
 	case GLUT_KEY_PAGE_UP:
-		cout << "Forward \n";
+		//cout << "Forward \n";
         translate.z-=10;
 		break;
 	case GLUT_KEY_PAGE_DOWN:
-		cout << "Backward \n";
+		//cout << "Backward \n";
 		translate.z+=10;
 		break;
 

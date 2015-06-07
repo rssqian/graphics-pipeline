@@ -34,6 +34,7 @@ void eat_comment(ifstream& f)
 
 void RGBImage::readPPM(const string& filename)
 {
+	cout << "Reading PPM file: " << filename << endl;
 	ifstream ifs(filename.c_str(), ios::binary);
 	if (ifs.fail()) {
 		cerr << "Error opening " << filename.c_str() << endl;
@@ -84,12 +85,12 @@ void RGBImage::readPPM(const string& filename)
 		ifs.close();
 		return;
 	}
-
+	//cout << "w = " << w << ", h = " << h << ", bits = " << bits << endl;
 	//load image data
 	data = new RGB[w*h];
 	if (mode == 6) {
 		ifs.get();
-		ifs.read((char*)&data[0],w*h);
+		ifs.read((char*)&data[0],w*h*3);
 	} else if (mode == 3) {
 		for (int i = 0; i < w*h; i++) {
 			int v;
