@@ -416,7 +416,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				//c.y = int(c.y/0.2) * 0.2;
 				//c.z = int(c.z/0.2) * 0.2;
 			}
-			getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c);
+			if (textureDisplay==1 && wireframe_filled==1) getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c);
 			/*if (!getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c)) {
 				cout << "===Printing Point Data===" << endl;
 				cout << "2D Screen Coord = (" << x_ << "," << y_ << "," << z_ << ")" << endl;
@@ -431,7 +431,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			c.x = ambient_c.x + diffuse_c.x;
 			c.y = ambient_c.y + diffuse_c.y;
 			c.z = ambient_c.z + diffuse_c.z;
-			if (shading==3) {
+			if (cell==true) {
 				c.x = int(c.x/0.2) * 0.2;
 				c.y = int(c.y/0.2) * 0.2;
 				c.z = int(c.z/0.2) * 0.2;

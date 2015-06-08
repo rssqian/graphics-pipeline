@@ -28,8 +28,6 @@ bool getTexture(Material* mtl,glm::vec3& texCoord,glm::vec3& ambient_c,glm::vec3
 	//if (texCoord.x != texCoord.x - size_t(texCoord.x)) cout << "x = " << texCoord.x << "," << texCoord.x - size_t(texCoord.x) << endl;
 	//if (texCoord.y != texCoord.y - size_t(texCoord.y)) cout << "y = " << texCoord.y << "," << texCoord.y - size_t(texCoord.y) << endl;
 	
-
-
 	if (textureAddressing == 1) {				/*===mirror mode===*/
 		texCoord.x = texCoord.x - size_t(texCoord.x/2)*2;
 		texCoord.y = texCoord.y - size_t(texCoord.y/2)*2;

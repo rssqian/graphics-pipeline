@@ -49,6 +49,8 @@ bool wireframe_filled; //0-wireframe, 1-filled surface
 int shading; //0-no shading, 1-flat shading, 2-smooth shading, 3-cell shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
+bool textureDisplay;
+bool cell;
 
 int curModelIdx;
 bool culling;
@@ -57,19 +59,20 @@ vec3 color(1.f);
 
 /* model names */
 char* modelNames[] = {
-	"model/quad.obj"/*,
-	"model/couch.obj",
+	"model/quad.obj",
+	"model/couch.obj",/*
 	"model/cessna7KC.obj",
 	"model/santa7KC.obj",
 	"model/laurana2KC.obj",
 	"model/shuttle.obj",
 	"model/sphere.obj",
-	"model/Miku.obj",
+	"model/Miku.obj",*/
+	"model/Giraffe.obj",
 	"model/blaze.obj",
 	"model/ateneal.obj",
 	"model/venusm.obj",
 	"model/bunnyC.obj",
-	"model/duck4KN.obj",
+	"model/duck4KN.obj"/*,
 	"model/happy10KN.obj",
 	"model/dragon10KN.obj",
 	"model/elephant16KN.obj",
@@ -89,6 +92,8 @@ void printHelp()
 	printf("  F5: Toggle lighting mode                 \n");
 	printf("  F6: Toggle wireframe mode                \n");
 	printf("  F7: Toggle texture addressing mode       \n");
+	printf("  F8: Toggle texture on/off                \n");
+	printf("  F9: Toggle cell shading mode             \n");
 	printf("  F12: Quit                                \n");
 	printf("  q/e: scale                               \n");
 	printf("  w/s: Up and down                         \n");
@@ -149,6 +154,8 @@ void init()
 	shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
+	textureDisplay = 0;
+	cell = 0;
 }
 
 void displayFunc() 
@@ -186,11 +193,15 @@ void displayFunc()
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
 			/*===texCoord===*/
-			//if (wireframe_filled==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
+			if (textureDisplay==1 && wireframe_filled==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
 				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])  ];
 				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
 				triTexCoord[j].z = 1;
-			//}
+			} else {
+				triTexCoord[j].x = 0;
+				triTexCoord[j].y = 0;
+				triTexCoord[j].z = 1;
+			}
 			if (shading==2 && modelPtr[curModelIdx]->numNormals!=0) {
 				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])  ];
 				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
@@ -278,7 +289,8 @@ void displayFunc()
 			for (int j=0; j<3;j++)
 				temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
 			displayNormals.push_back(temp_normal);
-			/*===texCoord===*/displayNormals.push_back(triTexCoord);
+			/*===texCoord===*/
+			if (textureDisplay==1 && wireframe_filled==1) displayNormals.push_back(triTexCoord);
 			//cout << "--- Printing Vertex Data of Triangle ---" << endl; 
 			//for (int k=0; k<3; k++) {
 			//	cout << MVPVertices[k].x << "," << MVPVertices[k].y << "," << viewVertices[k].z << endl;
@@ -333,7 +345,7 @@ void displayFunc()
 	if (t > refreshTime) {
 		//cout << ">>  curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << "\tcount = " << count << endl;
 		prev = curr;
-		if (prev > 1000000) 
+		if (t < 0) 
 			cout << "DEBUG: curr = " << curr << "\tprev = " << prev << endl;
 		sprintf(title, "3DMM GPU Pipelining: %.2lf fps",  (double)count/t);
 		glutSetWindowTitle(title);
@@ -510,7 +522,7 @@ void specialFunc(int key, int x, int y)
 		break;
 	//Shading Mode
 	case GLUT_KEY_F5:
-		if (shading == 3) shading = 0;
+		if (shading == 2) shading = 0;
 		else shading++;
 		break;
 	//Wireframe Mode
@@ -522,6 +534,12 @@ void specialFunc(int key, int x, int y)
 	case GLUT_KEY_F7:
 		if (textureAddressing == 2) textureAddressing = 0;
 		else textureAddressing++;
+		break;
+	case GLUT_KEY_F8:
+		textureDisplay = !textureDisplay;
+		break;
+	case GLUT_KEY_F9:
+		cell = !cell;
 		break;
 	// Quit
 	case GLUT_KEY_F12:

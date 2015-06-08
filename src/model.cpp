@@ -241,7 +241,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 			}
 			if (faceMtl == nullptr) {
 				cout << "Cannot found material: " << fileName << endl;
-				return;
+				break;
 			}
 			cout << "using material: "<< fileName << endl;
 			break;

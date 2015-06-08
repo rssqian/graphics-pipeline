@@ -50,7 +50,10 @@ void RGBImage::readPPM(const string& filename)
 		mode = 3; //ASCII mode
 	} else if (s == "P6") {
 		mode = 6; //binary mode
-	} 
+	} else {
+		cout << "Unsupported file format" << endl;
+		return;
+	}
 
 	//get width
 	eat_comment(ifs);
