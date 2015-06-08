@@ -404,10 +404,16 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				//c.z = int(c.z/0.2) * 0.2;
 			}
 			getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c);
-			/*cout << "===Printing Point Data===" << endl;
-			cout << "2D Screen Coord = (" << x_ << "," << y_ << "," << z_ << ")" << endl;
-			cout << "3D Normal Coord = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
-			cout << "3D Texture Coord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ")" << endl;*/
+			/*if (!getTexture(mtl,mv_result[1],ambient_c,diffuse_c,specular_c)) {
+				cout << "===Printing Point Data===" << endl;
+				cout << "2D Screen Coord = (" << x_ << "," << y_ << "," << z_ << ")" << endl;
+				cout << "3D Normal Coord = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
+				cout << "3D Texture Coord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ")" << endl;
+				for (int k=0; k<3; k++) {
+					cout << "Triangle 2D Screen Coord = (" << MVP_vertex[k].x << "," << MVP_vertex[k].y << "," << MVP_vertex[k].z << ")" << endl;
+					cout << "Triangle 3D Texture Coord = (" << v_MV_value[1][k].x << "," << v_MV_value[1][k].y << "," << v_MV_value[1][k].z << ")" << endl;
+				}
+			}*/
 			ambient_c = glm::vec3(0.f);
 			c.x = ambient_c.x + diffuse_c.x;
 			c.y = ambient_c.y + diffuse_c.y;

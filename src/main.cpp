@@ -45,6 +45,7 @@ float FoV=45.0f;
 bool wireframe_filled; //0-wireframe, 1-filled surface
 int shading; //0-no shading, 1-flat shading, 2-smooth shading
 bool projection; //0-orthogonal, 1-perspective
+int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 
 int curModelIdx;
 bool culling;
@@ -84,6 +85,7 @@ void printHelp()
 	printf("  F4: Toggle back-face culling             \n");
 	printf("  F5: Toggle lighting mode                 \n");
 	printf("  F6: Toggle wireframe mode                \n");
+	printf("  F7: Toggle texture addressing mode       \n");
 	printf("  F12: Quit                                \n");
 	printf("  q/e: scale                               \n");
 	printf("  w/s: Up and down                         \n");
@@ -134,6 +136,7 @@ void init()
 	wireframe_filled = 0; //0-wireframe, 1-filled surface
 	shading = 0; //0-no shading, 1-flat shading, 2-smooth shading
 	projection = 0; //0-orthogonal, 1-perspective
+	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 }
 
 void displayFunc() 
@@ -313,13 +316,14 @@ void displayFunc()
 	++count;
 	curr = clock();
 	double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
-	
+	//cout << "curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << endl;
 	if (t > refreshTime) {
-		//cout << "curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << endl;
-		//cout << "fps = " << 
-		sprintf(title, "3DMM HW#1 Rasterization: %.2lf fps",  (double)count/t);
-		glutSetWindowTitle(title);
+		//cout << ">>  curr = " << curr << "\tprev = " << prev <<  "\tt = " << t << "\tcount = " << count << endl;
 		prev = curr;
+		if (prev > 1000000) 
+			cout << "DEBUG: curr = " << curr << "\tprev = " << prev << endl;
+		sprintf(title, "3DMM GPU Pipelining: %.2lf fps",  (double)count/t);
+		glutSetWindowTitle(title);
 		count = 0;
 	}
 }
@@ -501,6 +505,10 @@ void specialFunc(int key, int x, int y)
 //		if (wireframe_filled == 1) wireframe_filled = 0;
 //		else wireframe_filled++;
 		wireframe_filled = !wireframe_filled;
+		break;
+	case GLUT_KEY_F7:
+		if (textureAddressing == 2) textureAddressing = 0;
+		else textureAddressing++;
 		break;
 	// Quit
 	case GLUT_KEY_F12:
