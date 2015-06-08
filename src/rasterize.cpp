@@ -248,6 +248,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	glm::vec3 ambient_c(c.x,c.y,c.z);
 	glm::vec3 diffuse_c(c.x,c.y,c.z);
 	glm::vec3 specular_c(c.x,c.y,c.z);
+	float lamda1,lamda2,lamda3;
 	while (y_ >= p3.y) {
 		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
@@ -261,7 +262,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_right.x = b2/(a2+b2)*p2.x + a2/(a2+b2)*p3.x;
 				p_right.y = y_;
 				p_right.z = b2/(a2+b2)*p2.z + a2/(a2+b2)*p3.z;
-				for (size_t i=0; i<v_MV_value.size(); i++) {
+				/*for (size_t i=0; i<v_MV_value.size(); i++) {
 					Primitive MV_value(v_MV_value[i]);
 					glm::vec3 n1 = MV_value[0];
 					glm::vec3 n2 = MV_value[1];
@@ -277,7 +278,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 						n_right[i].x = (b2/(a2+b2)*(n2.x/n2.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_right[i].z;
 						n_right[i].y = (b2/(a2+b2)*(n2.y/n2.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_right[i].z;
 					}
-				}
+				}*/
 			} else {
 				//debug_c = vec3(0.f,1.f,0.f);
 				//c=vec3(0.f,1.f,0.f);
@@ -290,7 +291,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_left.x = b2/(a2+b2)*p2.x + a2/(a2+b2)*p3.x;
 				p_left.y = y_;
 				p_left.z = b2/(a2+b2)*p2.z + a2/(a2+b2)*p3.z;
-				for (size_t i=0; i<v_MV_value.size(); i++) {
+				/*for (size_t i=0; i<v_MV_value.size(); i++) {
 					Primitive MV_value(v_MV_value[i]);
 					glm::vec3 n1 = MV_value[0];
 					glm::vec3 n2 = MV_value[1];
@@ -306,7 +307,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 						n_left[i].x = (b2/(a2+b2)*(n2.x/n2.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_left[i].z;
 						n_left[i].y = (b2/(a2+b2)*(n2.y/n2.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_left[i].z;
 					}
-				}
+				}*/
 			}
 		} else if (p2.y == p3.y){
 			if (p2.x<p3.x) {
@@ -319,7 +320,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_right.x = b2/(a2+b2)*p1.x + a2/(a2+b2)*p3.x;
 				p_right.y = y_;
 				p_right.z = b2/(a2+b2)*p1.z + a2/(a2+b2)*p3.z; 
-				for (size_t i=0; i<v_MV_value.size(); i++) {
+				/*for (size_t i=0; i<v_MV_value.size(); i++) {
 					Primitive MV_value(v_MV_value[i]);
 					glm::vec3 n1 = MV_value[0];
 					glm::vec3 n2 = MV_value[1];
@@ -335,7 +336,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 						n_right[i].x = (b2/(a2+b2)*(n1.x/n1.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_right[i].z;
 						n_right[i].y = (b2/(a2+b2)*(n1.y/n1.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_right[i].z;
 					}
-				}
+				}*/
 			} else {
 				//debug_c = vec3(0.f,1.f,1.f);
 				float b1 = y_-p2.y, b2 = y_-p3.y;
@@ -346,7 +347,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_left.x = b2/(a2+b2)*p1.x + a2/(a2+b2)*p3.x;
 				p_left.y = y_;
 				p_left.z = b2/(a2+b2)*p1.z + a2/(a2+b2)*p3.z; 
-				for (size_t i=0; i<v_MV_value.size(); i++) {
+				/*for (size_t i=0; i<v_MV_value.size(); i++) {
 					Primitive MV_value(v_MV_value[i]);
 					glm::vec3 n1 = MV_value[0];
 					glm::vec3 n2 = MV_value[1];
@@ -362,7 +363,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 						n_left[i].x = (b2/(a2+b2)*(n1.x/n1.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_left[i].z;
 						n_left[i].y = (b2/(a2+b2)*(n1.y/n1.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_left[i].z;
 					}
-				}
+				}*/
 			}
 		}
 
@@ -373,8 +374,20 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			float b = (p_right.x-p_left.x)-a;
 			//glm::vec3 mvp_result(x_,y_,z_);
 			mv_result.clear();
+			lamda1 = ((p2.y-p3.y)*(x_-p3.x) + (p3.x-p2.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
+			lamda2 = ((p3.y-p1.y)*(x_-p3.x) + (p1.x-p3.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
+			lamda3 = 1 - lamda1 - lamda2;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				if (projection==0) {
+					mv_result[i].x = lamda1*v_MV_value[i][0].x + lamda2*v_MV_value[i][1].x + lamda3*v_MV_value[i][2].x;
+					mv_result[i].y = lamda1*v_MV_value[i][0].y + lamda2*v_MV_value[i][1].y + lamda3*v_MV_value[i][2].y;
+					mv_result[i].z = lamda1*v_MV_value[i][0].z + lamda2*v_MV_value[i][1].z + lamda3*v_MV_value[i][2].z;
+				} else {
+					mv_result[i].x = 1/(lamda1*(1/v_MV_value[i][0].x) + lamda2*(1/v_MV_value[i][1].x) + lamda3*(1/v_MV_value[i][2].x));
+					mv_result[i].y = 1/(lamda1*(1/v_MV_value[i][0].y) + lamda2*(1/v_MV_value[i][1].y) + lamda3*(1/v_MV_value[i][2].y));
+					mv_result[i].z = 1/(lamda1*(1/v_MV_value[i][0].z) + lamda2*(1/v_MV_value[i][1].z) + lamda3*(1/v_MV_value[i][2].z));
+				}
+				/*if (projection==0) {
 					mv_result[i].z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
 					mv_result[i].x = b/(a+b)*n_left[i].x + a/(a+b)*n_right[i].x;
 					mv_result[i].y = b/(a+b)*n_left[i].y + a/(a+b)*n_right[i].y;
@@ -388,10 +401,10 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					//n_.z = b/(a+b)*(1/n_left[i].z) + a/(a+b)*(1/n_right[i].z);
 					//n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
 					//n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
-				}
+				}*/
 				//mv_result.push_back(n_);
 			}
-			if (shading==2 && modelPtr[curModelIdx]->numNormals!=0) { 
+			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
 				/*vec3 light_c = */lighting(mv_result[0],ambient_c,diffuse_c,specular_c); 
 				//vec3 light_c = lighting(glm::vec3(n_.x,n_.y,n_.z));
 				//if (light_c.x <= 0.9f && light_c.y <= 0.9f && light_c.z <= 0.9f)
@@ -418,6 +431,11 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 			c.x = ambient_c.x + diffuse_c.x;
 			c.y = ambient_c.y + diffuse_c.y;
 			c.z = ambient_c.z + diffuse_c.z;
+			if (shading==3) {
+				c.x = int(c.x/0.2) * 0.2;
+				c.y = int(c.y/0.2) * 0.2;
+				c.z = int(c.z/0.2) * 0.2;
+			}
 			framebuffer.draw(x_,y_,z_,c);
 
 			//getTexture(mtl,,ambient_c,diffuse_c,specular_c);

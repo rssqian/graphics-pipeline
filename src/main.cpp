@@ -23,6 +23,9 @@ int screenHeight = 600;
 int screenWidth_half = 400;
 int screenHeight_half = 300;
 
+/* default font */
+void* font = GLUT_BITMAP_9_BY_15;
+
 /* theta */
 double rotateSpeed = 0.05;
 /*double thetaX = 0;
@@ -43,7 +46,7 @@ float FoV=45.0f;
 /*mode*/
 //int wireframe_filled; //0-wireframe, 1-filled surface
 bool wireframe_filled; //0-wireframe, 1-filled surface
-int shading; //0-no shading, 1-flat shading, 2-smooth shading
+int shading; //0-no shading, 1-flat shading, 2-smooth shading, 3-cell shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 
@@ -94,6 +97,15 @@ void printHelp()
 	printf("  LEFT/RIGHT: Rotate along y-axis          \n");
 	printf("  PU/PD: forward and backward              \n");
 	printf("===========================================\n\n");
+}
+
+void renderBitmapString(glm::vec3 pos,void* font,char* string)
+{
+	char* c;
+	glRasterPos2f(pos.x,pos.y);
+	for (c=string; *c != '\0'; c++) {
+		glutBitmapCharacter(font,*c);
+	}
 }
 
 void init() 
@@ -305,6 +317,7 @@ void displayFunc()
 
     /* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
+	//renderBitmapString(glm::vec3(-1.f,-1.f,0.f),(void*)font,"TEST");
 	glutSwapBuffers();
 
 	/* FPS counter */
@@ -497,7 +510,7 @@ void specialFunc(int key, int x, int y)
 		break;
 	//Shading Mode
 	case GLUT_KEY_F5:
-		if (shading == 2) shading = 0;
+		if (shading == 3) shading = 0;
 		else shading++;
 		break;
 	//Wireframe Mode
