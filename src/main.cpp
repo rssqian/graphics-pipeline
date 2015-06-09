@@ -1,4 +1,5 @@
 #define _GLOBAL_VAR
+#include <QApplication>
 #include <GL/freeglut.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
@@ -7,12 +8,12 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
-#include "model.h"
-#include "framebuffer.h"
-#include "transform.h"
-#include "rasterize.h"
-#include "lighting.h"
-#include "ui.h"
+#include "model/model.h"
+#include "pipeline/framebuffer.h"
+#include "pipeline/transform.h"
+#include "pipeline/rasterize.h"
+#include "pipeline/lighting.h"
+#include "ui/mainwindow.h"
 using namespace std;
 
 #define PI 3.14159265
@@ -302,12 +303,19 @@ void idleFunc()
 
 int main(int argc, char** argv)
 {
+  init();
+
+  QApplication a(argc, argv);
+  MainWindow w;
+  w.show();
+
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
   glutInitWindowSize(screenWidth, screenHeight);
   glutCreateWindow("3D Graphics Engine");
 
-  init();
+
 
   glutDisplayFunc(displayFunc);
   glutIdleFunc(idleFunc);
@@ -323,5 +331,5 @@ int main(int argc, char** argv)
   }
   if(modelPtr) delete [] modelPtr;
 
-  return 0;
+  return a.exec();
 }
