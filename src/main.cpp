@@ -67,6 +67,7 @@ char* modelNames[] = {
 	"model/shuttle.obj",
 	"model/sphere.obj",
 	"model/Miku.obj",*/
+	"model/T_REX.obj",
 	"model/Giraffe.obj",
 	"model/blaze.obj",
 	"model/ateneal.obj",
@@ -329,7 +330,7 @@ void displayFunc()
 
     /* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
-	//renderBitmapString(glm::vec3(-1.f,-1.f,0.f),(void*)font,"TEST");
+	renderBitmapString(glm::vec3(-1.f,-1.f,0.f),(void*)font,"TEST");
 	glutSwapBuffers();
 
 	/* FPS counter */

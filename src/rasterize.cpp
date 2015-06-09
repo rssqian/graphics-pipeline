@@ -383,9 +383,11 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 					mv_result[i].y = lamda1*v_MV_value[i][0].y + lamda2*v_MV_value[i][1].y + lamda3*v_MV_value[i][2].y;
 					mv_result[i].z = lamda1*v_MV_value[i][0].z + lamda2*v_MV_value[i][1].z + lamda3*v_MV_value[i][2].z;
 				} else {
-					mv_result[i].x = 1/(lamda1*(1/v_MV_value[i][0].x) + lamda2*(1/v_MV_value[i][1].x) + lamda3*(1/v_MV_value[i][2].x));
-					mv_result[i].y = 1/(lamda1*(1/v_MV_value[i][0].y) + lamda2*(1/v_MV_value[i][1].y) + lamda3*(1/v_MV_value[i][2].y));
-					mv_result[i].z = 1/(lamda1*(1/v_MV_value[i][0].z) + lamda2*(1/v_MV_value[i][1].z) + lamda3*(1/v_MV_value[i][2].z));
+					mv_result[i].z = lamda1*(1/MVP_vertex[0].z) + lamda2*(1/MVP_vertex[1].z) + lamda3*(1/MVP_vertex[2].z);
+					mv_result[i].y = lamda1*(v_MV_value[i][0].y/MVP_vertex[0].z) + lamda2*(v_MV_value[i][1].y/MVP_vertex[1].z) + lamda3*(v_MV_value[i][2].y/MVP_vertex[2].z);
+					mv_result[i].x = lamda1*(v_MV_value[i][0].x/MVP_vertex[0].z) + lamda2*(v_MV_value[i][1].x/MVP_vertex[1].z) + lamda3*(v_MV_value[i][2].x/MVP_vertex[2].z);
+					mv_result[i].y = mv_result[i].y / mv_result[i].z;
+					mv_result[i].x = mv_result[i].x / mv_result[i].z;
 				}
 				/*if (projection==0) {
 					mv_result[i].z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
