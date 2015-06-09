@@ -5,7 +5,7 @@
 #include <fstream>
 using namespace std;
 
-#define DEPTH_INF 1e20
+#define DEPTH_INF -1e20
 
 class vec3 {
 public:
