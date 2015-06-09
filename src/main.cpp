@@ -179,10 +179,10 @@ void displayFunc()
 		projectionMatrix[2][2]=0;
 	}
 	glm::mat4 viewportMatrix = glm::mat4(1);
-	viewportMatrix[0][0]=screenWidth_half;
-	viewportMatrix[0][3]=screenWidth_half;
-	viewportMatrix[1][1]=screenHeight_half;
-	viewportMatrix[1][3]=screenHeight_half;
+	/*scale*/ viewportMatrix[0][0]=screenHeight_half;
+			  viewportMatrix[1][1]=screenHeight_half;
+	/*trans*/ viewportMatrix[0][3]=screenWidth_half;
+			  viewportMatrix[1][3]=screenHeight_half;
 
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
@@ -241,7 +241,6 @@ void displayFunc()
 								* model_rotation(theta);*/
 		
 		glm::vec4 modelVertices[3];
-		glm::vec4 viewVertices[3];
 		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
 
@@ -249,9 +248,9 @@ void displayFunc()
 			// model space (scaling->rotation->translation)
 			modelVertices[j] = modelMatrix * triVertices[j];
 			// view space
-			viewVertices[j] = viewMatrix * modelVertices[j];
+			modelVertices[j] = viewMatrix * modelVertices[j];
 			// projection space
-			MVPVertices[j] = projectionMatrix * viewVertices[j];
+			MVPVertices[j] = projectionMatrix * modelVertices[j];
 			MVPVertices[j] = MVPVertices[j] * glm::mat4(1/MVPVertices[j].w);
 			// Display space
 			MVPVertices[j] = MVPVertices[j]*viewportMatrix;
@@ -269,8 +268,8 @@ void displayFunc()
 
 		//Back Face Culling
 		if (!backFaceCulling(faceNormals) || !culling) {
-			int ix[3],iy[3];
-			float iz[3];
+			//int ix[3],iy[3];
+			//float iz[3];
 			vec3 c;
 			glm::vec3 ambient_c,diffuse_c,specular_c;
 			if (shading!=0) {
@@ -294,7 +293,7 @@ void displayFunc()
 			//=====glm type=======
 			glm::vec3* displayVertices = new glm::vec3[3];
 			for (int j=0; j<3;j++)
-				displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,viewVertices[j].z);
+				displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,modelVertices[j].z);
 			
 			vector<glm::vec3*> displayNormals;
 			glm::vec3* temp_normal = new glm::vec3[3];
