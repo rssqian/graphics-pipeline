@@ -76,7 +76,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 	int v0, v1, v2, n0, n1, n2, t0, t1, t2;
 	float* vertices = model->vertices;
 	float* normals  = model->normals;
-	float* texCoords = model->texCoords;
+	//float* texCoords = model->texCoords;
 	Triangle* triangles = model->triangles;
 
 	char ch;
@@ -103,8 +103,8 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				++nIdx;
 				break;
 			case 't':				/* texcoord */
-				sscanf(buf, "%s %f %f", s, &texCoords[2*tcIdx], &texCoords[2*tcIdx+1]);
-				++tcIdx;
+				//sscanf(buf, "%s %f %f", s, &texCoords[2*tcIdx], &texCoords[2*tcIdx+1]);
+				//++tcIdx;
 				break;
 			default:
 				cout << "readObjFirstPass(): Unknown token ignored: " << ch << buf << endl;
@@ -274,7 +274,7 @@ Model* readObj(const string& filename)
 	/* allocate memory */
 	model->vertices = new float[model->numVertices*3+1];
 	model->normals = new float[model->numNormals*3+1];
-	model->texCoords = new float[model->numTexCoords*2+1];
+	//model->texCoords = new float[model->numTexCoords*2+1];
 	model->triangles = new Triangle[model->numTriangles];
 
 	/* go back to the beginning of the stream and read data in the second pass */

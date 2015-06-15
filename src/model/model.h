@@ -43,16 +43,16 @@ public:
 	Model(): numVertices(0), numNormals(0), numTriangles(0), numTexCoords(0),
 			 vertices(nullptr), normals(nullptr), texCoords(nullptr), triangles(nullptr) {}
 	~Model() { 
-		if(vertices)  delete [] vertices;
-		if(normals)   delete [] normals;
-		if(texCoords) delete [] texCoords;
-		if(triangles) delete [] triangles;
+//		if(vertices)  delete [] vertices;
+//		if(normals)   delete [] normals;
+//		if(texCoords) delete [] texCoords;
+//		if(triangles) delete [] triangles; // FIXME
 	}
 	/* data members are declared public for easy access */
 	int numVertices;		/* number of vertices in model */
 	int numNormals;			/* number of normals in model */
 	int numTriangles;		/* number of triangles in model */
-	int numTexCoords;
+    int numTexCoords;
 	float* vertices;		/* array of vertices */
 	float* normals;			/* array of normals */
 	float* texCoords;

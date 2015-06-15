@@ -1,7 +1,7 @@
 #ifndef _RASTERIZE_H_
 #define _RASTERIZE_H_
 
-#include "model.h"
+#include "../model/model.h"
 #include "framebuffer.h"
 #include "lighting.h"
 #include <glm/vec3.hpp>
