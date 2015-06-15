@@ -5,6 +5,10 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
 #include <QKeyEvent>
+#include <QMouseEvent>
+#include <QWheelEvent>
+#include <QInputEvent>
+#include <cstring>
 
 class OpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -18,8 +22,15 @@ protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
+    void fpsCounter();
 
     void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
+
+signals:
+    void fpsChanged(QString);
 
 public slots:
     void printHelp();
@@ -31,6 +42,8 @@ public slots:
     void switchToWireframe();
     void switchToSolid();
     void toggleProjection();
+    void switchToOrthogonal();
+    void switchToPerspective();
     void toggleCulling();
     void toggleBackground();
     void changeShading();
@@ -45,6 +58,7 @@ public slots:
     void rotateDown();
     void rotateLeft();
     void rotateRight();
+    void pan(int, int);
     void panUp(int);
     void panDown(int);
     void panLeft(int);

@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -44,7 +45,12 @@ public:
     QSlider *horizontalSlider_2;
     QLabel *label_3;
     QSlider *horizontalSlider_3;
+    QLabel *label_fpsCounter;
+    QCheckBox *checkBox;
     QPushButton *pushButton;
+    QGroupBox *groupBox_4;
+    QRadioButton *radioButton_6;
+    QRadioButton *radioButton_7;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -59,9 +65,12 @@ public:
         openGLWidget->setGeometry(QRect(0, 0, 600, 400));
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(40, 420, 120, 91));
+        groupBox->setGeometry(QRect(40, 410, 120, 91));
         groupBox->setAutoFillBackground(false);
-        groupBox->setStyleSheet(QStringLiteral("border: 0px;"));
+        groupBox->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
         groupBox->setFlat(false);
         groupBox->setCheckable(false);
         radioButton = new QRadioButton(groupBox);
@@ -74,8 +83,11 @@ public:
         radioButton_2->setChecked(true);
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(180, 420, 131, 121));
-        groupBox_2->setStyleSheet(QStringLiteral("border: 0px;"));
+        groupBox_2->setGeometry(QRect(180, 410, 131, 121));
+        groupBox_2->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
         groupBox_2->setCheckable(false);
         radioButton_3 = new QRadioButton(groupBox_2);
         radioButton_3->setObjectName(QStringLiteral("radioButton_3"));
@@ -89,8 +101,11 @@ public:
         radioButton_5->setGeometry(QRect(0, 90, 131, 26));
         groupBox_3 = new QGroupBox(centralWidget);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        groupBox_3->setGeometry(QRect(340, 420, 221, 121));
-        groupBox_3->setStyleSheet(QStringLiteral("border: 0px;"));
+        groupBox_3->setGeometry(QRect(340, 410, 221, 121));
+        groupBox_3->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
         horizontalSlider = new QSlider(groupBox_3);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
         horizontalSlider->setGeometry(QRect(70, 30, 151, 21));
@@ -121,16 +136,32 @@ public:
         horizontalSlider_3->setPageStep(2);
         horizontalSlider_3->setSliderPosition(8);
         horizontalSlider_3->setOrientation(Qt::Horizontal);
+        label_fpsCounter = new QLabel(centralWidget);
+        label_fpsCounter->setObjectName(QStringLiteral("label_fpsCounter"));
+        label_fpsCounter->setGeometry(QRect(430, 550, 131, 21));
+        label_fpsCounter->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        checkBox = new QCheckBox(centralWidget);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+        checkBox->setGeometry(QRect(340, 550, 95, 26));
+        checkBox->setChecked(true);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(50, 520, 96, 31));
+        pushButton->setGeometry(QRect(180, 550, 121, 31));
+        groupBox_4 = new QGroupBox(centralWidget);
+        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
+        groupBox_4->setGeometry(QRect(40, 500, 120, 91));
+        groupBox_4->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
+        radioButton_6 = new QRadioButton(groupBox_4);
+        radioButton_6->setObjectName(QStringLiteral("radioButton_6"));
+        radioButton_6->setGeometry(QRect(0, 30, 112, 26));
+        radioButton_6->setChecked(true);
+        radioButton_7 = new QRadioButton(groupBox_4);
+        radioButton_7->setObjectName(QStringLiteral("radioButton_7"));
+        radioButton_7->setGeometry(QRect(0, 60, 112, 26));
         MainWindow->setCentralWidget(centralWidget);
-        openGLWidget->raise();
-        groupBox->raise();
-        groupBox_2->raise();
-        radioButton->raise();
-        groupBox_3->raise();
-        pushButton->raise();
 
         retranslateUi(MainWindow);
         QObject::connect(radioButton, SIGNAL(clicked()), openGLWidget, SLOT(switchToWireframe()));
@@ -142,6 +173,10 @@ public:
         QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), openGLWidget, SLOT(tuneAmbientLight(int)));
         QObject::connect(horizontalSlider_2, SIGNAL(valueChanged(int)), openGLWidget, SLOT(tuneDiffuseLight(int)));
         QObject::connect(horizontalSlider_3, SIGNAL(valueChanged(int)), openGLWidget, SLOT(tuneSpecularLight(int)));
+        QObject::connect(openGLWidget, SIGNAL(fpsChanged(QString)), label_fpsCounter, SLOT(setText(QString)));
+        QObject::connect(checkBox, SIGNAL(clicked()), openGLWidget, SLOT(toggleCulling()));
+        QObject::connect(radioButton_6, SIGNAL(clicked()), openGLWidget, SLOT(switchToOrthogonal()));
+        QObject::connect(radioButton_7, SIGNAL(clicked()), openGLWidget, SLOT(switchToPerspective()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -149,7 +184,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "3D Graphics Engine", 0));
-        groupBox->setTitle(QApplication::translate("MainWindow", "View", 0));
+        groupBox->setTitle(QApplication::translate("MainWindow", "Mode", 0));
         radioButton->setText(QApplication::translate("MainWindow", "Wireframe", 0));
         radioButton_2->setText(QApplication::translate("MainWindow", "Solid", 0));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "Shading", 0));
@@ -160,7 +195,12 @@ public:
         label->setText(QApplication::translate("MainWindow", "Ambient", 0));
         label_2->setText(QApplication::translate("MainWindow", "Diffuse", 0));
         label_3->setText(QApplication::translate("MainWindow", "Specular", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "Reset", 0));
+        label_fpsCounter->setText(QApplication::translate("MainWindow", "Frame per second", 0));
+        checkBox->setText(QApplication::translate("MainWindow", "Culling", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "Reset Position", 0));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "View", 0));
+        radioButton_6->setText(QApplication::translate("MainWindow", "Orthogonal", 0));
+        radioButton_7->setText(QApplication::translate("MainWindow", "Perspective", 0));
     } // retranslateUi
 
 };

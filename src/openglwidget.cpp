@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <sstream>
 #include <ctime>
 #include <cmath>
 #include "model/model.h"
@@ -52,6 +53,28 @@ extern glm::vec3 kd;
 extern glm::vec3 ks;
 
 int lightswitch = 0;
+QPoint offset;
+
+void OpenGLWidget::fpsCounter() {
+    static clock_t prev = clock();
+    static clock_t curr;
+    static double refreshTime = 0.5;
+    static int count = 0;
+    ++count;
+    curr = clock();
+    double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
+
+    if (t > refreshTime) {
+      stringstream ss;
+      string fpsStr;
+      ss << (double)count/t << "fps";
+      ss >> fpsStr;
+      QString qstr(fpsStr.c_str());
+      emit fpsChanged(qstr);
+      prev = curr;
+      count = 0;
+    }
+}
 
 void OpenGLWidget::initializeGL()
 {
@@ -212,6 +235,7 @@ void OpenGLWidget::paintGL()
     glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
   //  glutSwapBuffers();
 
+    fpsCounter();
 }
 
 void OpenGLWidget::resizeGL(int width, int height)
@@ -297,6 +321,17 @@ void OpenGLWidget::toggleProjection() {
   cout << "Toggle projection view to: " << projection << endl;
   update();
 }
+void OpenGLWidget::switchToOrthogonal() {
+    projection = 0;
+    cout << "Switch view to: " << projection << endl;
+    update();
+}
+void OpenGLWidget::switchToPerspective() {
+    projection = 1;
+    cout << "Switch view to: " << projection << endl;
+    update();
+}
+
 void OpenGLWidget::toggleCulling() {
   culling = !culling;
   cout << "Toggle back-face culling to: " << culling << endl;
@@ -415,6 +450,12 @@ void OpenGLWidget::rotateRight() {
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
   update();
 }
+void OpenGLWidget::pan(int xPace, int yPace) {
+  cout << "Pan: " << xPace << ", " << yPace << endl;
+  translate.x += xPace/5;
+  translate.y -= yPace/5;
+  update();
+}
 void OpenGLWidget::panUp(int pace) {
   cout << "Pan up" << endl;
   translate.y += pace;
@@ -529,3 +570,28 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
   }
 }
 
+void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
+    QPoint delta = event->pos() - offset;
+    if (event->modifiers() == Qt::SHIFT) {
+        if (delta.x() < -20) rotateLeft();
+        if (delta.x() > 20) rotateRight();
+        if (delta.y() < -20) rotateUp();
+        if (delta.y() > 20) rotateDown();
+    }
+    else {
+        if (event->buttons() == Qt::LeftButton)
+            pan(delta.x(), delta.y());
+    }
+}
+
+void OpenGLWidget::mousePressEvent(QMouseEvent *event) {
+    if (event->button() == Qt::LeftButton)
+        offset = event->pos();
+    if (event->button() == Qt::RightButton)
+        setLightSourcePosition(event->x(), event->y());
+}
+
+void OpenGLWidget::wheelEvent(QWheelEvent *event) {
+    if (event->delta() > 20) zoomIn();
+    else if (event->delta() < -20) zoomOut();
+}
