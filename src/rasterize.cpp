@@ -41,7 +41,7 @@ void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 		}
 }
 
-void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material* mtl,LightColor c)
+void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material* mtl,LightColor c_in)
 {
 	glm::vec3 p1 = MVP_vertex[0];
 	glm::vec3 p2 = MVP_vertex[1];
@@ -59,6 +59,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 	vec3 debug_c(1.f,1.f,1.f);
 	vector<glm::vec3> mv_result;
 	mv_result.resize(v_MV_value.size());
+	LightColor c;
 	//LightColor RGBIntensity();
 	//glm::vec3 ambient_c(c.x,c.y,c.z);
 	//glm::vec3 diffuse_c(c.x,c.y,c.z);
@@ -109,6 +110,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 		}
 
 		for (x_=(int(p_left.x)==p_left.x)?p_left.x:int(p_left.x)+1; x_<=p_right.x; x_++) {
+			c = c_in;
 			z_ = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(x_-p_left.x);
 			float a = (x_-p_left.x);
 			float b = (p_right.x-p_left.x)-a;
@@ -134,6 +136,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
 				light.shading(mv_result[1], mv_result[0],mtl,c); 
 			}
+			//if (textureDisplay==1) cout << "after lighting: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
 			if (textureDisplay==1 && wireframe_filled==1) {
 				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);
 				//ambient_c = glm::vec3(0.f);
@@ -141,6 +144,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 				//c.y = ambient_c.y + diffuse_c.y + specular_c.y;
 				//c.z = ambient_c.z + diffuse_c.z + specular_c.z;
 			}
+			//if (textureDisplay==1) cout << "after getTexture: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
 			/*vec3 vec3C(	c.ambient.x + c.diffuse.x + c.specular.x,
 						c.ambient.y + c.diffuse.y + c.specular.y,
 						c.ambient.z + c.diffuse.z + c.specular.z);*/

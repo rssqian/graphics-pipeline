@@ -206,8 +206,10 @@ inline void moveBackward() {
   translate.z += 0.1;
 }
 inline void setLightSourcePosition(int x, int y) {
-  light.source = glm::vec3(float(x), float(screenHeight - y), 500.f);
-  cout << "Set light source to (" << x << ", " << screenHeight - y << ", 500)"<< endl;
+  float lightX = float(x - screenWidth_half)/screenWidth_half*5;
+  float lightY = float(screenHeight_half - y)/screenHeight_half*5;
+  light.source = glm::vec3(lightX, lightY, 5.f);
+  cout << "Set light source to (" << lightX << ", " << lightY << ", 5)"<< endl;
 } 
 
 inline void toggleTexture() {
