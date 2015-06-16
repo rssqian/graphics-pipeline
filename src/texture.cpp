@@ -18,9 +18,9 @@ bool getTexture(Material* mtl,glm::vec3& texCoord,glm::vec3& ambient_c,glm::vec3
 	RGBImage* map;
 	//glm::vec3 imgCoord;
 	size_t actualCoord;
-	ambient_c = glm::vec3(0.f,0.f,0.f);
-	diffuse_c = glm::vec3(1.f,1.f,1.f);
-	specular_c = glm::vec3(0.f,0.f,0.f);
+	//ambient_c = glm::vec3(0.f,0.f,0.f);
+	//diffuse_c = glm::vec3(1.f,1.f,1.f);
+	//specular_c = glm::vec3(0.f,0.f,0.f);
 	//diffuse_c = diffuse_c + glm::vec3(0.2f);
 
 	//diffuse_c = diffuse_c + glm::vec3(0.5f);
