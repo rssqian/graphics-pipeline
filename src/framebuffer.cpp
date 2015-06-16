@@ -11,6 +11,7 @@ Framebuffer::Framebuffer(int w, int h)
 	int numPixel = w*h;
 	colorBuffer = new vec3[numPixel];
 	depthBuffer = new float[numPixel];
+	//mtlBuffer.resize(numPixel);
 	clear();
 }
 
@@ -26,6 +27,7 @@ void Framebuffer::clear() const
 	for (int i = 0; i < numPixel; ++i) {
 		colorBuffer[i] = clearColor;
 		depthBuffer[i] = DEPTH_INF;
+		//mtlBuffer[i] = nullptr;
 	}
 }
 
@@ -42,9 +44,9 @@ void Framebuffer::draw(int ix, int iy, float z, vec3 c) const {
 	if (z >= depthBuffer[idx]) {
 		if (shading==0) { 
 			c = color;
-			c.x *= ((-z+500)/1.0)/500;
-			c.y *= ((-z+500)/1.0)/500;
-			c.z *= ((-z+500)/1.0)/500;
+			c.x *= ((z+1)/1.0)/1;
+			c.y *= ((z+1)/1.0)/1;
+			c.z *= ((z+1)/1.0)/1;
 			colorBuffer[idx] = c;
 		} else colorBuffer[idx] = c;
 		depthBuffer[idx] = z;

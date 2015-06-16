@@ -1,70 +1,39 @@
 #include "lighting.h"
-
 #include <glm/glm.hpp>
 
-/*glm::vec3 lighting(glm::vec3 normal,Material* mtl,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c)     //input 3 triangle vertex
+void Lighting::shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,LightColor& c)
 {
-	//ambient
-	float ambient_light_intensity =  1;
-	glm::vec3 ambient_reflection_coefficient = mtl->Ka;
-	glm::vec3 ambient = ambient_light_intensity * ambient_reflection_coefficient;
-	ambient.x *= ambient_c.x;
-	ambient.y *= ambient_c.y;
-	ambient.z *= ambient_c.z;
+	//cout << vertex.x << " , " << vertex.y << " , " << vertex.z << endl;
 
-	//diffuse
-	float point_light_attenuation = 1;
-	float point_light_intensity = 1;
-	glm::vec3 diffuse_reflection_coefficient = mtl->Kd;
+  //ambient
+  float ambientIntensity = 1;
+  float ambient = ambientIntensity;
+  //diffuse
+  float diffuseIntensity = 1;
+  normal = glm::normalize(normal);
+  glm::vec3 lightDirection = glm::normalize(source - vertex);
+  float diffuse = diffuseIntensity * glm::dot(normal, lightDirection);
+  diffuse = diffuse > 0 ? diffuse : 0;
+  //specular
+  glm::vec3 viewDirection = cameraTarget - cameraPos;
+  glm::vec3 reflectDirection(glm::reflect(glm::normalize(lightDirection), glm::normalize(normal))); 
+  float specularDot = glm::dot(reflectDirection, viewDirection);
+  specularDot = specularDot > 0 ? specularDot : 0;
+  float specular = glm::pow(specularDot, ns);
 
-	normal = glm::normalize(normal);
-	glm::vec3 light_direction(1.f,1.f,1.f);
-	light_direction = glm::normalize(light_direction);
-	glm::vec3 diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * glm::dot(normal,light_direction);
-	diffuse.x *= diffuse_c.x;
-	diffuse.y *= diffuse_c.y;
-	diffuse.z *= diffuse_c.z;
+  float attenuation = 1;
+  //glm::vec3 color = ka * ambient + attenuation*(kd * diffuse + ks * specular);
+  c.ambient = ka * ambient;
+  c.diffuse = attenuation * kd * diffuse;
+  c.specular = attenuation * ks * specular;
+  //return vec3(color.x, color.y, color.z);
+  //return vec3(0.5, 0.5, 0.5);
+}
 
-	//specular
-	glm::vec3 specular_reflection_coefficient = mtl->Ks;
-	float specular_reflection_exponent = mtl->Ns;
-	glm::vec3 specular(0.f,0.f,0.f);	//sum ()
-
-	//glm::vec3 intensity = ambient + diffuse + specular;
-	glm::vec3 c;
-	c.x = ambient.x + diffuse.x + specular.x;
-	c.y = ambient.y + diffuse.y + specular.y;
-	c.z = ambient.z + diffuse.z + specular.z;
-	return c;
-}*/
-
-void lighting(glm::vec3& normal,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c)     //input 3 triangle vertex
+void Lighting::setParameter(const glm::vec3& Ka,const glm::vec3& Kd,const glm::vec3& Ks,const int& Ns)
 {
-	//ambient
-	float ambient_light_intensity =  1;
-	float ambient_reflection_coefficient = 0.2;
-	float ambient = ambient_light_intensity * ambient_reflection_coefficient;
-	//diffuse
-	float point_light_attenuation = 1;
-	float point_light_intensity = 1;
-	float diffuse_reflection_coefficient = 0.8;
-
-	normal = glm::normalize(normal);
-	glm::vec3 light_direction(1.f,1.f,1.f);
-	light_direction = glm::normalize(light_direction);
-	float diffuse = point_light_attenuation * point_light_intensity * diffuse_reflection_coefficient * glm::dot(normal,light_direction);
-	//specular
-	float specular_reflection_coefficient = 0.3;
-	float specular_reflection_exponent = 3;
-
-	float specular = 0; //sum ()
-	ambient_c = glm::vec3(ambient);
-	diffuse_c = glm::vec3(diffuse);
-	specular_c = glm::vec3(specular);
-	//float intensity = ambient + diffuse + specular;
-	//vec3 c = color;
-	//c.x *= intensity;
-	//c.y *= intensity;
-	//c.z *= intensity;
-	//return c;
+	ka = Ka;
+	kd = Kd;
+	ks = Ks;
+	ns = Ns;
 }

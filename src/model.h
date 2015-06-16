@@ -8,6 +8,21 @@
 #include "material.h"
 using namespace std;
 
+class ValueTriangle {
+public:
+	ValueTriangle() {
+		vertex = new glm::vec3[3];
+		normal = new glm::vec3[3];
+	}
+	~ValueTriangle() {
+		delete vertex;
+		delete normal;
+	}
+
+	glm::vec3* vertex;
+	glm::vec3* normal;
+};
+
 class Triangle {
 public:
 	Triangle() {

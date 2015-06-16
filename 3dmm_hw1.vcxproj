@@ -10,6 +10,27 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\framebuffer.cpp" />
+    <ClCompile Include="src\lighting.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\material.cpp" />
+    <ClCompile Include="src\model.cpp" />
+    <ClCompile Include="src\rasterize.cpp" />
+    <ClCompile Include="src\texture.cpp" />
+    <ClCompile Include="src\transform.cpp" />
+    <ClCompile Include="src\ui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\framebuffer.h" />
+    <ClInclude Include="src\lighting.h" />
+    <ClInclude Include="src\material.h" />
+    <ClInclude Include="src\model.h" />
+    <ClInclude Include="src\rasterize.h" />
+    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\transform.h" />
+    <ClInclude Include="src\ui.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{07D3E7FD-6E15-4073-8840-33A9859738B1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -75,28 +96,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freeglut.lib;DevIL.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\framebuffer.cpp" />
-    <ClCompile Include="src\material.cpp" />
-    <ClCompile Include="src\lighting.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\model.cpp" />
-    <ClCompile Include="src\rasterize.cpp" />
-    <ClCompile Include="src\texture.cpp" />
-    <ClCompile Include="src\transform.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\framebuffer.h" />
-    <ClInclude Include="src\material.h" />
-    <ClInclude Include="src\lighting.h" />
-    <ClInclude Include="src\model.h" />
-    <ClInclude Include="src\rasterize.h" />
-    <ClInclude Include="src\texture.h" />
-    <ClInclude Include="src\transform.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
