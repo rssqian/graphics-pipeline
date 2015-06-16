@@ -7,11 +7,11 @@
 #include <sstream>
 #include <ctime>
 #include <cmath>
-#include "model/model.h"
-#include "pipeline/framebuffer.h"
-#include "pipeline/transform.h"
-#include "pipeline/rasterize.h"
-#include "pipeline/lighting.h"
+#include "model.h"
+#include "framebuffer.h"
+#include "transform.h"
+#include "rasterize.h"
+#include "lighting.h"
 
 #define PI 3.14159265
 
@@ -573,14 +573,24 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
     QPoint delta = event->pos() - offset;
     if (event->modifiers() == Qt::SHIFT) {
-        if (delta.x() < -20) rotateLeft();
-        if (delta.x() > 20) rotateRight();
-        if (delta.y() < -20) rotateUp();
-        if (delta.y() > 20) rotateDown();
+        if (event->buttons() == Qt::LeftButton) {
+            if (delta.x() < -20) rotateLeft();
+            if (delta.x() > 20) rotateRight();
+            if (delta.y() < -20) rotateUp();
+            if (delta.y() > 20) rotateDown();
+        }
     }
     else {
-        if (event->buttons() == Qt::LeftButton)
-            pan(delta.x(), delta.y());
+        if (event->buttons() == Qt::LeftButton) {
+            if (delta.x() > 20)
+                panRight(2);
+            else if (delta.x() < -20)
+                panLeft(2);
+            if (delta.y() > 20)
+                panDown(2);
+            else if (delta.y() < -20)
+                panUp(2);
+        }
     }
 }
 

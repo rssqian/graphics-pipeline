@@ -1,5 +1,5 @@
 #include "framebuffer.h"
-#include "../model/model.h"
+#include "model.h"
 #include <cmath>
 
 extern int shading;

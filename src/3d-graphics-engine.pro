@@ -17,19 +17,19 @@ CONFIG += c++11
 SOURCES += main.cpp\
     mainwindow.cpp \
     openglwidget.cpp \
-    model/model.cpp \
-    pipeline/framebuffer.cpp \
-    pipeline/lighting.cpp \
-    pipeline/rasterize.cpp \
-    pipeline/transform.cpp
+    model.cpp \
+    framebuffer.cpp \
+    lighting.cpp \
+    rasterize.cpp \
+    transform.cpp
 
 
 HEADERS  += mainwindow.h \
     openglwidget.h \
-    model/model.h \
-    pipeline/framebuffer.h \
-    pipeline/lighting.h \
-    pipeline/rasterize.h \
-    pipeline/transform.h \
+    model.h \
+    framebuffer.h \
+    lighting.h \
+    rasterize.h \
+    transform.h \
 
-FORMS    += ui/mainwindow.ui
+FORMS    += mainwindow.ui

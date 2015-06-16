@@ -9,11 +9,11 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
-#include "model/model.h"
-#include "pipeline/framebuffer.h"
-#include "pipeline/transform.h"
-#include "pipeline/rasterize.h"
-#include "pipeline/lighting.h"
+#include "model.h"
+#include "framebuffer.h"
+#include "transform.h"
+#include "rasterize.h"
+#include "lighting.h"
 #include "mainwindow.h"
 using namespace std;
 

@@ -51,11 +51,11 @@ OBJECTS_DIR   = ./
 SOURCES       = main.cpp \
 		mainwindow.cpp \
 		openglwidget.cpp \
-		model/model.cpp \
-		pipeline/framebuffer.cpp \
-		pipeline/lighting.cpp \
-		pipeline/rasterize.cpp \
-		pipeline/transform.cpp moc_mainwindow.cpp \
+		model.cpp \
+		framebuffer.cpp \
+		lighting.cpp \
+		rasterize.cpp \
+		transform.cpp moc_mainwindow.cpp \
 		moc_openglwidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
@@ -203,18 +203,18 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		3d-graphics-engine.pro mainwindow.h \
 		openglwidget.h \
-		model/model.h \
-		pipeline/framebuffer.h \
-		pipeline/lighting.h \
-		pipeline/rasterize.h \
-		pipeline/transform.h main.cpp \
+		model.h \
+		framebuffer.h \
+		lighting.h \
+		rasterize.h \
+		transform.h main.cpp \
 		mainwindow.cpp \
 		openglwidget.cpp \
-		model/model.cpp \
-		pipeline/framebuffer.cpp \
-		pipeline/lighting.cpp \
-		pipeline/rasterize.cpp \
-		pipeline/transform.cpp
+		model.cpp \
+		framebuffer.cpp \
+		lighting.cpp \
+		rasterize.cpp \
+		transform.cpp
 QMAKE_TARGET  = 3d-graphics-engine
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = 3d-graphics-engine
@@ -538,9 +538,9 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h openglwidget.h model/model.h pipeline/framebuffer.h pipeline/lighting.h pipeline/rasterize.h pipeline/transform.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp openglwidget.cpp model/model.cpp pipeline/framebuffer.cpp pipeline/lighting.cpp pipeline/rasterize.cpp pipeline/transform.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h openglwidget.h model.h framebuffer.h lighting.h rasterize.h transform.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp openglwidget.cpp model.cpp framebuffer.cpp lighting.cpp rasterize.cpp transform.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
 clean:compiler_clean 
@@ -577,9 +577,9 @@ compiler_moc_source_clean:
 compiler_uic_make_all: ui_mainwindow.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_mainwindow.h
-ui_mainwindow.h: ui/mainwindow.ui \
+ui_mainwindow.h: mainwindow.ui \
 		openglwidget.h
-	/usr/lib/qt/bin/uic ui/mainwindow.ui -o ui_mainwindow.h
+	/usr/lib/qt/bin/uic mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -591,11 +591,11 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-main.o: main.cpp model/model.h \
-		pipeline/framebuffer.h \
-		pipeline/transform.h \
-		pipeline/rasterize.h \
-		pipeline/lighting.h \
+main.o: main.cpp model.h \
+		framebuffer.h \
+		transform.h \
+		rasterize.h \
+		lighting.h \
 		mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
@@ -604,29 +604,34 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		openglwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
 
-openglwidget.o: openglwidget.cpp openglwidget.h
+openglwidget.o: openglwidget.cpp openglwidget.h \
+		model.h \
+		framebuffer.h \
+		transform.h \
+		rasterize.h \
+		lighting.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglwidget.o openglwidget.cpp
 
-model.o: model/model.cpp model/model.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o model/model.cpp
+model.o: model.cpp model.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o model.cpp
 
-framebuffer.o: pipeline/framebuffer.cpp pipeline/framebuffer.h \
-		model/model.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o framebuffer.o pipeline/framebuffer.cpp
+framebuffer.o: framebuffer.cpp framebuffer.h \
+		model.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o framebuffer.o framebuffer.cpp
 
-lighting.o: pipeline/lighting.cpp pipeline/lighting.h \
-		pipeline/framebuffer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lighting.o pipeline/lighting.cpp
+lighting.o: lighting.cpp lighting.h \
+		framebuffer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lighting.o lighting.cpp
 
-rasterize.o: pipeline/rasterize.cpp pipeline/rasterize.h \
-		model/model.h \
-		pipeline/framebuffer.h \
-		pipeline/lighting.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rasterize.o pipeline/rasterize.cpp
+rasterize.o: rasterize.cpp rasterize.h \
+		model.h \
+		framebuffer.h \
+		lighting.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rasterize.o rasterize.cpp
 
-transform.o: pipeline/transform.cpp pipeline/framebuffer.h \
-		pipeline/transform.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o transform.o pipeline/transform.cpp
+transform.o: transform.cpp framebuffer.h \
+		transform.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o transform.o transform.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
