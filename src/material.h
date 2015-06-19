@@ -20,7 +20,7 @@ public:
 	}
 	void writePPM(const string& filename) const;
 	void readPPM(const string& filename);
-	void RGBImage::readDevIL(const string& filename, bool alpha);
+	void readDevIL(const string& filename, bool alpha);
 
 	int w;
 	int h;

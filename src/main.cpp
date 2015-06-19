@@ -38,7 +38,7 @@ float FoV=45.0f;
 
 /*mode*/
 bool wireframe_filled; //0-wireframe, 1-filled surface
-int shading; //0-no shading, 1-flat shading, 2-smooth shading
+int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
@@ -117,7 +117,7 @@ void init()
 	curModelIdx = 0;
 	culling = true;
 	wireframe_filled = 1; //0-wireframe, 1-filled surface
-	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading 
+	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
@@ -176,7 +176,7 @@ void displayFunc()
 				triTexCoord[j].y = 0;
 				triTexCoord[j].z = 1;
 			}
-			if ((shading==2 || shading==3)&& modelPtr[curModelIdx]->numNormals!=0) {
+			if ((shading==2 || shading==3 || shading==4)&& modelPtr[curModelIdx]->numNormals!=0) {
 				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])	];
 				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
 				triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
@@ -245,11 +245,11 @@ void displayFunc()
 			if (textureDisplay==1 && wireframe_filled==1) displayNormals.push_back(triTexCoord);
 
 			if (wireframe_filled==1)rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
-			else {
+			//else {
 				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
-			}
+			//}
 		}
 	}
 

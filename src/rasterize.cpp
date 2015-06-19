@@ -60,6 +60,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 	vector<glm::vec3> mv_result;
 	mv_result.resize(v_MV_value.size());
 	LightColor c;
+	float temp_barycentric;
 	//LightColor RGBIntensity();
 	//glm::vec3 ambient_c(c.x,c.y,c.z);
 	//glm::vec3 diffuse_c(c.x,c.y,c.z);
@@ -119,16 +120,18 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			lamda2 = ((p3.y-p1.y)*(x_-p3.x) + (p1.x-p3.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
 			lamda3 = 1 - lamda1 - lamda2;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
-				if (projection==0) {
+				if (projection==0 || i==0) {
 					mv_result[i].x = lamda1*v_MV_value[i][0].x + lamda2*v_MV_value[i][1].x + lamda3*v_MV_value[i][2].x;
 					mv_result[i].y = lamda1*v_MV_value[i][0].y + lamda2*v_MV_value[i][1].y + lamda3*v_MV_value[i][2].y;
 					mv_result[i].z = lamda1*v_MV_value[i][0].z + lamda2*v_MV_value[i][1].z + lamda3*v_MV_value[i][2].z;
 				} else {
-					mv_result[i].z = lamda1*(1/MVP_vertex[0].z) + lamda2*(1/MVP_vertex[1].z) + lamda3*(1/MVP_vertex[2].z);
-					mv_result[i].y = lamda1*(v_MV_value[i][0].y/MVP_vertex[0].z) + lamda2*(v_MV_value[i][1].y/MVP_vertex[1].z) + lamda3*(v_MV_value[i][2].y/MVP_vertex[2].z);
-					mv_result[i].x = lamda1*(v_MV_value[i][0].x/MVP_vertex[0].z) + lamda2*(v_MV_value[i][1].x/MVP_vertex[1].z) + lamda3*(v_MV_value[i][2].x/MVP_vertex[2].z);
-					mv_result[i].y = mv_result[i].y / mv_result[i].z;
-					mv_result[i].x = mv_result[i].x / mv_result[i].z;
+					temp_barycentric = lamda1*(1/v_MV_value[1][0].z) + lamda2*(1/v_MV_value[1][1].z) + lamda3*(1/v_MV_value[1][2].z);
+					mv_result[i].z = lamda1*(v_MV_value[i][0].z/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].z/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].z/v_MV_value[1][2].z);
+					mv_result[i].y = lamda1*(v_MV_value[i][0].y/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].y/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].y/v_MV_value[1][2].z);
+					mv_result[i].x = lamda1*(v_MV_value[i][0].x/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].x/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].x/v_MV_value[1][2].z);
+					mv_result[i].z = mv_result[i].z / temp_barycentric;
+					mv_result[i].y = mv_result[i].y / temp_barycentric;
+					mv_result[i].x = mv_result[i].x / temp_barycentric;
 				}
 			}
 			if (textureDisplay) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
@@ -137,7 +140,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 				light.shading(mv_result[1], mv_result[0],mtl,c); 
 			}
 			//if (textureDisplay==1) cout << "after lighting: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
-			if (textureDisplay==1 && wireframe_filled==1) {
+			if (textureDisplay==1 && wireframe_filled==1 && shading!=0 && shading!=4) {
 				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);
 				//ambient_c = glm::vec3(0.f);
 				//c.x = ambient_c.x + diffuse_c.x + specular_c.x;
@@ -150,6 +153,14 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 						c.ambient.z + c.diffuse.z + c.specular.z);*/
 			vec3 vec3C(c.diffuse.x,c.diffuse.y,c.diffuse.z);
 			//vec3 vec3C(c.specular.x,c.specular.y,c.specular.z);
+			if (shading==4) {
+				mv_result[0] = glm::normalize(mv_result[0]);
+				vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
+				vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
+				vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
+				//cout << "vetexCoord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ") -> ";
+				//cout << "normal = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
+			}
 			if (shading==3) {
 				vec3C.x = int(vec3C.x/0.2) * 0.2;
 				vec3C.y = int(vec3C.y/0.2) * 0.2;
@@ -263,4 +274,18 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 		delete [] s_MVP_vertex;
 		for (size_t i=0; i<s_v_MV_value.size(); i++) delete [] s_v_MV_value[i];
 	}
+	/*if (v_MV_value.size() > 0) {
+		glm::vec4 p1(0.f),p2(0.f);
+		glm::vec3 normalized_n;
+		for (int i=0; i<3; i++) {
+			p1.x = MVP_vertex[i].x;
+			p1.y = MVP_vertex[i].y;
+			p1.z = MVP_vertex[i].z;
+			normalized_n = glm::normalize(v_MV_value[0][i])/10.f;
+			p2.x = MVP_vertex[i].x + normalized_n.x;
+			p2.y = MVP_vertex[i].y + normalized_n.y;
+			p2.z = MVP_vertex[i].z + normalized_n.z;
+			drawLine(p1,p2,vec3(1.f));
+		}
+	}*/
 }
