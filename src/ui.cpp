@@ -101,12 +101,12 @@ inline void toggleBackground() {
   framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 }
 inline void changeShading() {
-  if (shading == 3) shading = 0;
+  if (shading == 4) shading = 0;
   else shading++;
   cout << "Change to shading mode to: ";
   switch(shading) {
     case 0:
-      cout << "No shading";
+      cout << "Z shading";
       break;
     case 1:
       cout << "Flat shading";
@@ -117,6 +117,9 @@ inline void changeShading() {
     case 3:
       cout << "Cell shading";
       break;
+	case 4:
+	  cout << "Suface normal shading";
+	  break;
   }
   cout << endl;
 }
@@ -214,7 +217,9 @@ inline void setLightSourcePosition(int x, int y) {
 
 inline void toggleTexture() {
   textureDisplay = !textureDisplay;
-  cout << "Toggle texture" << endl;
+  cout << "Toggle texture: ";
+  if (textureDisplay) cout << "on" << endl;
+  else cout << "off" << endl;
 }
 
 inline void switchTextureModes() {
