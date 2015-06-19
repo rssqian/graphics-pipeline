@@ -211,7 +211,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 
 		//interpolating for MV_value
 		vector<Primitive> s1_v_MV_value,s2_v_MV_value; 
-		if (projection==0) {
+		//if (projection==0) {
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				Primitive MV_value(v_MV_value[i]);
 				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
@@ -228,7 +228,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 				s1_v_MV_value.push_back(s1);
 				s2_v_MV_value.push_back(s2);
 			}
-		} else {
+		/*} else {
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				Primitive MV_value(v_MV_value[i]);
 				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
@@ -249,7 +249,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 				s1_v_MV_value.push_back(s1);
 				s2_v_MV_value.push_back(s2);
 			}
-		}
+		}*/
 		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,mtl,c);
 		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,mtl,c);
 		delete [] s1_MVP_vertex;

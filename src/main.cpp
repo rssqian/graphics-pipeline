@@ -213,7 +213,7 @@ void displayFunc()
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
 		//Back Face Culling
-		if (!backFaceCulling(faceNormals) || !culling) {
+		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
