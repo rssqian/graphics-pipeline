@@ -37,7 +37,8 @@ glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
-bool wireframe_filled; //0-wireframe, 1-filled surface
+bool wireframe;
+bool solid;
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
@@ -116,7 +117,8 @@ void init()
 	/* initialize parameters */
 	curModelIdx = 0;
 	culling = true;
-	wireframe_filled = 1; //0-wireframe, 1-filled surface
+	wireframe = 0;
+  solid = 1;
 	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
@@ -167,7 +169,7 @@ void displayFunc()
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
 			/*===texCoord===*/
-			if (textureDisplay==1 && wireframe_filled==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
+			if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
 				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
 				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
 				triTexCoord[j].z = 1;
@@ -213,7 +215,7 @@ void displayFunc()
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
 		//Back Face Culling
-		if (!backFaceCulling(faceNormals) || !culling) {
+		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
@@ -242,14 +244,16 @@ void displayFunc()
 			displayNormals.push_back(temp_vertex);
 
 			/*===texCoord===*/
-			if (textureDisplay==1 && wireframe_filled==1) displayNormals.push_back(triTexCoord);
+			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
 
-			if (wireframe_filled==1)rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
-			//else {
+      if (solid) {
+        rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
+      }
+			if (wireframe) {
 				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
-			//}
+      }
 		}
 	}
 

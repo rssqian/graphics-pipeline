@@ -124,13 +124,13 @@ void RGBImage::readDevIL(const string& filename, bool alpha)
     ilGenImages(1,&image);
 
     ilBindImage(image);
-    if (!ilLoadImage((wchar_t*)filename.c_str())) {
-		//DBG_(__glmWarning("glmLoadTexture(): DevIL ilLoadImage(%s): error %s\n", filename, ilGetError()));
-		//cerr << "glmLoadTexture(): DevIL ilLoadImage(" << filename << "): error " << ilGetError() << "\n";
-		ilDeleteImages(1, &image);
-		data = nullptr;
-		return;// NULL;
-    }
+    //if (!ilLoadImage((wchar_t*)filename.c_str())) {
+		////DBG_(__glmWarning("glmLoadTexture(): DevIL ilLoadImage(%s): error %s\n", filename, ilGetError()));
+		////cerr << "glmLoadTexture(): DevIL ilLoadImage(" << filename << "): error " << ilGetError() << "\n";
+		//ilDeleteImages(1, &image);
+		//data = nullptr;
+		//return;// NULL;
+    //}
     h = ilGetInteger(IL_IMAGE_HEIGHT);
     w = ilGetInteger(IL_IMAGE_WIDTH);
     type = alpha ? 1 : 0;

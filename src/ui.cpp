@@ -76,10 +76,14 @@ inline void selectPrevModel() {
 }
 
 inline void toggleWireframe() {
-  wireframe_filled = !wireframe_filled;
-  cout << "Toggle object to: ";
-  if (wireframe_filled) cout << "Solid" << endl;
-  else cout << "Wireframe" << endl;
+  wireframe = !wireframe;
+  if (wireframe) cout << "Add wireframe to view" << endl;
+  else cout << "Remove wireframe from view" << endl;
+}
+inline void toggleSolidView() {
+  solid = !solid;
+  if (solid) cout << "Add solid to view" << endl;
+  else cout << "Remove solid from view" << endl;
 }
 inline void toggleProjection() {
   projection = !projection;
@@ -170,19 +174,19 @@ inline void rotateRight() {
   //cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
 }
-inline void panUp(int pace) {
+inline void panUp(float pace) {
   //cout << "Pan up" << endl;
   translate.y += pace;
 }
-inline void panDown(int pace) {
+inline void panDown(float pace) {
   //cout << "Pan down" << endl;
   translate.y -= pace;
 }
-inline void panLeft(int pace) {
+inline void panLeft(float pace) {
   //cout << "Pan left" << endl;
   translate.x -= pace;
 }
-inline void panRight(int pace) {
+inline void panRight(float pace) {
   //cout << "Pan right" << endl;
 	translate.x += pace;
 }
@@ -315,6 +319,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     switchKaKdKsLighting(); break;
 	case 'w':
     toggleWireframe(); break;
+	case 'v':
+    toggleSolidView(); break;
 	case 'p':
     toggleProjection(); break;
 	case 'b':
@@ -324,13 +330,13 @@ void keyboardFunc(unsigned char key, int x, int y)
   case 'T':
     switchTextureModes(); break;
   case 'A':
-    panLeft(10); break;
+    panLeft(0.1); break;
   case 'D':
-    panRight(10); break;
+    panRight(0.1); break;
   case 'W':
-    panUp(10); break;
+    panUp(0.1); break;
   case 'S':
-    panDown(10); break;
+    panDown(0.1); break;
   case '=':
     zoomIn(); break;
   case '-':

@@ -29,7 +29,8 @@ extern glm::vec3 size;
 extern glm::vec3 translate;
 
 extern int shading;
-extern bool wireframe_filled;
+extern bool wireframe;
+extern bool solid;
 extern bool culling;
 extern bool projection;
 extern bool textureDisplay;
@@ -44,31 +45,6 @@ extern glm::vec3 ks;
 
 /* Basic functions */
 void printHelp(); 
-inline void reset();
-inline void saveImage();
-inline void selectNextModel();
-inline void selectPrevModel();
-inline void toggleWireframe();
-inline void toggleProjection();
-inline void toggleCulling();
-inline void toggleBackground();
-inline void changeShading();
-inline void switchKaKdKsLighting();
-inline void rotateUp();
-inline void rotateDown();
-inline void rotateLeft();
-inline void rotateRight();
-inline void panUp();
-inline void panDown();
-inline void panLeft();
-inline void panRight();
-inline void zoomIn();
-inline void zoomOut();
-inline void moveForward();
-inline void moveBackward();
-inline void setLightSourcePosition();
-inline void toggleTexture();
-inline void switchTextureModes();
 
 /* User interfaces */
 void motionFunc(int x, int y);

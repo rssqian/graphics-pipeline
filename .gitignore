@@ -7,5 +7,5 @@ lib/
 *.dll
 # Ignore object and binary files
 *.o
+*.swp
 3d-graphics-engine
-3d-graphics-engine_dbg
