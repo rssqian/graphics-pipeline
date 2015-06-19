@@ -40,6 +40,7 @@ void printHelp()
 	cout << "  <View options>                          " << endl;
 	cout << "  --------------------------------------- " << endl;
 	cout << "  w: Toggle wireframe mode                " << endl;
+	cout << "  f: Toggle Solid mode                    " << endl;
 	cout << "  p: Toggle projection mode               " << endl;
 	cout << "  c: Toggle back-face culling             " << endl;
 	cout << "  b: Toggle background color              " << endl;
@@ -76,10 +77,16 @@ inline void selectPrevModel() {
 }
 
 inline void toggleWireframe() {
-  wireframe_filled = !wireframe_filled;
+  wireframe = !wireframe;
   cout << "Toggle object to: ";
-  if (wireframe_filled) cout << "Solid" << endl;
-  else cout << "Wireframe" << endl;
+  if (wireframe) cout << "Wireframe on" << endl;
+  else cout << "Wireframe off" << endl;
+}
+inline void toggleSolid() {
+  solid = !solid;
+  cout << "Toggle object to: ";
+  if (wireframe) cout << "Solid on" << endl;
+  else cout << "Solid off" << endl;
 }
 inline void toggleProjection() {
   projection = !projection;
@@ -126,30 +133,19 @@ inline void changeShading() {
 inline void switchKaKdKsLighting(){
   if (lightswitch == 3)  lightswitch= 0;
   else lightswitch++;
+  light.displayLight = lightswitch;
   switch(lightswitch) {
     case 0:
       cout << "Change to lights to: Full lighting" << endl;
-      light.ka = ka;
-      light.kd = kd;
-      light.ks = ks;
       break;
     case 1:
       cout << "Change to lights to: Ambient light only" << endl;
-      light.ka = ka;
-      light.kd = glm::vec3(0.f);
-      light.ks = glm::vec3(0.f);
       break;
     case 2:
       cout << "Change to lights to: Diffuse light only" << endl;
-      light.ka = glm::vec3(0.f);
-      light.kd = kd;
-      light.ks = glm::vec3(0.f);
       break;
     case 3:
       cout << "Change to lights to: Specular light only" << endl;
-      light.ka = glm::vec3(0.f);
-      light.kd = glm::vec3(0.f);
-      light.ks = ks;
       break;
   }
 }
@@ -315,6 +311,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     switchKaKdKsLighting(); break;
 	case 'w':
     toggleWireframe(); break;
+	case 'f':
+		toggleSolid(); break;
 	case 'p':
     toggleProjection(); break;
 	case 'b':

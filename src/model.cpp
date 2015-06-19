@@ -269,9 +269,9 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
-					triangles[tIdx].tcIndices[0] = v0;
-					triangles[tIdx].tcIndices[1] = v1;
-					triangles[tIdx].tcIndices[2] = v2;
+					triangles[tIdx].tcIndices[0] = t0;
+					triangles[tIdx].tcIndices[1] = t1;
+					triangles[tIdx].tcIndices[2] = t2;
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;

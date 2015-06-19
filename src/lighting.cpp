@@ -23,9 +23,12 @@ void Lighting::shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,Light
 
   float attenuation = 1;
   //glm::vec3 color = ka * ambient + attenuation*(kd * diffuse + ks * specular);
-  c.ambient = ka * ambient;
-  c.diffuse = attenuation * kd * diffuse;
-  c.specular = attenuation * ks * specular;
+  if (displayLight==0 || displayLight==1) c.ambient = ka * ambient;
+  else c.ambient = glm::vec3(0.f);
+  if (displayLight==0 || displayLight==2) c.diffuse = attenuation * kd * diffuse;
+  else c.diffuse = glm::vec3(0.f);
+  if (displayLight==0 || displayLight==3) c.specular = attenuation * ks * specular;
+  else c.specular = glm::vec3(0.f);
   //return vec3(color.x, color.y, color.z);
   //return vec3(0.5, 0.5, 0.5);
 }

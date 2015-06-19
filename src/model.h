@@ -25,7 +25,7 @@ public:
 
 class Triangle {
 public:
-	Triangle() {
+	Triangle():mtlptr(nullptr) {
 		vIndices = new int[3];
 		nIndices = new int[3];
 		tcIndices = new int[3];
@@ -38,7 +38,7 @@ public:
 	int* vIndices;	/* array of triangle vertex indices */
 	int* nIndices;	/* array of triangle normal indices */
 	int* tcIndices; /* array of traingle texCoord indices */
-	Material*  mtlptr; /* materal indice */
+	Material*  mtlptr; /* materal pointer */
 };
 
 class Model {

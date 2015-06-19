@@ -45,6 +45,7 @@ public:
     kd = glm::vec3(1.f);
     ks = glm::vec3(0.f);
     ns = 1;
+	displayLight = 0;
   };
   ~Lighting() {};
 
@@ -56,6 +57,8 @@ public:
   glm::vec3 kd;
   glm::vec3 ks;
   int ns;
+
+  int displayLight; //0-KaKdKs, 1-Ka, 2-Kd, 3-Ks
 };
 
 //void lighting(glm::vec3& normal,glm::vec3& ambient_c,glm::vec3& diffuse_c,glm::vec3& specular_c);

@@ -37,7 +37,8 @@ glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
-bool wireframe_filled; //0-wireframe, 1-filled surface
+bool wireframe; //0-wireframe off, 1-wireframe on
+bool solid; //0-solid mode off, 1-solid mode on
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
@@ -57,8 +58,11 @@ glm::vec3 ks(0.8f);
 const char* modelNames[] = {
 	"model/quad.obj",
 	"model/couch.obj",
-	"model/ZEBRA.obj",
+	"model/cubeT.obj",
 	"model/ball.obj",
+	"model/duck.obj",
+	"model/ZEBRA.obj",
+	"model/Dog.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
 	//"model/laurana2KC.obj",
@@ -116,7 +120,8 @@ void init()
 	/* initialize parameters */
 	curModelIdx = 0;
 	culling = true;
-	wireframe_filled = 1; //0-wireframe, 1-filled surface
+	wireframe = 0;
+	solid = 1;
 	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
@@ -167,7 +172,7 @@ void displayFunc()
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
 			/*===texCoord===*/
-			if (textureDisplay==1 && wireframe_filled==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
+			if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
 				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
 				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
 				triTexCoord[j].z = 1;
@@ -176,7 +181,7 @@ void displayFunc()
 				triTexCoord[j].y = 0;
 				triTexCoord[j].z = 1;
 			}
-			if ((shading==2 || shading==3 || shading==4)&& modelPtr[curModelIdx]->numNormals!=0) {
+			if ((shading==2 || shading==3 || shading==4) && modelPtr[curModelIdx]->numNormals!=0) {
 				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])	];
 				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
 				triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
@@ -242,14 +247,18 @@ void displayFunc()
 			displayNormals.push_back(temp_vertex);
 
 			/*===texCoord===*/
-			if (textureDisplay==1 && wireframe_filled==1) displayNormals.push_back(triTexCoord);
+			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
 
-			if (wireframe_filled==1)rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
-			//else {
+			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
+			
+			if (wireframe==1) {
+				MVPVertices[0].z = 0.f;
+				MVPVertices[1].z = 0.f;
+				MVPVertices[2].z = 0.f;
 				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
-			//}
+			}
 		}
 	}
 
