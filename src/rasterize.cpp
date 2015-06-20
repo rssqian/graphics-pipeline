@@ -1,194 +1,11 @@
 #include "rasterize.h"
+#include "texture.h"
 #include <iostream>
 using namespace std;
-
-/*
-void drawStandingTriangle(const vec3& p1,const vec3& p2,const vec3& p3,
-						  const vec3& n1,const vec3& n2,const vec3& n3,vec3 c) //p1.y >= p2.y >= p3.y
-{
-	int x_,y_=p1.y;
-	float x1,x2,z1,z2;
-	float z_;
-	float nx_,ny_,nz_,nx1,nx2,ny1,ny2,nz1,nz2;
-	while (y_ >= p3.y) {
-		if (p1.y == p2.y) {
-			if (p1.x < p2.x) {
-				x1 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
-				z1 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
-				x2 = p2.x + (p3.x-p2.x)/(p3.y-p2.y)*(y_-p2.y);
-				z2 = p2.z + (p3.z-p2.z)/(p3.y-p2.y)*(y_-p2.y);
-				if (shading==2) {
-					nx1 = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
-					ny1 = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
-					nz1 = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
-					nx2 = n2.x + (n3.x-n2.x)/(p3.y-p2.y)*(y_-p2.y);
-					ny2 = n2.y + (n3.y-n2.y)/(p3.y-p2.y)*(y_-p2.y);
-					nz2 = n2.z + (n3.z-n2.z)/(p3.y-p2.y)*(y_-p2.y);
-				}
-			} else {
-				x1 = p2.x + (p3.x-p2.x)/(p3.y-p2.y)*(y_-p2.y);
-				z1 = p2.z + (p3.z-p2.z)/(p3.y-p2.y)*(y_-p2.y);
-				x2 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
-				z2 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
-				if (shading==2) {
-					nx2 = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
-					ny2 = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
-					nz2 = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
-					nx1 = n2.x + (n3.x-n2.x)/(p3.y-p2.y)*(y_-p2.y);
-					ny1 = n2.y + (n3.y-n2.y)/(p3.y-p2.y)*(y_-p2.y);
-					nz1 = n2.z + (n3.z-n2.z)/(p3.y-p2.y)*(y_-p2.y);
-				}
-			}
-		} else if (p2.y == p3.y){ 
-			if (p2.x < p3.x) {
-				x1 = p1.x + (p2.x-p1.x)/(p2.y-p1.y)*(y_-p1.y);
-				z1 = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
-				x2 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
-				z2 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
-				if (shading==2) {
-					nx1 = n1.x + (n2.x-n1.x)/(p2.y-p1.y)*(y_-p1.y);
-					ny1 = n1.y + (n2.y-n1.y)/(p2.y-p1.y)*(y_-p1.y);
-					nz1 = n1.z + (n2.z-n1.z)/(p2.y-p1.y)*(y_-p1.y);
-					nx2 = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
-					ny2 = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
-					nz2 = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
-				}
-			} else {
-				x1 = p1.x + (p3.x-p1.x)/(p3.y-p1.y)*(y_-p1.y);
-				z1 = p1.z + (p3.z-p1.z)/(p3.y-p1.y)*(y_-p1.y);
-				x2 = p1.x + (p2.x-p1.x)/(p2.y-p1.y)*(y_-p1.y);
-				z2 = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
-				if (shading==2) {
-					nx1 = n1.x + (n3.x-n1.x)/(p3.y-p1.y)*(y_-p1.y);
-					ny1 = n1.y + (n3.y-n1.y)/(p3.y-p1.y)*(y_-p1.y);
-					nz1 = n1.z + (n3.z-n1.z)/(p3.y-p1.y)*(y_-p1.y);
-					nx2 = n1.x + (n2.x-n1.x)/(p2.y-p1.y)*(y_-p1.y);
-					ny2 = n1.y + (n2.y-n1.y)/(p2.y-p1.y)*(y_-p1.y);
-					nz2 = n1.z + (n2.z-n1.z)/(p2.y-p1.y)*(y_-p1.y);
-				}
-			}
-		}
-		for (x_=(int(x1)==x1)?x1:int(x1)+1; x_<=x2; x_++) {
-			z_ = z1 + (z2-z1)/(x2-x1)*(x_-x1);
-			if (shading==2) {
-				nz_ = nz1 + (nz2-nz1)/(x2-x1)*(x_-x1);
-				nx_ = nx1 + (nx2-nx1)/(x2-x1)*(x_-x1);
-				ny_ = ny1 + (ny2-ny1)/(x2-x1)*(x_-x1);
-			}
-			if (shading==2) c = lighting(vec3(nx_,ny_,nz_));
-			framebuffer.draw(x_,y_,z_,c);
-		}
-		y_--;
-	}
-}
-*/
-/*
-void drawTriangle(vec3* triVertices,vec3* triNormals,vec3 c)  //triVertices & triNormal must have 3 element
-{
-	//use insertion sort to sort 3 Vertices with Y order
-	int vYSort[3];
-	for (int i=0; i<3; i++)
-		vYSort[i] = i;
-	for (int i=1; i<3; i++) {
-		float key = triVertices[vYSort[i]].y;
-		int temp = vYSort[i];
-		int j = i-1;
-		while (j>=0 && triVertices[vYSort[j]].y>key) {
-			vYSort[j+1] = vYSort[j];
-			j--;
-		}
-		vYSort[j+1] = temp;
-	}
-	if ((triVertices[vYSort[0]].y != triVertices[vYSort[1]].y) && 
-		(triVertices[vYSort[1]].y != triVertices[vYSort[2]].y) && 
-		(triVertices[vYSort[2]].y != triVertices[vYSort[0]].y)) {
-		float temp_x = triVertices[vYSort[0]].x + (triVertices[vYSort[2]].x-triVertices[vYSort[0]].x) / 
-					   (triVertices[vYSort[2]].y-triVertices[vYSort[0]].y) * (triVertices[vYSort[1]].y-triVertices[vYSort[0]].y);
-		float temp_z = triVertices[vYSort[0]].z + (triVertices[vYSort[2]].z-triVertices[vYSort[0]].z) / 
-					   (triVertices[vYSort[2]].y-triVertices[vYSort[0]].y) * (triVertices[vYSort[1]].y-triVertices[vYSort[0]].y);
-		vec3 p1(triVertices[vYSort[2]].x,triVertices[vYSort[2]].y,triVertices[vYSort[2]].z);
-		vec3 p2(triVertices[vYSort[1]].x,triVertices[vYSort[1]].y,triVertices[vYSort[1]].z);
-		vec3 p3(temp_x,triVertices[vYSort[1]].y,temp_z);
-		vec3 p4(triVertices[vYSort[0]].x,triVertices[vYSort[0]].y,triVertices[vYSort[0]].z);
-		vec3 n1,n2,n3,n4;
-		if (shading==2) {
-			temp_x = triNormals[vYSort[0]].x + (triNormals[vYSort[2]].x-triNormals[vYSort[0]].x) / 
-					 (triVertices[vYSort[2]].y-triVertices[vYSort[0]].y) * (triVertices[vYSort[1]].y-triVertices[vYSort[0]].y);
-			float temp_y = triNormals[vYSort[0]].y + (triNormals[vYSort[2]].y-triNormals[vYSort[0]].y) / 
-						   (triVertices[vYSort[2]].y-triVertices[vYSort[0]].y) * (triVertices[vYSort[1]].y-triVertices[vYSort[0]].y);
-			temp_z = triNormals[vYSort[0]].z + (triNormals[vYSort[2]].z-triNormals[vYSort[0]].z) / 
-					 (triVertices[vYSort[2]].y-triVertices[vYSort[0]].y) * (triVertices[vYSort[1]].y-triVertices[vYSort[0]].y);
-			n1 = vec3(triNormals[vYSort[2]].x,triNormals[vYSort[2]].y,triNormals[vYSort[2]].z);
-			n2 = vec3(triNormals[vYSort[1]].x,triNormals[vYSort[1]].y,triNormals[vYSort[1]].z);
-			n3 = vec3(temp_x,temp_y,temp_z);
-			n4 = vec3(triNormals[vYSort[0]].x,triNormals[vYSort[0]].y,triNormals[vYSort[0]].z);
-		} else {
-			n1 = n2 = n3 = n4 = vec3(0.f);
-		}
-		drawStandingTriangle(p1,p2,p3,n1,n2,n3,c);
-		drawStandingTriangle(p2,p3,p4,n2,n3,n4,c);
-	} else if ((triVertices[vYSort[0]].y==triVertices[vYSort[1]].y) && (triVertices[vYSort[1]].y==triVertices[vYSort[2]].y)) {
-	} else {
-		vec3 p1(triVertices[vYSort[2]].x,triVertices[vYSort[2]].y,triVertices[vYSort[2]].z);
-		vec3 p2(triVertices[vYSort[1]].x,triVertices[vYSort[1]].y,triVertices[vYSort[1]].z);
-		vec3 p3(triVertices[vYSort[0]].x,triVertices[vYSort[0]].y,triVertices[vYSort[0]].z);
-		vec3 n1(triNormals[vYSort[2]].x,triNormals[vYSort[2]].y,triNormals[vYSort[2]].z);
-		vec3 n2(triNormals[vYSort[1]].x,triNormals[vYSort[1]].y,triNormals[vYSort[1]].z);
-		vec3 n3(triNormals[vYSort[0]].x,triNormals[vYSort[0]].y,triNormals[vYSort[0]].z);
-		drawStandingTriangle(p1,p2,p3,n1,n2,n3,c);
-	}
-}
-*/
-/*
-void drawEdge(int* ix,int* iy,float* iz,vec3 c)  //ix,iy,iz must have 3 element
-{
-	float m[3],B[3];
-	for (int j=0; j<3; j++) {
-		int k = j+1;
-		if (k==3) k = 0;
-		if (abs(iy[k]-iy[j]) <= abs(ix[k]-ix[j])) {	//use y=mx+B
-			m[j] = float(iy[k]-iy[j])/float(ix[k]-ix[j]);
-			B[j] = iy[j]-m[j]*ix[j];
-			if (ix[j]<ix[k]) {
-				for (int x_=ix[j]; x_<=ix[k]; x_++) {
-					int y_ = x_*m[j]+B[j];
-					float z_ = iz[j] + (iz[k]-iz[j])/(ix[k]-ix[j])*(x_-ix[j]);
-					framebuffer.draw(x_,y_,z_,c);
-				}
-			} else {
-				for (int x_=ix[k]; x_<=ix[j]; x_++) {
-					int y_ = x_*m[j]+B[j];
-					float z_ = iz[k] + (iz[j]-iz[k])/(ix[j]-ix[k])*(x_-ix[k]);
-					framebuffer.draw(x_,y_,z_,c);
-				}
-			}
-		} else {									//use x=my+B
-			m[j] = float(ix[k]-ix[j])/float(iy[k]-iy[j]);
-			B[j] = ix[j]-m[j]*iy[j];
-			if (iy[j]<iy[k]) {
-				for (int y_=iy[j]; y_<=iy[k]; y_++) {
-					int x_ = y_*m[j]+B[j];
-					float z_ = iz[j] + (iz[k]-iz[j])/(iy[k]-iy[j])*(y_-iy[j]);
-					framebuffer.draw(x_,y_,z_,c);
-				}
-			} else {
-				for (int y_=iy[k]; y_<=iy[j]; y_++) {
-					int x_ = y_*m[j]+B[j];
-					float z_ = iz[k] + (iz[j]-iz[k])/(iy[j]-iy[k])*(y_-iy[k]);
-					framebuffer.draw(x_,y_,z_,c);
-				}
-			}
-		}
-	}
-}
-*/
 
 void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 {
 	float m,B;
-	//for (int j=0; j<3; j++) {
-		//int k = j+1;
-		//if (k==3) k = 0;
 		if (abs(p2.y-p1.y) <= abs(p2.x-p1.x)) {	//use y=mx+B
 			m = float(p2.y-p1.y)/float(p2.x-p1.x);
 			B = p1.y - m * p1.x;
@@ -222,12 +39,10 @@ void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 				}
 			}
 		}
-	//}
 }
 
-void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
+void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material* mtl,LightColor c_in)
 {
-	//Primitive MV_value(v_MV_value[i]);
 	glm::vec3 p1 = MVP_vertex[0];
 	glm::vec3 p2 = MVP_vertex[1];
 	glm::vec3 p3 = MVP_vertex[2];
@@ -241,8 +56,17 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 	vector<glm::vec3> n_right(v_MV_value.size());
 	vector<glm::vec3*> result_vertex;
 	vector<glm::vec3*> result_value;
+	vec3 debug_c(1.f,1.f,1.f);
+	vector<glm::vec3> mv_result;
+	mv_result.resize(v_MV_value.size());
+	LightColor c;
+	float temp_barycentric;
+	//LightColor RGBIntensity();
+	//glm::vec3 ambient_c(c.x,c.y,c.z);
+	//glm::vec3 diffuse_c(c.x,c.y,c.z);
+	//glm::vec3 specular_c(c.x,c.y,c.z);
+	float lamda1,lamda2,lamda3;
 	while (y_ >= p3.y) {
-		//c = vec3(1.f,1.f,1.f);
 		if (p1.y == p2.y) {
 			if (p1.x<p2.x) {
 				float b1 = y_-p3.y, b2 = y_-p3.y;
@@ -253,50 +77,16 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_right.x = b2/(a2+b2)*p2.x + a2/(a2+b2)*p3.x;
 				p_right.y = y_;
 				p_right.z = b2/(a2+b2)*p2.z + a2/(a2+b2)*p3.z;
-				for (size_t i=0; i<v_MV_value.size(); i++) {
-					Primitive MV_value(v_MV_value[i]);
-					glm::vec3 n1 = MV_value[0];
-					glm::vec3 n2 = MV_value[1];
-					glm::vec3 n3 = MV_value[2];
-					if (projection==0) {
-						n_left[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n3;
-						n_right[i] = b2/(a2+b2)*n2 + a2/(a2+b2)*n3;
-					} else {
-						n_left[i].z = 1 / (b1/(a1+b1)*(1/n1.z) + a1/(a1+b1)*(1/n3.z));
-						n_left[i].x = (b1/(a1+b1)*(n1.x/n1.z) + a1/(a1+b1)*(n3.x/n3.z)) * n_left[i].z;
-						n_left[i].y = (b1/(a1+b1)*(n1.y/n1.z) + a1/(a1+b1)*(n3.y/n3.z)) * n_left[i].z;
-						n_right[i].z = 1 / (b2/(a2+b2)*(1/n2.z) + a2/(a2+b2)*(1/n3.z));
-						n_right[i].x = (b2/(a2+b2)*(n2.x/n2.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_right[i].z;
-						n_right[i].y = (b2/(a2+b2)*(n2.y/n2.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_right[i].z;
-					}
-				}
 			} else {
-				//c=vec3(0.f,1.f,0.f);
 				int idx[3] = {0,1,2};
 				float b1 = y_-p3.y, b2 = y_-p3.y;
 				float a1 = p2.y-p3.y-b1, a2 = p1.y-p3.y-b2;
- 				p_right.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p3.x;
+				p_right.x = b1/(a1+b1)*p1.x + a1/(a1+b1)*p3.x;
+				p_right.y = y_;
 				p_right.z = b1/(a1+b1)*p1.z + a1/(a1+b1)*p3.z;
 				p_left.x = b2/(a2+b2)*p2.x + a2/(a2+b2)*p3.x;
 				p_left.y = y_;
 				p_left.z = b2/(a2+b2)*p2.z + a2/(a2+b2)*p3.z;
-				for (size_t i=0; i<v_MV_value.size(); i++) {
-					Primitive MV_value(v_MV_value[i]);
-					glm::vec3 n1 = MV_value[0];
-					glm::vec3 n2 = MV_value[1];
-					glm::vec3 n3 = MV_value[2];
-					if (projection==0) {
-						n_right[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n3;
-						n_left[i] = b2/(a2+b2)*n2 + a2/(a2+b2)*n3;
-					} else {
-						n_right[i].z = 1 / (b1/(a1+b1)*(1/n1.z) + a1/(a1+b1)*(1/n3.z));
-						n_right[i].x = (b1/(a1+b1)*(n1.x/n1.z) + a1/(a1+b1)*(n3.x/n3.z)) * n_right[i].z;
-						n_right[i].y = (b1/(a1+b1)*(n1.y/n1.z) + a1/(a1+b1)*(n3.y/n3.z)) * n_right[i].z;
-						n_left[i].z = 1 / (b2/(a2+b2)*(1/n2.z) + a2/(a2+b2)*(1/n3.z));
-						n_left[i].x = (b2/(a2+b2)*(n2.x/n2.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_left[i].z;
-						n_left[i].y = (b2/(a2+b2)*(n2.y/n2.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_left[i].z;
-					}
-				}
 			}
 		} else if (p2.y == p3.y){
 			if (p2.x<p3.x) {
@@ -308,23 +98,6 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_right.x = b2/(a2+b2)*p1.x + a2/(a2+b2)*p3.x;
 				p_right.y = y_;
 				p_right.z = b2/(a2+b2)*p1.z + a2/(a2+b2)*p3.z; 
-				for (size_t i=0; i<v_MV_value.size(); i++) {
-					Primitive MV_value(v_MV_value[i]);
-					glm::vec3 n1 = MV_value[0];
-					glm::vec3 n2 = MV_value[1];
-					glm::vec3 n3 = MV_value[2];
-					if (projection==0) {
-						n_left[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n2;
-						n_right[i] = b2/(a2+b2)*n1 + a2/(a2+b2)*n3;
-					} else {
-						n_left[i].z = 1 / (b1/(a1+b1)*(1/n1.z) + a1/(a1+b1)*(1/n2.z));
-						n_left[i].x = (b1/(a1+b1)*(n1.x/n1.z) + a1/(a1+b1)*(n2.x/n2.z)) * n_left[i].z;
-						n_left[i].y = (b1/(a1+b1)*(n1.y/n1.z) + a1/(a1+b1)*(n2.y/n2.z)) * n_left[i].z;
-						n_right[i].z = 1 / (b2/(a2+b2)*(1/n1.z) + a2/(a2+b2)*(1/n3.z));
-						n_right[i].x = (b2/(a2+b2)*(n1.x/n1.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_right[i].z;
-						n_right[i].y = (b2/(a2+b2)*(n1.y/n1.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_right[i].z;
-					}
-				}
 			} else {
 				float b1 = y_-p2.y, b2 = y_-p3.y;
 				float a1 = p1.y-p2.y-b1, a2 = p1.y-p3.y-b2;
@@ -334,54 +107,72 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,v
 				p_left.x = b2/(a2+b2)*p1.x + a2/(a2+b2)*p3.x;
 				p_left.y = y_;
 				p_left.z = b2/(a2+b2)*p1.z + a2/(a2+b2)*p3.z; 
-				for (size_t i=0; i<v_MV_value.size(); i++) {
-					Primitive MV_value(v_MV_value[i]);
-					glm::vec3 n1 = MV_value[0];
-					glm::vec3 n2 = MV_value[1];
-					glm::vec3 n3 = MV_value[2];
-					if (projection==0) {
-						n_right[i] = b1/(a1+b1)*n1 + a1/(a1+b1)*n2;
-						n_left[i] = b2/(a2+b2)*n1 + a2/(a2+b2)*n3;
-					} else {
-						n_right[i].z = 1 / (b1/(a1+b1)*(1/n1.z) + a1/(a1+b1)*(1/n2.z));
-						n_right[i].x = (b1/(a1+b1)*(n1.x/n1.z) + a1/(a1+b1)*(n2.x/n2.z)) * n_right[i].z;
-						n_right[i].y = (b1/(a1+b1)*(n1.y/n1.z) + a1/(a1+b1)*(n2.y/n2.z)) * n_right[i].z;
-						n_left[i].z = 1 / (b2/(a2+b2)*(1/n1.z) + a2/(a2+b2)*(1/n3.z));
-						n_left[i].x = (b2/(a2+b2)*(n1.x/n1.z) + a2/(a2+b2)*(n3.x/n3.z)) * n_left[i].z;
-						n_left[i].y = (b2/(a2+b2)*(n1.y/n1.z) + a2/(a2+b2)*(n3.y/n3.z)) * n_left[i].z;
-					}
-				}
 			}
 		}
+
 		for (x_=(int(p_left.x)==p_left.x)?p_left.x:int(p_left.x)+1; x_<=p_right.x; x_++) {
+			c = c_in;
 			z_ = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(x_-p_left.x);
-			//Primitive result = new glm::vec3[v_MV_value.size()];
 			float a = (x_-p_left.x);
 			float b = (p_right.x-p_left.x)-a;
-      glm::vec3 lightingVertex;
-      glm::vec3 lightingNormal;
+			mv_result.clear();
+			lamda1 = ((p2.y-p3.y)*(x_-p3.x) + (p3.x-p2.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
+			lamda2 = ((p3.y-p1.y)*(x_-p3.x) + (p1.x-p3.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
+			lamda3 = 1 - lamda1 - lamda2;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
-				if (projection==0) {
-					n_.z = b/(a+b)*n_left[i].z + a/(a+b)*n_right[i].z;
-					n_.x = b/(a+b)*n_left[i].x + a/(a+b)*n_right[i].x;
-					n_.y = b/(a+b)*n_left[i].y + a/(a+b)*n_right[i].y;
-				} else {
-					n_.z = b/(a+b)*(1/n_left[i].z) + a/(a+b)*(1/n_right[i].z);
-					n_.x = (b/(a+b)*(n_left[i].x/n_left[i].z) + a/(a+b)*(n_right[i].x/n_right[i].z)) * n_.z;
-					n_.y = (b/(a+b)*(n_left[i].y/n_left[i].z) + a/(a+b)*(n_right[i].y/n_right[i].z)) * n_.z;
-				}
-        if (i == 0) lightingNormal = glm::vec3(n_.x, n_.y, n_.z);
-        else if (i == 1) lightingVertex = glm::vec3(n_.x, n_.y, n_.z);
+        if (projection==0 || i==0) {
+					mv_result[i].x = lamda1*v_MV_value[i][0].x + lamda2*v_MV_value[i][1].x + lamda3*v_MV_value[i][2].x;
+					mv_result[i].y = lamda1*v_MV_value[i][0].y + lamda2*v_MV_value[i][1].y + lamda3*v_MV_value[i][2].y;
+					mv_result[i].z = lamda1*v_MV_value[i][0].z + lamda2*v_MV_value[i][1].z + lamda3*v_MV_value[i][2].z;
+        } else {
+          temp_barycentric = lamda1*(1/v_MV_value[1][0].z) + lamda2*(1/v_MV_value[1][1].z) + lamda3*(1/v_MV_value[1][2].z);
+          mv_result[i].z = lamda1*(v_MV_value[i][0].z/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].z/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].z/v_MV_value[1][2].z);
+          mv_result[i].y = lamda1*(v_MV_value[i][0].y/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].y/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].y/v_MV_value[1][2].z);
+          mv_result[i].x = lamda1*(v_MV_value[i][0].x/v_MV_value[1][0].z) + lamda2*(v_MV_value[i][1].x/v_MV_value[1][1].z) + lamda3*(v_MV_value[i][2].x/v_MV_value[1][2].z);
+          mv_result[i].z = mv_result[i].z / temp_barycentric;
+          mv_result[i].y = mv_result[i].y / temp_barycentric;
+          mv_result[i].x = mv_result[i].x / temp_barycentric;
+        }
 			}
-      if (shading==2) c = light.shading(lightingVertex, lightingNormal);
-			framebuffer.draw(x_,y_,z_,c);
+			if (textureDisplay) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
+			else light.setParameter(ka,kd,ks,1);
+			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
+				light.shading(mv_result[1], mv_result[0],mtl,c); 
+			}
+			//if (textureDisplay==1) cout << "after lighting: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
+			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
+				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);
+				//ambient_c = glm::vec3(0.f);
+				//c.x = ambient_c.x + diffuse_c.x + specular_c.x;
+				//c.y = ambient_c.y + diffuse_c.y + specular_c.y;
+				//c.z = ambient_c.z + diffuse_c.z + specular_c.z;
+			}
+			//if (textureDisplay==1) cout << "after getTexture: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
+			/*vec3 vec3C(	c.ambient.x + c.diffuse.x + c.specular.x,
+						c.ambient.y + c.diffuse.y + c.specular.y,
+						c.ambient.z + c.diffuse.z + c.specular.z);*/
+			vec3 vec3C(c.diffuse.x,c.diffuse.y,c.diffuse.z);
+			//vec3 vec3C(c.specular.x,c.specular.y,c.specular.z);
+			if (shading==4) {
+				mv_result[0] = glm::normalize(mv_result[0]);
+        vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
+        vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
+        vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
+				//cout << "vetexCoord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ") -> ";
+				//cout << "normal = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
+			}
+			if (shading==3) {
+				vec3C.x = int(vec3C.x/0.2) * 0.2;
+				vec3C.y = int(vec3C.y/0.2) * 0.2;
+				vec3C.z = int(vec3C.z/0.2) * 0.2;
+			}
+			framebuffer.draw(x_,y_,z_,vec3C);
 		}
-	
 		y_--;
 	}
 }
 
-void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c) 
+void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material* mtl,LightColor c) 
 {
 	//use insertion sort to sort 3 Vertices in w_vert with Y order
 	int vYSort[3];
@@ -420,7 +211,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 
 		//interpolating for MV_value
 		vector<Primitive> s1_v_MV_value,s2_v_MV_value; 
-		if (projection==0) {
+    //if (projection==0) {
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				Primitive MV_value(v_MV_value[i]);
 				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
@@ -436,31 +227,31 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 				s2[2] = glm::vec3(MV_value[vYSort[0]]);
 				s1_v_MV_value.push_back(s1);
 				s2_v_MV_value.push_back(s2);
-			}
-		} else {
-			for (size_t i=0; i<v_MV_value.size(); i++) {
-				Primitive MV_value(v_MV_value[i]);
-				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
-				a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
-				temp.z = 1 / (b/(a+b)*(1/MV_value[vYSort[2]].z) + a/(a+b)*(1/MV_value[vYSort[0]].z));
-				temp.x = (b/(a+b)*(MV_value[vYSort[2]].x/MV_value[vYSort[2]].z) + a/(a+b)*(MV_value[vYSort[0]].x/MV_value[vYSort[0]].z))
-							* temp.z;
-				temp.y = (b/(a+b)*(MV_value[vYSort[2]].y/MV_value[vYSort[2]].y) + a/(a+b)*(MV_value[vYSort[0]].y/MV_value[vYSort[0]].y))
-							* temp.z;
-				Primitive s1 = new glm::vec3[3];
-				s1[0] = glm::vec3(MV_value[vYSort[2]]);
-				s1[1] = glm::vec3(MV_value[vYSort[1]]);
-				s1[2] = glm::vec3(temp);
-				Primitive s2 = new glm::vec3[3];
-				s2[0] = glm::vec3(MV_value[vYSort[1]]);
-				s2[1] = glm::vec3(temp);
-				s2[2] = glm::vec3(MV_value[vYSort[0]]);
-				s1_v_MV_value.push_back(s1);
-				s2_v_MV_value.push_back(s2);
-			}
-		}
-		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,c);
-		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,c);
+      }
+    //} else {
+      //for (size_t i=0; i<v_MV_value.size(); i++) {
+        //Primitive MV_value(v_MV_value[i]);
+        //b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+        //a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
+        //temp.z = 1 / (b/(a+b)*(1/MV_value[vYSort[2]].z) + a/(a+b)*(1/MV_value[vYSort[0]].z));
+        //temp.x = (b/(a+b)*(MV_value[vYSort[2]].x/MV_value[vYSort[2]].z) + a/(a+b)*(MV_value[vYSort[0]].x/MV_value[vYSort[0]].z))
+              //* temp.z;
+        //temp.y = (b/(a+b)*(MV_value[vYSort[2]].y/MV_value[vYSort[2]].y) + a/(a+b)*(MV_value[vYSort[0]].y/MV_value[vYSort[0]].y))
+              //* temp.z;
+        //Primitive s1 = new glm::vec3[3];
+        //s1[0] = glm::vec3(MV_value[vYSort[2]]);
+        //s1[1] = glm::vec3(MV_value[vYSort[1]]);
+        //s1[2] = glm::vec3(temp);
+        //Primitive s2 = new glm::vec3[3];
+        //s2[0] = glm::vec3(MV_value[vYSort[1]]);
+        //s2[1] = glm::vec3(temp);
+        //s2[2] = glm::vec3(MV_value[vYSort[0]]);
+        //s1_v_MV_value.push_back(s1);
+        //s2_v_MV_value.push_back(s2);
+      //}
+		//}
+		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,mtl,c);
+		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,mtl,c);
 		delete [] s1_MVP_vertex;
 		delete [] s2_MVP_vertex;
 		for (size_t i=0; i<s1_v_MV_value.size(); i++) delete [] s1_v_MV_value[i];
@@ -479,8 +270,22 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,vec3 c)
 			s_MV_value[2] = glm::vec3(v_MV_value[i][vYSort[0]]);
 			s_v_MV_value.push_back(s_MV_value);
 		}
-		rasterStandingTriangle(s_MVP_vertex,s_v_MV_value,c);
+		rasterStandingTriangle(s_MVP_vertex,s_v_MV_value,mtl,c);
 		delete [] s_MVP_vertex;
 		for (size_t i=0; i<s_v_MV_value.size(); i++) delete [] s_v_MV_value[i];
 	}
+	/*if (v_MV_value.size() > 0) {
+		glm::vec4 p1(0.f),p2(0.f);
+		glm::vec3 normalized_n;
+		for (int i=0; i<3; i++) {
+			p1.x = MVP_vertex[i].x;
+			p1.y = MVP_vertex[i].y;
+			p1.z = MVP_vertex[i].z;
+			normalized_n = glm::normalize(v_MV_value[0][i])/10.f;
+			p2.x = MVP_vertex[i].x + normalized_n.x;
+			p2.y = MVP_vertex[i].y + normalized_n.y;
+			p2.z = MVP_vertex[i].z + normalized_n.z;
+			drawLine(p1,p2,vec3(1.f));
+		}
+	}*/
 }

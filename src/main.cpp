@@ -1,4 +1,3 @@
-#define _GLOBAL_VAR
 #include <QApplication>
 #include <QStyleFactory>
 #include <GL/freeglut.h>
@@ -30,8 +29,8 @@ int screenHeight_half = 200;
 /* theta */
 double rotateSpeed = 0.05;
 glm::vec3 theta (0.0f, 0.0f, 0.0f);
-glm::vec3 model_size (400.0f, 400.0f, 400.0f);
-glm::vec3 translate (float(screenWidth_half), float(screenHeight_half), 0.0f);
+glm::vec3 model_size (1.0f, 1.0f, 1.0f);
+glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
 glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
 glm::vec3 cameraTarget (0.0f, 0.0f, 0.0f);
@@ -39,9 +38,13 @@ glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
-bool wireframe_filled; //0-wireframe, 1-filled surface
-int shading; //0-no shading, 1-flat shading, 2-smooth shading
+bool wireframe;
+bool solid;
+bool showNormals;
+int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
+int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
+bool textureDisplay;
 
 int curModelIdx;
 bool culling;
@@ -55,7 +58,7 @@ glm::vec3 ks(0.8f);
 
 /* model names */
 const char* modelNames[] = {
-  //"../model/quad.obj",
+  "../model/quad.obj",
   //"../model/couch.obj",
   //"model/cessna7KC.obj",
   //"model/santa7KC.obj",
@@ -78,49 +81,48 @@ int numModels = sizeof(modelNames) / sizeof(char*);
 
 void init() 
 {
-  modelPtr = new Model*[numModels];
-  for(int i = 0; i < numModels; ++i) {
-  	/* load models */
-  	modelPtr[i] = readObj(modelNames[i]);
+	modelPtr = new Model*[numModels];
+	for(int i = 0; i < numModels; ++i) {
+		/* load models */
+		modelPtr[i] = readObj(modelNames[i]);
 
-  	/* normalize coordinates to [-0.5, +0.5] */
-  	float xmax, xmin, ymax, ymin, zmax, zmin, longest;
-  	float xmean, ymean, zmean;
-  	xmax = xmin = modelPtr[i]->vertices[3];
-  	ymax = ymin = modelPtr[i]->vertices[4];
-  	zmax = zmin = modelPtr[i]->vertices[5];
-  	for(int v = 2; v <= modelPtr[i]->numVertices; ++v) {
-  		xmax = max(xmax, modelPtr[i]->vertices[3*v]);
-  		xmin = min(xmin, modelPtr[i]->vertices[3*v]);
-  		ymax = max(ymax, modelPtr[i]->vertices[3*v+1]);
-  		ymin = min(ymin, modelPtr[i]->vertices[3*v+1]);
-  		zmax = max(zmax, modelPtr[i]->vertices[3*v+2]);
-  		zmin = min(zmin, modelPtr[i]->vertices[3*v+2]);
-  	}
-  	longest = max(xmax - xmin, ymax - ymin);
-  	longest = max(longest, zmax - zmin);
-  	xmean = 0.5f*(xmax + xmin);
-  	ymean = 0.5f*(ymax + ymin);
-  	zmean = 0.5f*(zmax + zmin);
-  	
-  	for(int v = 1; v <= modelPtr[i]->numVertices; ++v) {
-  		modelPtr[i]->vertices[3*v  ] = (modelPtr[i]->vertices[3*v  ] - xmean)/longest;
-  		modelPtr[i]->vertices[3*v+1] = (modelPtr[i]->vertices[3*v+1] - ymean)/longest;
-  		modelPtr[i]->vertices[3*v+2] = (modelPtr[i]->vertices[3*v+2] - zmean)/longest;
-  	}
-  }
+		/* normalize coordinates to [-0.5, +0.5] */
+		float xmax, xmin, ymax, ymin, zmax, zmin, longest;
+		float xmean, ymean, zmean;
+		xmax = xmin = modelPtr[i]->vertices[3];
+		ymax = ymin = modelPtr[i]->vertices[4];
+		zmax = zmin = modelPtr[i]->vertices[5];
+		for(int v = 2; v <= modelPtr[i]->numVertices; ++v) {
+			xmax = max(xmax, modelPtr[i]->vertices[3*v]);
+			xmin = min(xmin, modelPtr[i]->vertices[3*v]);
+			ymax = max(ymax, modelPtr[i]->vertices[3*v+1]);
+			ymin = min(ymin, modelPtr[i]->vertices[3*v+1]);
+			zmax = max(zmax, modelPtr[i]->vertices[3*v+2]);
+			zmin = min(zmin, modelPtr[i]->vertices[3*v+2]);
+		}
+		longest = max(xmax - xmin, ymax - ymin);
+		longest = max(longest, zmax - zmin);
+		xmean = 0.5f*(xmax + xmin);
+		ymean = 0.5f*(ymax + ymin);
+		zmean = 0.5f*(zmax + zmin);
+		
+		for(int v = 1; v <= modelPtr[i]->numVertices; ++v) {
+			modelPtr[i]->vertices[3*v	] = (modelPtr[i]->vertices[3*v	] - xmean)/longest;
+			modelPtr[i]->vertices[3*v+1] = (modelPtr[i]->vertices[3*v+1] - ymean)/longest;
+			modelPtr[i]->vertices[3*v+2] = (modelPtr[i]->vertices[3*v+2] - zmean)/longest;
+		}
+	}
 
-  /* initialize parameters */
-  curModelIdx = 0;
-  culling = true;
-  wireframe_filled = 1; //0-wireframe, 1-filled surface
-  shading = 1; //0-no shading, 1-flat shading, 2-smooth shading
-  projection = 0; //0-orthogonal, 1-perspective
-}
-
-void idleFunc() 
-{
-  glutPostRedisplay();
+	/* initialize parameters */
+	curModelIdx = 0;
+	culling = true;
+	wireframe = 0;
+  solid = 1;
+  showNormals = 1;
+	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
+	projection = 0; //0-orthogonal, 1-perspective
+	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
+	textureDisplay = 0;
 }
 
 int main(int argc, char** argv)
@@ -159,26 +161,5 @@ int main(int argc, char** argv)
 
   MainWindow window;
   window.show();
-
-
-
-//  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-//  glutInitWindowSize(screenWidth, screenHeight);
-//  glutCreateWindow("3D Graphics Engine");
-
-//  glutDisplayFunc(displayFunc);
-//  glutIdleFunc(idleFunc);
-//  glutMotionFunc(motionFunc);
-//  glutMouseFunc(mouseFunc);
-//  glutKeyboardFunc(keyboardFunc);
-//  glutSpecialFunc(specialFunc);
-
-//  glutMainLoop();
-  
-//  for(int i = 0; i < numModels; ++i) {
-//  	if(modelPtr[i]) delete [] modelPtr[i];
-//  }
-//  if(modelPtr) delete [] modelPtr;
-
   return app.exec();
 }

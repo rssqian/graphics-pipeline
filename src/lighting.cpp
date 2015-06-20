@@ -1,8 +1,10 @@
 #include "lighting.h"
 #include <glm/glm.hpp>
 
-vec3 Lighting::shading(glm::vec3 vertex, glm::vec3 normal)
+void Lighting::shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,LightColor& c)
 {
+	//cout << vertex.x << " , " << vertex.y << " , " << vertex.z << endl;
+
   //ambient
   float ambientIntensity = 1;
   float ambient = ambientIntensity;
@@ -20,6 +22,18 @@ vec3 Lighting::shading(glm::vec3 vertex, glm::vec3 normal)
   float specular = glm::pow(specularDot, ns);
 
   float attenuation = 1;
-  glm::vec3 color = ka * ambient + attenuation*(kd * diffuse + ks * specular);
-  return vec3(color.x, color.y, color.z);
+  //glm::vec3 color = ka * ambient + attenuation*(kd * diffuse + ks * specular);
+  c.ambient = ka * ambient;
+  c.diffuse = attenuation * kd * diffuse;
+  c.specular = attenuation * ks * specular;
+  //return vec3(color.x, color.y, color.z);
+  //return vec3(0.5, 0.5, 0.5);
+}
+
+void Lighting::setParameter(const glm::vec3& Ka,const glm::vec3& Kd,const glm::vec3& Ks,const int& Ns)
+{
+	ka = Ka;
+	kd = Kd;
+	ks = Ks;
+	ns = Ns;
 }

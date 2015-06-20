@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include "material.h"
 using namespace std;
 
 #define DEPTH_INF -1e20
@@ -35,7 +37,8 @@ private:
 	vec3 clearColor;
 	vec3* colorBuffer;
 	float* depthBuffer;
-
+	vector<Material*> mtlBuffer;
+	//Pixel* pixelBuffer;
 };
 
 float dotProduct(const vec3& v1,const vec3& v2);

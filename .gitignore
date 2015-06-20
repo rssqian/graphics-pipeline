@@ -1,2 +1,11 @@
-3d-graphics-engine
+# Ignore files created by Visual Studio
+Release/
+include/
+ipch/
+lib/
+3dmm_hw1.*
+*.dll
+# Ignore object and binary files
 *.o
+*.swp
+3d-graphics-engine

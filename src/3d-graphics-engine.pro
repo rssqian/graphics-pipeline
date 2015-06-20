@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = 3d-graphics-engine
 TEMPLATE = app
 
-LIBS   += -lGL -lGLU -lglut
+LIBS   += -lGL -lGLU -lglut -lIL
 CONFIG += c++11
 
 SOURCES += main.cpp\
@@ -21,7 +21,9 @@ SOURCES += main.cpp\
     framebuffer.cpp \
     lighting.cpp \
     rasterize.cpp \
-    transform.cpp
+    transform.cpp \
+    texture.cpp \
+    material.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -31,5 +33,7 @@ HEADERS  += mainwindow.h \
     lighting.h \
     rasterize.h \
     transform.h \
+    texture.h \
+    material.h
 
 FORMS    += mainwindow.ui

@@ -36,7 +36,7 @@ DISTNAME      = 3d-graphics-engine1.0.0
 DISTDIR = /home/tanyuan/graphics-pipeline/src/.tmp/3d-graphics-engine1.0.0
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) -lGLU -lglut -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -lGLU -lglut -lIL -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -55,7 +55,9 @@ SOURCES       = main.cpp \
 		framebuffer.cpp \
 		lighting.cpp \
 		rasterize.cpp \
-		transform.cpp moc_mainwindow.cpp \
+		transform.cpp \
+		texture.cpp \
+		material.cpp moc_mainwindow.cpp \
 		moc_openglwidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
@@ -65,6 +67,8 @@ OBJECTS       = main.o \
 		lighting.o \
 		rasterize.o \
 		transform.o \
+		texture.o \
+		material.o \
 		moc_mainwindow.o \
 		moc_openglwidget.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -207,14 +211,18 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		framebuffer.h \
 		lighting.h \
 		rasterize.h \
-		transform.h main.cpp \
+		transform.h \
+		texture.h \
+		material.h main.cpp \
 		mainwindow.cpp \
 		openglwidget.cpp \
 		model.cpp \
 		framebuffer.cpp \
 		lighting.cpp \
 		rasterize.cpp \
-		transform.cpp
+		transform.cpp \
+		texture.cpp \
+		material.cpp
 QMAKE_TARGET  = 3d-graphics-engine
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = 3d-graphics-engine
@@ -538,8 +546,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h openglwidget.h model.h framebuffer.h lighting.h rasterize.h transform.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp openglwidget.cpp model.cpp framebuffer.cpp lighting.cpp rasterize.cpp transform.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h openglwidget.h model.h framebuffer.h lighting.h rasterize.h transform.h texture.h material.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp openglwidget.cpp model.cpp framebuffer.cpp lighting.cpp rasterize.cpp transform.cpp texture.cpp material.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -592,6 +600,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 main.o: main.cpp model.h \
+		material.h \
 		framebuffer.h \
 		transform.h \
 		rasterize.h \
@@ -606,32 +615,47 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 
 openglwidget.o: openglwidget.cpp openglwidget.h \
 		model.h \
+		material.h \
 		framebuffer.h \
 		transform.h \
 		rasterize.h \
 		lighting.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglwidget.o openglwidget.cpp
 
-model.o: model.cpp model.h
+model.o: model.cpp model.h \
+		material.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o model.cpp
 
 framebuffer.o: framebuffer.cpp framebuffer.h \
+		material.h \
 		model.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o framebuffer.o framebuffer.cpp
 
 lighting.o: lighting.cpp lighting.h \
+		material.h \
 		framebuffer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lighting.o lighting.cpp
 
 rasterize.o: rasterize.cpp rasterize.h \
 		model.h \
+		material.h \
 		framebuffer.h \
-		lighting.h
+		lighting.h \
+		texture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rasterize.o rasterize.cpp
 
 transform.o: transform.cpp framebuffer.h \
+		material.h \
 		transform.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o transform.o transform.cpp
+
+texture.o: texture.cpp texture.h \
+		material.h \
+		framebuffer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o texture.o texture.cpp
+
+material.o: material.cpp material.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o material.o material.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
