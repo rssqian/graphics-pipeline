@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "openglwidget.h"
+#include "src/openglwidget.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
@@ -113,37 +113,37 @@ static const uint qt_meta_data_OpenGLWidget[] = {
        6,    0,  210,    2, 0x0a /* Public */,
        7,    0,  211,    2, 0x0a /* Public */,
        8,    0,  212,    2, 0x0a /* Public */,
-       9,    0,  213,    2, 0x0a /* Public */,
-      10,    0,  214,    2, 0x0a /* Public */,
-      11,    0,  215,    2, 0x0a /* Public */,
-      12,    0,  216,    2, 0x0a /* Public */,
-      13,    0,  217,    2, 0x0a /* Public */,
-      14,    0,  218,    2, 0x0a /* Public */,
-      15,    0,  219,    2, 0x0a /* Public */,
-      16,    0,  220,    2, 0x0a /* Public */,
-      17,    0,  221,    2, 0x0a /* Public */,
-      18,    0,  222,    2, 0x0a /* Public */,
-      19,    0,  223,    2, 0x0a /* Public */,
-      20,    0,  224,    2, 0x0a /* Public */,
-      21,    0,  225,    2, 0x0a /* Public */,
-      22,    1,  226,    2, 0x0a /* Public */,
-      23,    1,  229,    2, 0x0a /* Public */,
-      24,    1,  232,    2, 0x0a /* Public */,
-      25,    0,  235,    2, 0x0a /* Public */,
-      26,    0,  236,    2, 0x0a /* Public */,
-      27,    0,  237,    2, 0x0a /* Public */,
-      28,    0,  238,    2, 0x0a /* Public */,
-      29,    0,  239,    2, 0x0a /* Public */,
-      30,    2,  240,    2, 0x0a /* Public */,
-      31,    1,  245,    2, 0x0a /* Public */,
-      32,    1,  248,    2, 0x0a /* Public */,
-      33,    1,  251,    2, 0x0a /* Public */,
-      34,    1,  254,    2, 0x0a /* Public */,
-      35,    0,  257,    2, 0x0a /* Public */,
-      36,    0,  258,    2, 0x0a /* Public */,
-      37,    0,  259,    2, 0x0a /* Public */,
-      38,    0,  260,    2, 0x0a /* Public */,
-      39,    2,  261,    2, 0x0a /* Public */,
+       9,    1,  213,    2, 0x0a /* Public */,
+      10,    0,  216,    2, 0x0a /* Public */,
+      11,    1,  217,    2, 0x0a /* Public */,
+      12,    0,  220,    2, 0x0a /* Public */,
+      13,    0,  221,    2, 0x0a /* Public */,
+      14,    0,  222,    2, 0x0a /* Public */,
+      15,    0,  223,    2, 0x0a /* Public */,
+      16,    0,  224,    2, 0x0a /* Public */,
+      17,    0,  225,    2, 0x0a /* Public */,
+      18,    0,  226,    2, 0x0a /* Public */,
+      19,    0,  227,    2, 0x0a /* Public */,
+      20,    0,  228,    2, 0x0a /* Public */,
+      21,    0,  229,    2, 0x0a /* Public */,
+      22,    1,  230,    2, 0x0a /* Public */,
+      23,    1,  233,    2, 0x0a /* Public */,
+      24,    1,  236,    2, 0x0a /* Public */,
+      25,    0,  239,    2, 0x0a /* Public */,
+      26,    0,  240,    2, 0x0a /* Public */,
+      27,    0,  241,    2, 0x0a /* Public */,
+      28,    0,  242,    2, 0x0a /* Public */,
+      29,    0,  243,    2, 0x0a /* Public */,
+      30,    2,  244,    2, 0x0a /* Public */,
+      31,    1,  249,    2, 0x0a /* Public */,
+      32,    1,  252,    2, 0x0a /* Public */,
+      33,    1,  255,    2, 0x0a /* Public */,
+      34,    1,  258,    2, 0x0a /* Public */,
+      35,    0,  261,    2, 0x0a /* Public */,
+      36,    0,  262,    2, 0x0a /* Public */,
+      37,    0,  263,    2, 0x0a /* Public */,
+      38,    0,  264,    2, 0x0a /* Public */,
+      39,    2,  265,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString,    2,
@@ -155,9 +155,9 @@ static const uint qt_meta_data_OpenGLWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,    2,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Bool,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -202,9 +202,9 @@ void OpenGLWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 4: _t->selectNextModel(); break;
         case 5: _t->selectPrevModel(); break;
         case 6: _t->toggleWireframe(); break;
-        case 7: _t->switchToWireframe(); break;
+        case 7: _t->switchToWireframe((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 8: _t->toggleSolidView(); break;
-        case 9: _t->switchToSolid(); break;
+        case 9: _t->switchToSolid((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 10: _t->toggleProjection(); break;
         case 11: _t->switchToOrthogonal(); break;
         case 12: _t->switchToPerspective(); break;

@@ -313,9 +313,10 @@ void OpenGLWidget::toggleWireframe() {
   else cout << "Remove wireframe from view" << endl;
   update();
 }
-void OpenGLWidget::switchToWireframe() {
-  wireframe = 1;
-  cout << "Add wireframe to view" << endl;
+void OpenGLWidget::switchToWireframe(bool on) {
+  wireframe = on;
+  if (wireframe) cout << "Add wireframe to view" << endl;
+  else cout << "Remove wireframe from view" << endl;
   update();
 }
 void OpenGLWidget::toggleSolidView() {
@@ -324,9 +325,10 @@ void OpenGLWidget::toggleSolidView() {
   else cout << "Remove solid from view" << endl;
   update();
 }
-void OpenGLWidget::switchToSolid() {
-  solid = 1;
-  cout << "Add solid to view" << endl;
+void OpenGLWidget::switchToSolid(bool on) {
+  solid = on;
+  if (solid) cout << "Add solid to view" << endl;
+  else cout << "Remove solid from view" << endl;
   update();
 }
 
@@ -503,15 +505,15 @@ void OpenGLWidget::panRight(float pace) {
 }
 void OpenGLWidget::zoomIn() {
   cout << "Zoom in" << endl;
-  model_size.x += 10;
-  model_size.y += 10;
+  model_size.x += 0.1;
+  model_size.y += 0.1;
   update();
 }
 void OpenGLWidget::zoomOut() {
   if(model_size.x>(0.01-1)){
     cout << "Zoom out" << endl;
-    model_size.x -= 10;
-    model_size.y -= 10;
+    model_size.x -= 0.1;
+    model_size.y -= 0.1;
     update();
   }
   else
@@ -519,12 +521,12 @@ void OpenGLWidget::zoomOut() {
 }
 void OpenGLWidget::moveForward() {
   cout << "Move forward" << endl;
-  translate.z -= 10;
+  translate.z -= 0.1;
   update();
 }
 void OpenGLWidget::moveBackward() {
   cout << "Move backward" << endl;
-  translate.z += 10;
+  translate.z += 0.1;
   update();
 }
 void OpenGLWidget::setLightSourcePosition(int x, int y) {

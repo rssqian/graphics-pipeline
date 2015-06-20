@@ -58,8 +58,8 @@ glm::vec3 ks(0.8f);
 
 /* model names */
 const char* modelNames[] = {
-  "../model/quad.obj",
-  //"../model/couch.obj",
+  "model/quad.obj",
+  //"model/couch.obj",
   //"model/cessna7KC.obj",
   //"model/santa7KC.obj",
   //"model/laurana2KC.obj",
@@ -69,7 +69,7 @@ const char* modelNames[] = {
   //"model/blaze.obj",
   //"model/ateneal.obj",
   //"model/venusm.obj",
-  "../model/bunnyC.obj"
+  "model/bunnyC.obj"
   //"model/duck4KN.obj",
   //"model/happy10KN.obj",
   //"model/dragon10KN.obj",

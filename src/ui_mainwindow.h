@@ -164,8 +164,8 @@ public:
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
-        QObject::connect(radioButton, SIGNAL(clicked()), openGLWidget, SLOT(switchToWireframe()));
-        QObject::connect(radioButton_2, SIGNAL(clicked()), openGLWidget, SLOT(switchToSolid()));
+        QObject::connect(radioButton, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToWireframe(bool)));
+        QObject::connect(radioButton_2, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToSolid(bool)));
         QObject::connect(pushButton, SIGNAL(clicked()), openGLWidget, SLOT(reset()));
         QObject::connect(radioButton_3, SIGNAL(clicked()), openGLWidget, SLOT(switchToNoShading()));
         QObject::connect(radioButton_4, SIGNAL(clicked()), openGLWidget, SLOT(switchToFlatShading()));

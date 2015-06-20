@@ -39,9 +39,9 @@ public slots:
     void selectNextModel();
     void selectPrevModel();
     void toggleWireframe();
-    void switchToWireframe();
+    void switchToWireframe(bool);
     void toggleSolidView();
-    void switchToSolid();
+    void switchToSolid(bool);
     void toggleProjection();
     void switchToOrthogonal();
     void switchToPerspective();

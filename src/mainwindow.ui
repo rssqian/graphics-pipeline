@@ -378,8 +378,6 @@
    <header>openglwidget.h</header>
    <slots>
     <signal>fpsChanged(QString)</signal>
-    <slot>switchToWireframe()</slot>
-    <slot>switchToSolid()</slot>
     <slot>reset()</slot>
     <slot>switchToNoShading()</slot>
     <slot>switchToFlatShading()</slot>
@@ -390,6 +388,8 @@
     <slot>toggleCulling()</slot>
     <slot>switchToOrthogonal()</slot>
     <slot>switchToPerspective()</slot>
+    <slot>switchToWireframe(bool)</slot>
+    <slot>switchToSolid(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -397,9 +397,9 @@
  <connections>
   <connection>
    <sender>radioButton</sender>
-   <signal>clicked()</signal>
+   <signal>toggled(bool)</signal>
    <receiver>openGLWidget</receiver>
-   <slot>switchToWireframe()</slot>
+   <slot>switchToWireframe(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>83</x>
@@ -413,9 +413,9 @@
   </connection>
   <connection>
    <sender>radioButton_2</sender>
-   <signal>clicked()</signal>
+   <signal>toggled(bool)</signal>
    <receiver>openGLWidget</receiver>
-   <slot>switchToSolid()</slot>
+   <slot>switchToSolid(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>54</x>
