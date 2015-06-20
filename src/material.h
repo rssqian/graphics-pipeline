@@ -84,6 +84,5 @@ public:
 	string mtlName;
 };
 
-void makeMipMaps(vector<RGBImage*>&);
-
+void makeMipMaps(vector<RGBImage*>&) ;
 #endif

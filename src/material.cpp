@@ -1,7 +1,7 @@
 #include "material.h"
 #include <fstream>
 #include <iostream>
-#include <IL/il.h>
+//#include <IL/il.h>
 #include <stdlib.h>
 using namespace std;
 
@@ -111,6 +111,7 @@ bool RGBImage::readPPM(const string& filename)
 	return true;
 }
 
+/*
 void RGBImage::readDevIL(const string& filename, bool alpha)
 {
     ILuint image;
@@ -148,7 +149,7 @@ void RGBImage::readDevIL(const string& filename, bool alpha)
     free(data);
 	data = nullptr;
     return;// NULL;
-}
+}*/
 
 void makeMipMaps(vector<RGBImage*>& texMap) 
 { 

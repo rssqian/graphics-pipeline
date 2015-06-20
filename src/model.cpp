@@ -78,7 +78,6 @@ void readMtlLib(Model* model, const string& filename)
 				sprintf(PPMname,"%s Map_Kd Mipmap %d.ppm",mtlptr->mtlName.c_str(),i);
 				mtlptr->map_Kd[i]->writePPM(PPMname);
 			}*/
-			cout << "w = " << mtlptr->map_Kd[0]->w << ", h = " << mtlptr->map_Kd[0]->h << ", bits = " << mtlptr->map_Kd[0]->bits << endl;
 		} else if (h == "map_Ks") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -98,8 +97,6 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_bump.push_back(new RGBImage);
 			mtlptr->map_bump[0]->readPPM(fileName_s);
-			if(mtlptr->map_bump.size() != 0)
-				makeMipMaps(mtlptr->map_bump);
 		} else if (h == "map_d") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -107,8 +104,6 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_d.push_back(new RGBImage);
 			mtlptr->map_d[0]->readPPM(fileName_s);
-			if(mtlptr->map_d.size() != 0)
-				makeMipMaps(mtlptr->map_d);
 		} else {
 			cout << "readMtlLib(): Unknow token \"" << h << "\" ignored" << endl;
 			ifs.getline(buf,256);
@@ -265,7 +260,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				cout << "Cannot found material: " << fileName << endl;
 				break;
 			}
-			cout << "using material: "<< fileName << endl;
+			cout << "using material: "<< faceMtl->mtlName << endl;
 			break;
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
@@ -292,13 +287,14 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].vIndices[0] = v0;
 					triangles[tIdx].vIndices[1] = v1;
 					triangles[tIdx].vIndices[2] = v2;
-					triangles[tIdx].tcIndices[0] = v0;
-					triangles[tIdx].tcIndices[1] = v1;
-					triangles[tIdx].tcIndices[2] = v2;
+					triangles[tIdx].tcIndices[0] = t0;
+					triangles[tIdx].tcIndices[1] = t1;
+					triangles[tIdx].tcIndices[2] = t2;
 					triangles[tIdx].nIndices[0] = n0;
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
 					triangles[tIdx].mtlptr = faceMtl;
+					//cout << "Triangle[" << tIdx << "] use " << faceMtl->mtlName << endl;
 				}
 				else if(sscanf(buf, "%d/%d", &v0, &t0) == 2) {	/* v/t */
 					sscanf(buf, "%d/%d %d/%d %d/%d", &v0, &t0, &v1, &t1, &v2, &t2);
@@ -360,6 +356,10 @@ Model* readObj(const string& filename)
 	ifs.close();
 
 	cout << filename.c_str() << " loaded..." << endl;
+
+	//for (int i=0; i<model->numTriangles; i++) {
+	//	cout << "Triangle[" << i << "] use " << model->triangles[i]->->mtlName << endl;
+	//}
 
 	return model;
 }
