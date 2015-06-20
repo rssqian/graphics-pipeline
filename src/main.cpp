@@ -58,14 +58,14 @@ int ns = 1;
 
 /* model names */
 const char* modelNames[] = {
-	//"model/quad.obj",
+	"model/quad.obj",
 	//"model/couch.obj",
 	//"model/cubeT.obj",
-	"model/Nala.obj",
+	//"model/Nala.obj",
 	//"model/ball.obj",
 	//"model/duck.obj",
-	"model/ZEBRA.obj",
-	"model/Dog.obj",
+	//"model/ZEBRA.obj",
+	//"model/Dog.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
 	//"model/laurana2KC.obj",

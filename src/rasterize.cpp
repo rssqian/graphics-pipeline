@@ -113,14 +113,12 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 		for (x_=(int(p_left.x)==p_left.x)?p_left.x:int(p_left.x)+1; x_<=p_right.x; x_++) {
 			c = c_in;
 			z_ = p_left.z + (p_right.z-p_left.z)/(p_right.x-p_left.x)*(x_-p_left.x);
-			float a = (x_-p_left.x);
-			float b = (p_right.x-p_left.x)-a;
 			mv_result.clear();
 			lamda1 = ((p2.y-p3.y)*(x_-p3.x) + (p3.x-p2.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
 			lamda2 = ((p3.y-p1.y)*(x_-p3.x) + (p1.x-p3.x)*(y_-p3.y)) / ((p2.y-p3.y)*(p1.x-p3.x) + (p3.x-p2.x)*(p1.y-p3.y));
 			lamda3 = 1 - lamda1 - lamda2;
 			for (size_t i=0; i<v_MV_value.size(); i++) {
-				if (projection==0 || i==1) {
+				if (projection==0) {
 					mv_result[i].x = lamda1*v_MV_value[i][0].x + lamda2*v_MV_value[i][1].x + lamda3*v_MV_value[i][2].x;
 					mv_result[i].y = lamda1*v_MV_value[i][0].y + lamda2*v_MV_value[i][1].y + lamda3*v_MV_value[i][2].y;
 					mv_result[i].z = lamda1*v_MV_value[i][0].z + lamda2*v_MV_value[i][1].z + lamda3*v_MV_value[i][2].z;
@@ -132,6 +130,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 					mv_result[i].z = mv_result[i].z / temp_barycentric;
 					mv_result[i].y = mv_result[i].y / temp_barycentric;
 					mv_result[i].x = mv_result[i].x / temp_barycentric;
+					if (i==1) mv_result[i].z = 1 / temp_barycentric;
 				}
 			}
 			
@@ -206,16 +205,17 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 		vector<Primitive> s1_v_MV_value,s2_v_MV_value; 
 		Primitive s1;
 		Primitive s2;
+		b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+		a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
 		for (size_t i=0; i<v_MV_value.size(); i++) {
-			b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
-			a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
-			if (projection==0 || i==1) {
+			if (projection==0) {
 				temp = b / (a+b) * v_MV_value[i][vYSort[2]] + a / (a+b) * v_MV_value[i][vYSort[0]];
 			} else {
 				temp_perspective = b/(a+b)*(1/v_MV_value[1][vYSort[2]].z) + a/(a+b)*(1/v_MV_value[1][vYSort[0]].z);
 				temp.x = (b/(a+b)*(v_MV_value[i][vYSort[2]].x/v_MV_value[1][vYSort[2]].z) + a/(a+b)*(v_MV_value[i][vYSort[0]].x/v_MV_value[1][vYSort[0]].z)) / temp_perspective;
 				temp.y = (b/(a+b)*(v_MV_value[i][vYSort[2]].y/v_MV_value[1][vYSort[2]].z) + a/(a+b)*(v_MV_value[i][vYSort[0]].y/v_MV_value[1][vYSort[0]].z)) / temp_perspective;
 				temp.z = (b/(a+b)*(v_MV_value[i][vYSort[2]].z/v_MV_value[1][vYSort[2]].z) + a/(a+b)*(v_MV_value[i][vYSort[0]].z/v_MV_value[1][vYSort[0]].z)) / temp_perspective;
+				if (i==1) temp.z = 1 / temp_perspective;
 			}
 			s1 = new glm::vec3[3];
 			s1[0] = glm::vec3(v_MV_value[i][vYSort[2]]);
