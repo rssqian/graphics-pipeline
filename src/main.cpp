@@ -48,6 +48,7 @@ int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
+bool showAxes;
 
 int curModelIdx;
 bool culling;
@@ -130,6 +131,7 @@ void init()
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
+  showAxes = 0;
 }
 
 void displayFunc() 
@@ -202,7 +204,8 @@ void displayFunc()
 		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
 
- 		for(int j=0;j<3;j++) {
+    
+ 		for(int j=0; j<3; ++j) {
 			// model space (scaling->rotation->translation)
 			modelVertices[j] = modelMatrix * triVertices[j];
 			// view space
@@ -261,12 +264,13 @@ void displayFunc()
 
 			/*===wireframe mode===*/
 			if (wireframe==1) {
+        vec3 colorWireframe = vec3(0.8f, 0.6f, 0.2f);
 				MVPVertices[0].z = 0.f;
 				MVPVertices[1].z = 0.f;
 				MVPVertices[2].z = 0.f;
-				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,1.f,1.f));
-				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,1.f,1.f));
-				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,1.f,1.f));
+				drawLine(MVPVertices[0], MVPVertices[1], colorWireframe);
+				drawLine(MVPVertices[1], MVPVertices[2], colorWireframe);
+				drawLine(MVPVertices[2], MVPVertices[0], colorWireframe);
 			}
 
 			/*===display normal===*/
@@ -282,8 +286,36 @@ void displayFunc()
 					drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
 				}
 			}
-		}
-	}
+
+
+		} // end if culling
+	} // end for each triangle
+
+  /*===show axes===*/
+  if (showAxes) {
+    glm::vec4 axis[4];
+    axis[0] = glm::vec4(0.f, 0.f, 0.f, 1.f);
+    axis[1] = glm::vec4(1.f, 0.f, 0.f, 1.f);
+    axis[2] = glm::vec4(0.f, 1.f, 0.f, 1.f);
+    axis[3] = glm::vec4(0.f, 0.f, 1.f, 1.f);
+
+    for(int j=0; j<4; ++j) {
+      // model space (scaling->rotation->translation)
+      axis[j] = modelMatrix * axis[j];
+      // view space
+      axis[j] = viewMatrix * axis[j];
+      // projection space
+      axis[j] = projectionMatrix * axis[j];
+      // Display space
+      axis[j] = axis[j]*viewportMatrix;
+    }
+    vec3 colorAxisX = vec3(1.f, 0.f, 0.f);
+    vec3 colorAxisY = vec3(0.f, 1.f, 0.f);
+    vec3 colorAxisZ = vec3(0.f, 0.f, 1.f);
+    drawLine(axis[0], axis[1], colorAxisX); 
+    drawLine(axis[0], axis[2], colorAxisY); 
+    drawLine(axis[0], axis[3], colorAxisZ); 
+  } 
 	
 	/* Per Pixel Shading */ 
 	

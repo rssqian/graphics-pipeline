@@ -44,6 +44,7 @@ void printHelp()
 	cout << "  f: Toggle Solid mode                    " << endl;
 	cout << "  p: Toggle projection mode               " << endl;
 	cout << "  c: Toggle back-face culling             " << endl;
+	cout << "  a: Toggle axes (X-axis: Red, Y-axis: Green, Z-axis: Blue) " << endl;
 	cout << "  b: Toggle background color              " << endl;
 	cout << "  l: Toggle lighting mode                 " << endl;
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
@@ -109,6 +110,11 @@ inline void toggleCulling() {
   if (culling) cout << "ON";
   else cout << "OFF";
   cout << endl;
+}
+inline void toggleShowAxes() {
+  showAxes = !showAxes;
+  if (showAxes) cout << "Show axes" << endl;
+  else cout << "Hide axes" << endl;
 }
 inline void toggleBackground() {
   cout << "Toggle background color" << endl;
@@ -343,6 +349,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     toggleSolid(); break;
 	case 'p':
     toggleProjection(); break;
+  case 'a':
+    toggleShowAxes(); break;
 	case 'b':
     toggleBackground(); break;
   case 't':
