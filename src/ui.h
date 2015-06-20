@@ -30,6 +30,7 @@ extern glm::vec3 translate;
 
 extern int shading;
 extern bool wireframe;
+extern bool normalDisplay;
 extern bool solid;
 extern bool culling;
 extern bool projection;
@@ -50,6 +51,7 @@ inline void saveImage();
 inline void selectNextModel();
 inline void selectPrevModel();
 inline void toggleWireframe();
+inline void toggleNormalDisplay();
 inline void toggleSolid();
 inline void toggleProjection();
 inline void toggleCulling();

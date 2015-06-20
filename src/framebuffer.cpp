@@ -11,7 +11,9 @@ Framebuffer::Framebuffer(int w, int h)
 	int numPixel = w*h;
 	colorBuffer = new vec3[numPixel];
 	depthBuffer = new float[numPixel];
-	//mtlBuffer.resize(numPixel);
+	KaKdKsBuffer = new LightColor[numPixel];
+	texCoordBuffer = new vec3[numPixel];
+	mtlBuffer = new Material*[numPixel];
 	clear();
 }
 
@@ -19,6 +21,9 @@ Framebuffer::~Framebuffer()
 {
 	if(colorBuffer) delete[] colorBuffer;
 	if(depthBuffer) delete[] depthBuffer;
+	if(KaKdKsBuffer) delete [] KaKdKsBuffer;
+	if(texCoordBuffer) delete [] texCoordBuffer;
+	if(mtlBuffer) delete [] mtlBuffer;
 }
 
 void Framebuffer::clear() const 
@@ -27,7 +32,9 @@ void Framebuffer::clear() const
 	for (int i = 0; i < numPixel; ++i) {
 		colorBuffer[i] = clearColor;
 		depthBuffer[i] = DEPTH_INF;
-		//mtlBuffer[i] = nullptr;
+		KaKdKsBuffer[i] = LightColor();
+		//texCoordBuffer[i] = vec3()
+		mtlBuffer[i] = nullptr;
 	}
 }
 
@@ -36,7 +43,7 @@ void Framebuffer::setClearColor(const vec3 color)
 	clearColor = color;
 }
 
-void Framebuffer::draw(int ix, int iy, float z, vec3 c) const {
+void Framebuffer::draw(int ix, int iy, float z, vec3 c, LightColor KaKdKs, vec3 texCoord, Material* mtlptr) const {
 	if(ix < 0 || ix >= width || iy < 0 || iy >= height) {
 		return;
 	}
@@ -50,6 +57,9 @@ void Framebuffer::draw(int ix, int iy, float z, vec3 c) const {
 			colorBuffer[idx] = c;
 		} else colorBuffer[idx] = c;
 		depthBuffer[idx] = z;
+		KaKdKsBuffer[idx] = KaKdKs;
+		texCoordBuffer[idx] = texCoord;
+		mtlBuffer[idx] = mtlptr;
 	}
 }
 
@@ -76,6 +86,50 @@ void Framebuffer::writePPM(string filename) const {
 	delete [] buffer;
 }
 
+bool Framebuffer::celShading(int ix,int iy)
+{
+	int idx = iy * width + ix;
+	colorBuffer[idx].x = int(colorBuffer[idx].x/0.2) * 0.2;
+	colorBuffer[idx].y = int(colorBuffer[idx].y/0.2) * 0.2;
+	colorBuffer[idx].z = int(colorBuffer[idx].z/0.2) * 0.2;
+	return true;
+}
+
+bool Framebuffer::texturing(int ix,int iy)
+{
+	int idx = iy * width + ix;
+	if (mtlBuffer[idx]!=nullptr) {
+		glm::vec3 texCoord(texCoordBuffer[idx].x,texCoordBuffer[idx].y,texCoordBuffer[idx].z);
+		float LOD1 = 0, LOD2 = 0, LOD3 = 0, LOD4 = 0;
+		int target;
+		target = iy * width + (ix+1);
+		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[target]) 
+			LOD1 = sqrt((texCoordBuffer[idx].x-texCoordBuffer[target].x)*(texCoordBuffer[idx].x-texCoordBuffer[target].x) + 
+						(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y));
+		target = iy * width + (ix-1);
+		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[iy * width + (ix-1)]) 
+			LOD2 = sqrt((texCoordBuffer[idx].x-texCoordBuffer[target].x)*(texCoordBuffer[idx].x-texCoordBuffer[target].x) + 
+						(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y));
+		target = (iy+1) * width + ix;
+		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy+1) * width + ix]) 
+			LOD3 = sqrt((texCoordBuffer[idx].x-texCoordBuffer[target].x)*(texCoordBuffer[idx].x-texCoordBuffer[target].x) + 
+						(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y));
+		target = (iy-1) * width + ix;
+		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy-1) * width + ix]) 
+			LOD4 = sqrt((texCoordBuffer[idx].x-texCoordBuffer[target].x)*(texCoordBuffer[idx].x-texCoordBuffer[target].x) + 
+						(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y));
+		float LOD = (LOD1>LOD2) ? LOD1 : LOD2;
+		LOD = (LOD3>LOD) ? LOD3 : LOD;
+		LOD = (LOD4>LOD) ? LOD4 : LOD;
+		LOD = log10(LOD)/log10(2.0);
+		getTexture(mtlBuffer[idx],texCoord,KaKdKsBuffer[idx].ambient,KaKdKsBuffer[idx].diffuse,KaKdKsBuffer[idx].specular);
+		colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x + KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].specular.x;
+		colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].specular.y;
+		colorBuffer[idx].z = KaKdKsBuffer[idx].ambient.z + KaKdKsBuffer[idx].diffuse.z + KaKdKsBuffer[idx].specular.z;
+	}
+	return true;
+}
+
 float dotProduct(const vec3& v1,const vec3& v2)
 {
 	return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
@@ -96,4 +150,9 @@ void normalize(vec3& v)
 	v.x /= length;
 	v.y /= length;
 	v.z /= length;
+}
+
+vec3 glm2vec3(const glm::vec3& v)
+{
+	return vec3(v.x,v.y,v.z);
 }

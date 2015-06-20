@@ -13,13 +13,13 @@ void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 				for (int x_=p1.x; x_<=p2.x; x_++) {
 					int y_ = x_*m+B;
 					float z_ = p1.z + (p2.z-p1.z)/(p2.x-p1.x)*(x_-p1.x);
-					framebuffer.draw(x_,y_,z_,c);
+					framebuffer.draw(x_,y_,z_,c,LightColor(),vec3(0.f),nullptr);
 				}
 			} else {
 				for (int x_=p2.x; x_<=p1.x; x_++) {
 					int y_ = x_*m+B;
 					float z_ = p2.z + (p1.z-p2.z)/(p1.x-p2.x)*(x_-p2.x);
-					framebuffer.draw(x_,y_,z_,c);
+					framebuffer.draw(x_,y_,z_,c,LightColor(),vec3(0.f),nullptr);
 				}
 			}
 		} else {									//use x=my+B
@@ -29,13 +29,13 @@ void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 				for (int y_=p1.y; y_<=p2.y; y_++) {
 					int x_ = y_*m+B;
 					float z_ = p1.z + (p2.z-p1.z)/(p2.y-p1.y)*(y_-p1.y);
-					framebuffer.draw(x_,y_,z_,c);
+					framebuffer.draw(x_,y_,z_,c,LightColor(),vec3(0.f),nullptr);
 				}
 			} else {
 				for (int y_=p2.y; y_<=p1.y; y_++) {
 					int x_ = y_*m+B;
 					float z_ = p2.z + (p1.z-p2.z)/(p1.y-p2.y)*(y_-p2.y);
-					framebuffer.draw(x_,y_,z_,c);
+					framebuffer.draw(x_,y_,z_,c,LightColor(),vec3(0.f),nullptr);
 				}
 			}
 		}
@@ -134,39 +134,31 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 					mv_result[i].x = mv_result[i].x / temp_barycentric;
 				}
 			}
+			
 			if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
 			else light.setParameter(ka,kd,ks,1);
 			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
 				light.shading(mv_result[1], mv_result[0],mtl,c); 
 			}
-			//if (textureDisplay==1) cout << "after lighting: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
-			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 && mtl!=nullptr) {
+			/*if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 && mtl!=nullptr) {
 				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);
-				//ambient_c = glm::vec3(0.f);
-				//c.x = ambient_c.x + diffuse_c.x + specular_c.x;
-				//c.y = ambient_c.y + diffuse_c.y + specular_c.y;
-				//c.z = ambient_c.z + diffuse_c.z + specular_c.z;
-			}
-			//if (textureDisplay==1) cout << "after getTexture: " << c.diffuse.x << ", " << c.diffuse.y << ", " << c.diffuse.z << endl;
-			vec3 vec3C(	c.ambient.x + c.diffuse.x + c.specular.x,
-						c.ambient.y + c.diffuse.y + c.specular.y,
-						c.ambient.z + c.diffuse.z + c.specular.z);
-			//vec3 vec3C(c.diffuse.x,c.diffuse.y,c.diffuse.z);
-			//vec3 vec3C(c.specular.x,c.specular.y,c.specular.z);
-			if (shading==4) {
+			}*/
+			vec3 vec3C = glm2vec3(c.ambient + c.diffuse + c.specular);
+			//vec3 vec3C(	(c.ambient.x + c.diffuse.x + c.specular.x),
+			//			(c.ambient.y + c.diffuse.y + c.specular.y),
+			//			(c.ambient.z + c.diffuse.z + c.specular.z));
+			if (shading==4 && modelPtr[curModelIdx]->numNormals!=0) {
 				mv_result[0] = glm::normalize(mv_result[0]);
 				vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
 				vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
 				vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
-				//cout << "vetexCoord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ") -> ";
-				//cout << "normal = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
 			}
-			if (shading==3) {
+			/*if (shading==3) {
 				vec3C.x = int(vec3C.x/0.2) * 0.2;
 				vec3C.y = int(vec3C.y/0.2) * 0.2;
 				vec3C.z = int(vec3C.z/0.2) * 0.2;
-			}
-			framebuffer.draw(x_,y_,z_,vec3C);
+			}*/
+			framebuffer.draw(x_,y_,z_,vec3C,c,glm2vec3(mv_result[2]),mtl);
 		}
 		y_--;
 	}

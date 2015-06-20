@@ -20,10 +20,10 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 800;
-int screenHeight = 600;
-int screenWidth_half = 400;
-int screenHeight_half = 300;
+int screenWidth = 1200;
+int screenHeight = 900;
+int screenWidth_half = 600;
+int screenHeight_half = 450;
 
 /* theta */
 double rotateSpeed = 0.05;
@@ -38,6 +38,7 @@ float FoV=45.0f;
 
 /*mode*/
 bool wireframe; //0-wireframe off, 1-wireframe on
+bool normalDisplay;
 bool solid; //0-solid mode off, 1-solid mode on
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
@@ -51,8 +52,9 @@ vec3 color(1.f);
 
 Lighting light;
 glm::vec3 ka(0.2f);
-glm::vec3 kd(0.5f);
-glm::vec3 ks(0.8f);
+glm::vec3 kd(0.8f);
+glm::vec3 ks(0.5f);
+int ns = 1;
 
 /* model names */
 const char* modelNames[] = {
@@ -121,6 +123,7 @@ void init()
 	curModelIdx = 0;
 	culling = true;
 	wireframe = 0;
+	normalDisplay = 0;
 	solid = 1;
 	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
 	projection = 0; //0-orthogonal, 1-perspective
@@ -158,12 +161,10 @@ void displayFunc()
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
 		float* normalPtr = modelPtr[curModelIdx]->normals;
-		/*===texCoord===*/
 		float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
 
 		glm::vec4 triVertices[3];
 		glm::vec4 triNormals[3];
-		/*===texCoord===*/
 		glm::vec3 triTexCoord[3];
 
 		for (int j=0; j<3; j++) {
@@ -171,7 +172,6 @@ void displayFunc()
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
 			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
 			triVertices[j].w = 1;
-			/*===texCoord===*/
 			if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
 				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
 				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
@@ -195,6 +195,7 @@ void displayFunc()
 		}
 		Material* mtl = trianglePtr -> mtlptr;
 
+		/*===transformation===*/
 		glm::vec4 modelVertices[3];
 		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
@@ -217,20 +218,23 @@ void displayFunc()
 		glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
-		//Back Face Culling
+		/*===Back Face Culling===*/
 		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
-			LightColor RGBIntensity(glm::vec3(1.f),glm::vec3(1.f),glm::vec3(1.f));
+			LightColor KaKdKsIntensity(glm::vec3(1.f),glm::vec3(1.f),glm::vec3(1.f));
+
+			/*===flat shading===*/
 			if (shading==1) {
 				glm::vec3 centerVertex = glm::vec3(modelVertices[0]+modelVertices[1]+modelVertices[2]) / 3.f;
-				glm::vec3 ambient_c,diffuse_c,specular_c;
-				light.shading(centerVertex, faceNormals,mtl,RGBIntensity);
-				//c.x = ambient_c.x + diffuse_c.x + specular_c.x;
-				//c.y = ambient_c.y + diffuse_c.y + specular_c.y;
-				//c.z = ambient_c.z + diffuse_c.z + specular_c.z;
-			} //else c = color;
+				//glm::vec3 ambient_c,diffuse_c,specular_c;
+				if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
+				else light.setParameter(ka,kd,ks,ns);
+				light.shading(centerVertex, faceNormals,mtl,KaKdKsIntensity);
+			}
+
+			/*===Rasteriztion===*/
 			glm::vec3* displayVertices = new glm::vec3[3];
 			for (int j=0; j<3;j++)
 				displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,modelVertices[j].z);
@@ -246,11 +250,11 @@ void displayFunc()
 				temp_vertex[j] = glm::vec3(modelVertices[j].x,modelVertices[j].y,modelVertices[j].z);
 			displayNormals.push_back(temp_vertex);
 
-			/*===texCoord===*/
 			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
 
-			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
-			
+			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
+
+			/*===wireframe mode===*/
 			if (wireframe==1) {
 				MVPVertices[0].z = 0.f;
 				MVPVertices[1].z = 0.f;
@@ -259,10 +263,40 @@ void displayFunc()
 				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
 				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
 			}
+
+			/*===display normal===*/
+			if (normalDisplay) {
+				glm::vec4 smallNormals[3];
+				vec3 colorNormal;
+				for (int j=0; j<3;j++){
+					smallNormals[j] = glm::normalize(modelNormals[j]);
+					smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
+					colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
+					colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
+					colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
+					drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
+				}
+			}
 		}
 	}
+	
+	/* Per Pixel Shading */ 
+	/*
+	for (int i=0; i<screenWidth; i++) {
+		for (int j=0; j<screenHeight; j++) {
+			//texturing
+			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
+				framebuffer.texturing(i,j);
+			}
 
-		/* display */
+			//cel shading
+			if (shading==3) {
+				framebuffer.celShading(i,j);
+			}
+		}
+	}*/
+
+	/* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
 	glutSwapBuffers();
 

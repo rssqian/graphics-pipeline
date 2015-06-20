@@ -40,6 +40,7 @@ void printHelp()
 	cout << "  <View options>                          " << endl;
 	cout << "  --------------------------------------- " << endl;
 	cout << "  w: Toggle wireframe mode                " << endl;
+	cout << "  n: Toggle normal-display mode           " << endl;
 	cout << "  f: Toggle Solid mode                    " << endl;
 	cout << "  p: Toggle projection mode               " << endl;
 	cout << "  c: Toggle back-face culling             " << endl;
@@ -81,6 +82,12 @@ inline void toggleWireframe() {
   cout << "Toggle object to: ";
   if (wireframe) cout << "Wireframe on" << endl;
   else cout << "Wireframe off" << endl;
+}
+inline void toggleNormalDisplay() {
+	normalDisplay = !normalDisplay;
+	cout << "Toggle normal display: ";
+	if (normalDisplay) cout << "on" << endl;
+	else cout << "off" << endl;
 }
 inline void toggleSolid() {
   solid = !solid;
@@ -311,8 +318,10 @@ void keyboardFunc(unsigned char key, int x, int y)
     switchKaKdKsLighting(); break;
 	case 'w':
     toggleWireframe(); break;
+	case 'n':
+	toggleNormalDisplay(); break;
 	case 'f':
-		toggleSolid(); break;
+	toggleSolid(); break;
 	case 'p':
     toggleProjection(); break;
 	case 'b':

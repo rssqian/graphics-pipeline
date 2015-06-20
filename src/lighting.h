@@ -2,12 +2,11 @@
 #define _LIGHTING_H_
 
 #include "material.h"
-#include "framebuffer.h"
+#include "vec3.h"
 #include <glm/glm.hpp>
 #include <iostream>
 using namespace std;
 
-extern vec3 color;
 extern glm::vec3 cameraPos;
 extern glm::vec3 cameraTarget;
 extern bool textureDisplay;

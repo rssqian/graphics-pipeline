@@ -30,6 +30,7 @@
     <ClInclude Include="src\texture.h" />
     <ClInclude Include="src\transform.h" />
     <ClInclude Include="src\ui.h" />
+    <ClInclude Include="src\vec3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{07D3E7FD-6E15-4073-8840-33A9859738B1}</ProjectGuid>
