@@ -20,10 +20,10 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 1200;
-int screenHeight = 900;
-int screenWidth_half = 600;
-int screenHeight_half = 450;
+int screenWidth = 800;
+int screenHeight = 600;
+int screenWidth_half = 400;
+int screenHeight_half = 300;
 
 /* theta */
 double rotateSpeed = 0.05;
@@ -58,11 +58,12 @@ int ns = 1;
 
 /* model names */
 const char* modelNames[] = {
-	"model/quad.obj",
-	"model/couch.obj",
-	"model/cubeT.obj",
-	"model/ball.obj",
-	"model/duck.obj",
+	//"model/quad.obj",
+	//"model/couch.obj",
+	//"model/cubeT.obj",
+	"model/Nala.obj",
+	//"model/ball.obj",
+	//"model/duck.obj",
 	"model/ZEBRA.obj",
 	"model/Dog.obj",
 	//"model/cessna7KC.obj",
@@ -193,7 +194,7 @@ void displayFunc()
 				triNormals[j].w = 1; // unsure
 			}
 		}
-		Material* mtl = trianglePtr -> mtlptr;
+		Material* mtl = trianglePtr[i].mtlptr;
 
 		/*===transformation===*/
 		glm::vec4 modelVertices[3];

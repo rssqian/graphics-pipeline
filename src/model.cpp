@@ -242,7 +242,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				cout << "Cannot found material: " << fileName << endl;
 				break;
 			}
-			cout << "using material: "<< fileName << endl;
+			cout << "using material: "<< faceMtl->mtlName << endl;
 			break;
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
@@ -276,6 +276,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
 					triangles[tIdx].mtlptr = faceMtl;
+					//cout << "Triangle[" << tIdx << "] use " << faceMtl->mtlName << endl;
 				}
 				else if(sscanf(buf, "%d/%d", &v0, &t0) == 2) {	/* v/t */
 					sscanf(buf, "%d/%d %d/%d %d/%d", &v0, &t0, &v1, &t1, &v2, &t2);
@@ -337,6 +338,10 @@ Model* readObj(const string& filename)
 	ifs.close();
 
 	cout << filename.c_str() << " loaded..." << endl;
+
+	//for (int i=0; i<model->numTriangles; i++) {
+	//	cout << "Triangle[" << i << "] use " << model->triangles[i]->->mtlName << endl;
+	//}
 
 	return model;
 }
