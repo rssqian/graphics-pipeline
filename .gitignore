@@ -1,5 +1,3 @@
-# Ignore files created by Qt Creator
-*.user
 # Ignore files created by Visual Studio
 Release/
 include/
