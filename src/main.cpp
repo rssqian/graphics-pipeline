@@ -281,7 +281,7 @@ void displayFunc()
 	}
 	
 	/* Per Pixel Shading */ 
-	/*
+	
 	for (int i=0; i<screenWidth; i++) {
 		for (int j=0; j<screenHeight; j++) {
 			//texturing
@@ -294,7 +294,7 @@ void displayFunc()
 				framebuffer.celShading(i,j);
 			}
 		}
-	}*/
+	}
 
 	/* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
