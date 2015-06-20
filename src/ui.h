@@ -41,6 +41,8 @@ extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+extern bool pointLight;
+extern float spotlightAngle;
 
 #endif
 

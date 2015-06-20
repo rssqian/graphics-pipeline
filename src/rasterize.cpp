@@ -138,7 +138,10 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
 			else light.setParameter(ka,kd,ks,1);
 			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
-				light.shading(mv_result[1], mv_result[0],mtl,c); 
+        if (pointLight)
+          light.shading(mv_result[1], mv_result[0], c, spotlightAngle); 
+        else
+          light.directionalShading(mv_result[0], c); 
 			}
 			/*if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 && mtl!=nullptr) {
 				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);

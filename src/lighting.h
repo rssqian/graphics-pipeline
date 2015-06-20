@@ -38,24 +38,20 @@ public:
 class Lighting
 {
 public:
-  Lighting() {
-    source = glm::vec3(-3.f, 3.f, 5.f);
-    ka = glm::vec3(0.f);
-    kd = glm::vec3(0.f);
-    ks = glm::vec3(0.f);
-    ns = 1;
-	displayLight = 0;
-  };
-  ~Lighting() {};
+  Lighting();
+  ~Lighting();
 
   void setParameter(const glm::vec3& Ka,const glm::vec3& Kd,const glm::vec3& Ks,const int& Ns);
-  void shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,LightColor& c);
+  void shading(const glm::vec3& vertex, const glm::vec3& normal, LightColor& c, float spotlightAngle = 0);
+  void directionalShading(const glm::vec3& normal, LightColor& c);
 
   glm::vec3 source;
   glm::vec3 ka;
   glm::vec3 kd;
   glm::vec3 ks;
   int ns;
+
+  float attenuation;
 
   int displayLight; //0-KaKdKs, 1-Ka, 2-Kd, 3-Ks
 };

@@ -59,27 +59,29 @@ glm::vec3 ka(0.2f);
 glm::vec3 kd(0.5f);
 glm::vec3 ks(0.1f);
 int ns = 1;
+bool pointLight; // 0 - directional light source, 1 - point light source
+float spotlightAngle = 0.99; // 0 to turn off
 
 /* model names */
 const char* modelNames[] = {
-	//"model/quad.obj"
+  "model/quad.obj",
 	//"model/couch.obj",
 	//"model/cubeT.obj",
-	//"model/ball.obj",
+  "model/ball.obj",
 	//"model/duck.obj",
   //"model/box.obj",
 	//"model/cubeT.obj"
   //"model/bunnyC.obj"
   // Animals with textures
-  //"model/ZEBRA.obj",
-  //"model/Nala.obj",
-  //"model/Dog.obj",
-  //"model/Tiger.obj",
+  "model/ZEBRA.obj",
+  "model/Nala.obj",
+  "model/Dog.obj",
+  "model/Tiger.obj",
   "model/Giraffe.obj",
-  //"model/cat.obj",
+  "model/cat.obj",
   "model/Deer.obj",
-  "model/Killer_Whale.obj"
-  //"model/Rabbit.obj"
+  "model/Killer_Whale.obj",
+  "model/Rabbit.obj"
 };
 int numModels = sizeof(modelNames) / sizeof(char*);
 
@@ -123,7 +125,8 @@ void init()
 	wireframe = 0;
 	normalDisplay = 0;
 	solid = 1;
-	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
+	shading = 2; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
+  pointLight = 1;
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
@@ -230,7 +233,10 @@ void displayFunc()
 				//glm::vec3 ambient_c,diffuse_c,specular_c;
 				if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
 				else light.setParameter(ka,kd,ks,ns);
-				light.shading(centerVertex, faceNormals,mtl,KaKdKsIntensity);
+        if (pointLight)
+				  light.shading(centerVertex, faceNormals, KaKdKsIntensity, spotlightAngle);
+        else
+				  light.directionalShading(faceNormals, KaKdKsIntensity);
 			}
 
 			/*===Rasteriztion===*/

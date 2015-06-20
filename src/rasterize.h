@@ -20,6 +20,8 @@ extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+extern float spotlightAngle;
+extern bool pointLight;
 
 void drawEdge(int* ix,int* iy,float* iz,vec3 c);  //ix,iy,iz must have 3 element
 

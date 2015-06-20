@@ -47,6 +47,8 @@ void printHelp()
 	cout << "  b: Toggle background color              " << endl;
 	cout << "  l: Toggle lighting mode                 " << endl;
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
+	cout << "  d: Toggle poit/directional light source  " << endl;
+	cout << "  z/x: Increase/Decrease spotlight angle (point light) " << endl;
 	cout << "  t: Toggle texture                        " << endl;
 	cout << "  T: Switch texture addressing mode        " << endl;
 	cout << "===========================================" << endl;
@@ -137,7 +139,7 @@ inline void changeShading() {
   }
   cout << endl;
 }
-inline void switchKaKdKsLighting(){
+inline void switchKaKdKsLighting() {
   if (lightswitch == 3)  lightswitch= 0;
   else lightswitch++;
   light.displayLight = lightswitch;
@@ -156,6 +158,17 @@ inline void switchKaKdKsLighting(){
       break;
   }
 }
+inline void togglePointLight() {
+  pointLight = !pointLight;
+  if (pointLight) cout << "Point light source" << endl;
+  else cout << "Directional light source" << endl;
+}
+inline void changeSpotlightAngle(float angle) {
+  spotlightAngle += angle;
+  if (spotlightAngle > 1) spotlightAngle = 1;
+  if (spotlightAngle < 0) spotlightAngle = 0;
+  cout << "Spotlight angle: " << spotlightAngle << endl;
+}
 
 inline void rotateUp() {
   //cout << "Rotate up" << endl;
@@ -173,19 +186,19 @@ inline void rotateRight() {
   //cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
 }
-inline void panUp(int pace) {
+inline void panUp(float pace) {
   //cout << "Pan up" << endl;
   translate.y += pace;
 }
-inline void panDown(int pace) {
+inline void panDown(float pace) {
   //cout << "Pan down" << endl;
   translate.y -= pace;
 }
-inline void panLeft(int pace) {
+inline void panLeft(float pace) {
   //cout << "Pan left" << endl;
   translate.x -= pace;
 }
-inline void panRight(int pace) {
+inline void panRight(float pace) {
   //cout << "Pan right" << endl;
 	translate.x += pace;
 }
@@ -214,7 +227,7 @@ inline void moveBackward() {
 inline void setLightSourcePosition(int x, int y) {
   float lightX = float(x - screenWidth_half)/screenWidth_half*5;
   float lightY = float(screenHeight_half - y)/screenHeight_half*5;
-  light.source = glm::vec3(lightX, lightY, 5.f);
+  light.source = glm::vec3(lightX, lightY, 1.f);
   cout << "Set light source to (" << lightX << ", " << lightY << ", 5)"<< endl;
 } 
 
@@ -316,12 +329,18 @@ void keyboardFunc(unsigned char key, int x, int y)
     changeShading(); break;
   case 'k':
     switchKaKdKsLighting(); break;
+  case 'd':
+    togglePointLight(); break;
+  case 'z':
+    changeSpotlightAngle(-0.001); break;
+  case 'x':
+    changeSpotlightAngle(0.001); break;
 	case 'w':
     toggleWireframe(); break;
 	case 'n':
-	toggleNormalDisplay(); break;
+    toggleNormalDisplay(); break;
 	case 'f':
-	toggleSolid(); break;
+    toggleSolid(); break;
 	case 'p':
     toggleProjection(); break;
 	case 'b':
@@ -331,13 +350,13 @@ void keyboardFunc(unsigned char key, int x, int y)
   case 'T':
     switchTextureModes(); break;
   case 'A':
-    panLeft(10); break;
+    panLeft(0.1); break;
   case 'D':
-    panRight(10); break;
+    panRight(0.1); break;
   case 'W':
-    panUp(10); break;
+    panUp(0.1); break;
   case 'S':
-    panDown(10); break;
+    panDown(0.1); break;
   case '=':
     zoomIn(); break;
   case '-':
