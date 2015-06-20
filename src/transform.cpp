@@ -82,10 +82,6 @@ glm::mat4 projectionMatrix(float FoV) {
 */
 bool backFaceCulling(glm::vec3 faceNormals, glm::vec3 modelVertice)   //input 3 vertex of the triangle
 {
-/*	vec3 v1(triangleV[0].x-triangleV[1].x,triangleV[0].y-triangleV[1].y,triangleV[0].z-triangleV[1].z);
-	vec3 v2(triangleV[0].x-triangleV[2].x,triangleV[0].y-triangleV[2].y,triangleV[0].z-triangleV[2].z);
-	vec3 v3 = crossProduct(v1,v2);
-	normalize(v3);*/
 	glm::vec3 front(0.f,0.f,1.f);
   if (projection) {
     if ( glm::dot(faceNormals, modelVertice) > 0) return true;

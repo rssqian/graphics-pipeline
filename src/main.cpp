@@ -39,6 +39,7 @@ float FoV=45.0f;
 /*mode*/
 bool wireframe;
 bool solid;
+bool showNormals;
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
@@ -119,6 +120,7 @@ void init()
 	culling = true;
 	wireframe = 0;
   solid = 1;
+  showNormals = 1;
 	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
@@ -195,6 +197,7 @@ void displayFunc()
 		glm::vec4 modelVertices[3];
 		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
+		glm::vec4 smallNormals[3];
 
  		for(int j=0;j<3;j++) {
 			// model space (scaling->rotation->translation)
@@ -209,6 +212,9 @@ void displayFunc()
 
 			// Normal : rotation
 			modelNormals[j] = model_rotation(theta) * triNormals[j];
+
+			smallNormals[j] = glm::normalize(modelNormals[j]);
+			smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
  		}
 		glm::vec3 v1 ( modelVertices[0]-modelVertices[1] );
 		glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
@@ -250,9 +256,24 @@ void displayFunc()
         rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
       }
 			if (wireframe) {
-				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
+        vec3 wireColor = vec3(1.f, 0.5f, 0.5f);
+        // Move wireframe to the front, so not covered by solid view
+        MVPVertices[0].z = 0.f;
+        MVPVertices[1].z = 0.f;
+        MVPVertices[2].z = 0.f;
+				drawLine(MVPVertices[0], MVPVertices[1], wireColor);
+				drawLine(MVPVertices[1], MVPVertices[2], wireColor);
+				drawLine(MVPVertices[2], MVPVertices[0], wireColor);
+      }
+      // Display Normal
+			if (showNormals) {
+        vec3 colorNormal;
+        for (int j=0; j<3;j++){
+          colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
+          colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
+          colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
+          drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
+        }
       }
 		}
 	}

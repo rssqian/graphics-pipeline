@@ -155,9 +155,9 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			//vec3 vec3C(c.specular.x,c.specular.y,c.specular.z);
 			if (shading==4) {
 				mv_result[0] = glm::normalize(mv_result[0]);
-				vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
-				vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
-				vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
+        vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
+        vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
+        vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
 				//cout << "vetexCoord = (" << mv_result[1].x << "," << mv_result[1].y << "," << mv_result[1].z << ") -> ";
 				//cout << "normal = (" << mv_result[0].x << "," << mv_result[0].y << "," << mv_result[0].z << ")" << endl;
 			}
@@ -211,7 +211,7 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 
 		//interpolating for MV_value
 		vector<Primitive> s1_v_MV_value,s2_v_MV_value; 
-    if (projection==0) {
+    //if (projection==0) {
 			for (size_t i=0; i<v_MV_value.size(); i++) {
 				Primitive MV_value(v_MV_value[i]);
 				b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
@@ -228,28 +228,28 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 				s1_v_MV_value.push_back(s1);
 				s2_v_MV_value.push_back(s2);
       }
-    } else {
-      for (size_t i=0; i<v_MV_value.size(); i++) {
-        Primitive MV_value(v_MV_value[i]);
-        b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
-        a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
-        temp.z = 1 / (b/(a+b)*(1/MV_value[vYSort[2]].z) + a/(a+b)*(1/MV_value[vYSort[0]].z));
-        temp.x = (b/(a+b)*(MV_value[vYSort[2]].x/MV_value[vYSort[2]].z) + a/(a+b)*(MV_value[vYSort[0]].x/MV_value[vYSort[0]].z))
-              * temp.z;
-        temp.y = (b/(a+b)*(MV_value[vYSort[2]].y/MV_value[vYSort[2]].y) + a/(a+b)*(MV_value[vYSort[0]].y/MV_value[vYSort[0]].y))
-              * temp.z;
-        Primitive s1 = new glm::vec3[3];
-        s1[0] = glm::vec3(MV_value[vYSort[2]]);
-        s1[1] = glm::vec3(MV_value[vYSort[1]]);
-        s1[2] = glm::vec3(temp);
-        Primitive s2 = new glm::vec3[3];
-        s2[0] = glm::vec3(MV_value[vYSort[1]]);
-        s2[1] = glm::vec3(temp);
-        s2[2] = glm::vec3(MV_value[vYSort[0]]);
-        s1_v_MV_value.push_back(s1);
-        s2_v_MV_value.push_back(s2);
-      }
-		}
+    //} else {
+      //for (size_t i=0; i<v_MV_value.size(); i++) {
+        //Primitive MV_value(v_MV_value[i]);
+        //b = MVP_vertex[vYSort[1]].y-MVP_vertex[vYSort[0]].y;
+        //a = MVP_vertex[vYSort[2]].y-MVP_vertex[vYSort[0]].y - b;
+        //temp.z = 1 / (b/(a+b)*(1/MV_value[vYSort[2]].z) + a/(a+b)*(1/MV_value[vYSort[0]].z));
+        //temp.x = (b/(a+b)*(MV_value[vYSort[2]].x/MV_value[vYSort[2]].z) + a/(a+b)*(MV_value[vYSort[0]].x/MV_value[vYSort[0]].z))
+              //* temp.z;
+        //temp.y = (b/(a+b)*(MV_value[vYSort[2]].y/MV_value[vYSort[2]].y) + a/(a+b)*(MV_value[vYSort[0]].y/MV_value[vYSort[0]].y))
+              //* temp.z;
+        //Primitive s1 = new glm::vec3[3];
+        //s1[0] = glm::vec3(MV_value[vYSort[2]]);
+        //s1[1] = glm::vec3(MV_value[vYSort[1]]);
+        //s1[2] = glm::vec3(temp);
+        //Primitive s2 = new glm::vec3[3];
+        //s2[0] = glm::vec3(MV_value[vYSort[1]]);
+        //s2[1] = glm::vec3(temp);
+        //s2[2] = glm::vec3(MV_value[vYSort[0]]);
+        //s1_v_MV_value.push_back(s1);
+        //s2_v_MV_value.push_back(s2);
+      //}
+		//}
 		rasterStandingTriangle(s1_MVP_vertex,s1_v_MV_value,mtl,c);
 		rasterStandingTriangle(s2_MVP_vertex,s2_v_MV_value,mtl,c);
 		delete [] s1_MVP_vertex;
