@@ -20,15 +20,19 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 1200;
-int screenHeight = 900;
-int screenWidth_half = 600;
-int screenHeight_half = 450;
+//int screenWidth = 4200;
+//int screenHeight = 4200;
+int screenWidth = 800;
+int screenHeight = 600;
+int screenWidth_half = screenWidth/2;
+int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
-glm::vec3 theta (0.0f, 0.0f, 0.0f);
-glm::vec3 size (1.0f, 1.0f, 1.0f);
+glm::vec3 theta (0.0f, 0.5f, 0.0f);
+glm::vec3 size (1.5f, 1.5f, 1.5f);
+//glm::vec3 theta (0.0f, 0.0f, 0.0f);
+//glm::vec3 size (1.0f, 1.0f, 1.0f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
 glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
@@ -52,36 +56,30 @@ vec3 color(1.f);
 
 Lighting light;
 glm::vec3 ka(0.2f);
-glm::vec3 kd(0.8f);
-glm::vec3 ks(0.5f);
+glm::vec3 kd(0.5f);
+glm::vec3 ks(0.1f);
 int ns = 1;
 
 /* model names */
 const char* modelNames[] = {
-	"model/quad.obj",
-	"model/couch.obj",
-	"model/cubeT.obj",
-	"model/ball.obj",
-	"model/duck.obj",
-	"model/ZEBRA.obj",
-	"model/Dog.obj",
-	//"model/cessna7KC.obj",
-	//"model/santa7KC.obj",
-	//"model/laurana2KC.obj",
-	//"model/shuttle.obj",
-	//"model/sphere.obj",
-	//"model/KioMiku/Miku.obj",
-	//"model/Giraffe.obj",
-	//"model/blaze.obj",
-	//"model/ateneal.obj",
-	//"model/venusm.obj",
-	"model/bunnyC.obj"
-	//"model/duck4KN.obj",
-	//"model/happy10KN.obj",
-	//"model/dragon10KN.obj",
-	//"model/elephant16KN.obj",
-	//"model/Statue_of_Liberty.obj",
-	//"model/Nissan_Pathfinder.obj"
+	//"model/quad.obj"
+	//"model/couch.obj",
+	//"model/cubeT.obj",
+	//"model/ball.obj",
+	//"model/duck.obj",
+  //"model/box.obj",
+	//"model/cubeT.obj"
+  //"model/bunnyC.obj"
+  // Animals with textures
+  //"model/ZEBRA.obj",
+  //"model/Nala.obj",
+  //"model/Dog.obj",
+  //"model/Tiger.obj",
+  "model/Giraffe.obj",
+  //"model/cat.obj",
+  "model/Deer.obj",
+  "model/Killer_Whale.obj"
+  //"model/Rabbit.obj"
 };
 int numModels = sizeof(modelNames) / sizeof(char*);
 
@@ -134,6 +132,7 @@ void init()
 void displayFunc() 
 {
 	framebuffer.clear();
+	//framebuffer.setClearColor(vec3(0.1, 0.3, 0.5));
 
 	// Set MVP and viewport
 	glm::mat4 modelMatrix = model_translation(translate) 
@@ -193,7 +192,7 @@ void displayFunc()
 				triNormals[j].w = 1; // unsure
 			}
 		}
-		Material* mtl = trianglePtr -> mtlptr;
+		Material* mtl = trianglePtr[i].mtlptr;
 
 		/*===transformation===*/
 		glm::vec4 modelVertices[3];
@@ -259,9 +258,9 @@ void displayFunc()
 				MVPVertices[0].z = 0.f;
 				MVPVertices[1].z = 0.f;
 				MVPVertices[2].z = 0.f;
-				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
+				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,1.f,1.f));
+				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,1.f,1.f));
+				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,1.f,1.f));
 			}
 
 			/*===display normal===*/
@@ -270,7 +269,7 @@ void displayFunc()
 				vec3 colorNormal;
 				for (int j=0; j<3;j++){
 					smallNormals[j] = glm::normalize(modelNormals[j]);
-					smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
+					smallNormals[j] = glm::vec4(smallNormals[j].x*130,smallNormals[j].y*130,smallNormals[j].z*130,0.f);
 					colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
 					colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
 					colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;

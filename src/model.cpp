@@ -63,7 +63,6 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_Kd.push_back(new RGBImage);
 			mtlptr->map_Kd[0]->readPPM(fileName_s);
-			mtlptr->map_Kd[0]->writePPM("debugPPM.ppm");
 			cout << "w = " << mtlptr->map_Kd[0]->w << ", h = " << mtlptr->map_Kd[0]->h << ", bits = " << mtlptr->map_Kd[0]->bits << endl;
 		} else if (h == "map_Ks") {
 			ifs.getline(buf,256);

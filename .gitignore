@@ -6,6 +6,7 @@ lib/
 3dmm_hw1.*
 *.dll
 # Ignore object and binary files
+*.swp
 *.o
 3d-graphics-engine
 3d-graphics-engine_dbg

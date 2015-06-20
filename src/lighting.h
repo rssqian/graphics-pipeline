@@ -39,9 +39,9 @@ class Lighting
 {
 public:
   Lighting() {
-    source = glm::vec3(5.f, 5.f, 5.f);
+    source = glm::vec3(-3.f, 3.f, 5.f);
     ka = glm::vec3(0.f);
-    kd = glm::vec3(1.f);
+    kd = glm::vec3(0.f);
     ks = glm::vec3(0.f);
     ns = 1;
 	displayLight = 0;
