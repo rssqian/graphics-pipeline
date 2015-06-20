@@ -56,12 +56,12 @@ Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
 
 Lighting light;
-glm::vec3 ka(0.2f);
-glm::vec3 kd(0.5f);
-glm::vec3 ks(0.1f);
+glm::vec3 ka(1.f);
+glm::vec3 kd(1.f);
+glm::vec3 ks(1.f);
 int ns = 1;
 bool pointLight; // 0 - directional light source, 1 - point light source
-float spotlightAngle = 0.99; // 0 to turn off
+float spotlightAngle = 0; // 0 to turn off
 
 /* model names */
 const char* modelNames[] = {
@@ -234,7 +234,7 @@ void displayFunc()
 			if (shading==1) {
 				glm::vec3 centerVertex = glm::vec3(modelVertices[0]+modelVertices[1]+modelVertices[2]) / 3.f;
 				//glm::vec3 ambient_c,diffuse_c,specular_c;
-				if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
+        if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
 				else light.setParameter(ka,kd,ks,ns);
         if (pointLight)
 				  light.shading(centerVertex, faceNormals, KaKdKsIntensity, spotlightAngle);
@@ -323,7 +323,7 @@ void displayFunc()
 		for (int j=0; j<screenHeight; j++) {
 			//texturing
 			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
-				framebuffer.texturing(i,j);
+        framebuffer.texturing(i,j);
 			}
 
 			//cel shading
