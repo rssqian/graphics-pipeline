@@ -101,32 +101,34 @@ bool Framebuffer::texturing(int ix,int iy, int filterMode)
 	if (mtlBuffer[idx]!=nullptr) {
 		glm::vec3 texCoord(texCoordBuffer[idx].x,texCoordBuffer[idx].y,texCoordBuffer[idx].z);
 		float LODu = 0, LODv = 0, temp = 0;
-		int target;
-		target = iy * width + (ix+1);
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[target]) {
-			LODu = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODv = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-		}
-		target = iy * width + (ix-1);
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[iy * width + (ix-1)]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
-		}
-		target = (iy+1) * width + ix;
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy+1) * width + ix]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x); 
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
-		}
-		target = (iy-1) * width + ix;
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy-1) * width + ix]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
+		if (filterMode>=3) {
+			int target;
+			target = iy * width + (ix+1);
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[target]) {
+				LODu = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODv = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+			}
+			target = iy * width + (ix-1);
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[iy * width + (ix-1)]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
+			target = (iy+1) * width + ix;
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy+1) * width + ix]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x); 
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
+			target = (iy-1) * width + ix;
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy-1) * width + ix]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
 		}
 //		float LOD = (LOD1>LOD2) ? LOD1 : LOD2;
 //		LOD = (LOD3>LOD) ? LOD3 : LOD;
