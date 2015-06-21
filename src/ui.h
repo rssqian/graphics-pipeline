@@ -35,6 +35,7 @@ extern bool solid;
 extern bool culling;
 extern bool projection;
 extern bool textureDisplay;
+extern int filterMode;
 extern int textureAddressing;
 
 extern Lighting light;

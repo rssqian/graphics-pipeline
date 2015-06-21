@@ -47,9 +47,9 @@ void printHelp()
 	cout << "  b: Toggle background color              " << endl;
 	cout << "  l: Toggle lighting mode                 " << endl;
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
-	cout << "  t: Toggle texture                        " << endl;
-	cout << "  T: Switch texture addressing mode        " << endl;
-	cout << "===========================================" << endl;
+	cout << "  t: Toggle texture/texture filtering mode  " << endl;
+	cout << "  T: Switch texture addressing mode         " << endl;
+	cout << "=========================================== " << endl;
 }
 
 inline void reset() {
@@ -219,10 +219,28 @@ inline void setLightSourcePosition(int x, int y) {
 } 
 
 inline void toggleTexture() {
-  textureDisplay = !textureDisplay;
+  
+  if (filterMode==6) 
+  {
+	  filterMode=0; 
+	  textureDisplay = !textureDisplay;
+  }
+  else if(filterMode==0) 
+  {
+	  filterMode++;
+	  textureDisplay = !textureDisplay;
+  }
+  else filterMode++;
   cout << "Toggle texture: ";
-  if (textureDisplay) cout << "on" << endl;
-  else cout << "off" << endl;
+  if (filterMode==0) cout << "Off" << endl;
+  else if(filterMode==1) cout << "Nearest Mode" << endl;
+  else if(filterMode==2) cout << "Linear Mode" << endl;
+  else if(filterMode==3) cout << "Nearest-Mipmap-Nearest Mode" << endl;
+  else if(filterMode==4) cout << "Linear-Mipmap-Nearest Mode" << endl;
+  else if(filterMode==5) cout << "Nearest-Mipmap-Linear Mode" << endl;
+  else if(filterMode==6) cout << "Linear-Mipmap-Linear Mode" << endl;
+  //if (textureDisplay) cout << "on" << endl;
+  //else cout << "off" << endl;
 }
 
 inline void switchTextureModes() {

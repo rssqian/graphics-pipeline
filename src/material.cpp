@@ -34,13 +34,13 @@ void eat_comment(ifstream& f)
 		f.getline(linebuf,255);
 }
 
-void RGBImage::readPPM(const string& filename)
+bool RGBImage::readPPM(const string& filename)
 {
 	cout << "Reading PPM file: " << filename << endl;
 	ifstream ifs(filename.c_str(), ios::binary);
 	if (ifs.fail()) {
 		cerr << "Error opening " << filename.c_str() << endl;
-		return;
+		return false;
 	}
 
 	//get file type
@@ -54,7 +54,7 @@ void RGBImage::readPPM(const string& filename)
 		mode = 6; //binary mode
 	} else {
 		cout << "Unsupported file format" << endl;
-		return;
+		return false;
 	}
 
 	//get width
@@ -73,22 +73,22 @@ void RGBImage::readPPM(const string& filename)
 	if (mode != 3 && mode != 6) {
 		cerr << "Unsupported magic number" << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (w<1) {
 		cerr << "Unsupported width: " << w << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (h<1) {
 		cerr << "Unsupported height: " << h << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (bits < 1 || bits > 255) {
 		cerr << "Unsupported number of bits: " << bits << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	//cout << "w = " << w << ", h = " << h << ", bits = " << bits << endl;
 	//load image data
@@ -108,6 +108,7 @@ void RGBImage::readPPM(const string& filename)
 		}
 	}
 	ifs.close();
+	return true;
 }
 
 /*

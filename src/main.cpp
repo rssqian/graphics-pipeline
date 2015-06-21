@@ -44,6 +44,7 @@ int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
+int filterMode;
 
 int curModelIdx;
 bool culling;
@@ -61,11 +62,11 @@ const char* modelNames[] = {
 	"model/quad.obj",
 	//"model/couch.obj",
 	//"model/cubeT.obj",
-	//"model/Nala.obj",
+	"model/Nala.obj",
 	//"model/ball.obj",
 	//"model/duck.obj",
-	//"model/ZEBRA.obj",
-	//"model/Dog.obj",
+	"model/ZEBRA.obj",
+	"model/Dog.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
 	//"model/laurana2KC.obj",
@@ -130,6 +131,7 @@ void init()
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
+	filterMode = 0;
 }
 
 void displayFunc() 
@@ -287,7 +289,7 @@ void displayFunc()
 		for (int j=0; j<screenHeight; j++) {
 			//texturing
 			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
-				framebuffer.texturing(i,j);
+				framebuffer.texturing(i,j,filterMode);
 			}
 
 			//cel shading

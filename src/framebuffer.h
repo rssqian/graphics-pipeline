@@ -28,7 +28,7 @@ public:
 	void writePPM(string fileName) const;
 	// You can add new member functions here.
 	bool celShading(int ix,int iy);
-	bool texturing(int ix,int iy);
+	bool texturing(int ix,int iy,int filterMode);
 
 private:
 	int width;

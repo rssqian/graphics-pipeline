@@ -19,7 +19,7 @@ public:
 		if(data) delete [] data;
 	}
 	void writePPM(const string& filename) const;
-	void readPPM(const string& filename);
+	bool readPPM(const string& filename);
 	void readDevIL(const string& filename, bool alpha);
 
 	int w;
@@ -83,5 +83,7 @@ public:
 	vector<RGBImage*> map_bump;
 	string mtlName;
 };
+
+void makeMipMaps(vector<RGBImage*>&);
 
 #endif
