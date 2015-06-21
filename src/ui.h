@@ -47,6 +47,7 @@ extern bool culling;
 extern bool projection;
 extern bool textureDisplay;
 extern int textureAddressing;
+extern bool showShadow;
 extern bool showAxes;
 
 extern Lighting light;

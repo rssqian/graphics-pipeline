@@ -48,7 +48,8 @@ void printHelp()
 	cout << "  b: Toggle background color              " << endl;
 	cout << "  l: Toggle lighting mode                 " << endl;
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
-	cout << "  d: Toggle poit/directional light source  " << endl;
+	cout << "  d: Toggle point/directional light source  " << endl;
+	cout << "  o: Toggle shadow                         " << endl;
 	cout << "  z/x: Increase/Decrease spotlight angle (point light) " << endl;
 	cout << "  t: Toggle texture                        " << endl;
 	cout << "  T: Switch texture addressing mode        " << endl;
@@ -111,6 +112,11 @@ inline void toggleCulling() {
   if (culling) cout << "ON";
   else cout << "OFF";
   cout << endl;
+}
+inline void toggleShadow() {
+  showShadow = !showShadow;
+  if (showShadow) cout << "Show shadow. Please turn off back-face culling." << endl;
+  else cout << "Hide shadow. You may turn on back-face culling." << endl;
 }
 inline void toggleShowAxes() {
   showAxes = !showAxes;
@@ -179,11 +185,11 @@ inline void changeSpotlightAngle(float angle) {
 
 inline void rotateUp() {
   //cout << "Rotate up" << endl;
-  //theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
-  glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
-  glm::mat4 camera2object = glm::inverse(modelMatrix);
-  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
-  model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
+  theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
+  //glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
+  //glm::mat4 camera2object = glm::inverse(modelMatrix);
+  //glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  //model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void rotateDown() {
   //cout << "Rotate down" << endl;
@@ -195,11 +201,11 @@ inline void rotateDown() {
 }
 inline void rotateLeft() {
   //cout << "Rotate left" << endl;
-  //theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
-  glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
-  glm::mat4 camera2object = glm::inverse(modelMatrix);
-  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
-  model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
+  theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
+  //glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
+  //glm::mat4 camera2object = glm::inverse(modelMatrix);
+  //glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  //model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void rotateRight() {
   //cout << "Rotate right" << endl;
@@ -366,6 +372,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     toggleSolid(); break;
 	case 'p':
     toggleProjection(); break;
+  case 'o':
+    toggleShadow(); break;
   case 'a':
     toggleShowAxes(); break;
 	case 'b':

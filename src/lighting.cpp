@@ -83,15 +83,10 @@ bool Lighting::projectionShadow(const glm::vec4& vertex, glm::vec4& project) {
   glm::vec3 originalVertex(vertex);
   glm::vec3 planeNormal(0.f, 0.f, 1.f);
   glm::vec3 projectVertex;
-  float alpha = (0.8 + glm::dot(planeNormal, originalVertex))/glm::dot(planeNormal, originalVertex - source);  
-  projectVertex = originalVertex - alpha * (originalVertex - source);
-  //cout << projectVertex.x << ", " << projectVertex.y << ", " << projectVertex.z << endl;
-  
-    project = glm::vec4(projectVertex, 1.f);
-    return true;
-  //}
-  //else
-    //return false;
+  float alpha = (0.5 + glm::dot(planeNormal, originalVertex))/glm::dot(planeNormal, originalVertex - source);  
+  projectVertex = originalVertex + alpha * (originalVertex - source);
+  project = glm::vec4(projectVertex, 1.f);
+  return true;
 }
 
 void Lighting::setParameter(const glm::vec3& Ka,const glm::vec3& Kd,const glm::vec3& Ks,const int& Ns)

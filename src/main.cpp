@@ -29,13 +29,13 @@ int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
-glm::vec3 theta (0.0f, 0.0f, 1.0f);
-glm::vec3 size (0.5f, 0.5f, 0.5f);
+glm::vec3 theta (0.0f, 0.0f, 0.0f);
+glm::vec3 size (1.0f, 1.0f, 1.0f);
 //glm::vec3 theta (0.0f, 0.0f, 0.0f);
 //glm::vec3 size (1.0f, 1.0f, 1.0f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
-glm::vec3 cameraPos (0.0f, 0.3f, 0.5f);
+glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
 glm::vec3 cameraTarget (0.0f, 0.0f, 0.0f);
 glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
@@ -48,6 +48,7 @@ int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
+bool showShadow;
 bool showAxes;
 
 int curModelIdx;
@@ -131,6 +132,7 @@ void init()
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
+  showShadow = 0;
   showAxes = 0;
 }
 
@@ -266,20 +268,19 @@ void displayFunc()
 
 			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
 
-			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
+			if (solid==1) rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
 
-      glm::vec4 projectVertices[3];
-      glm::vec4 MVPProjectVertices[3];
-      if ( light.projectionShadow(modelVertices[0], projectVertices[0]) &&
-           light.projectionShadow(modelVertices[1], projectVertices[1]) &&
-           light.projectionShadow(modelVertices[2], projectVertices[2]) ) {
-        MVPProjectVertices[0] = projectVertices[0] * viewportMatrix;
-        MVPProjectVertices[1] = projectVertices[1] * viewportMatrix;
-        MVPProjectVertices[2] = projectVertices[2] * viewportMatrix;
-        drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.2f, 0.2f, 0.2f));
-        //drawLine(MVPProjectVertices[0], MVPProjectVertices[1], vec3(0.2f, 0.7f, 0.2f));
-        //drawLine(MVPProjectVertices[1], MVPProjectVertices[2], vec3(0.2f, 0.7f, 0.2f));
-        //drawLine(MVPProjectVertices[0], MVPProjectVertices[2], vec3(0.2f, 0.7f, 0.2f));
+      if (showShadow) {
+        glm::vec4 projectVertices[3];
+        glm::vec4 MVPProjectVertices[3];
+        if ( light.projectionShadow(modelVertices[0], projectVertices[0]) &&
+             light.projectionShadow(modelVertices[1], projectVertices[1]) &&
+             light.projectionShadow(modelVertices[2], projectVertices[2]) ) {
+          MVPProjectVertices[0] = projectVertices[0] * viewportMatrix;
+          MVPProjectVertices[1] = projectVertices[1] * viewportMatrix;
+          MVPProjectVertices[2] = projectVertices[2] * viewportMatrix;
+          drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.15f, 0.12f, 0.1f));
+        }
       }
 
 			/*===wireframe mode===*/
