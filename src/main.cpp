@@ -29,13 +29,13 @@ int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
-glm::vec3 theta (0.0f, 0.5f, 0.0f);
-glm::vec3 size (1.5f, 1.5f, 1.5f);
+glm::vec3 theta (0.0f, 0.0f, 0.0f);
+glm::vec3 size (1.0f, 1.0f, 1.0f);
 //glm::vec3 theta (0.0f, 0.0f, 0.0f);
 //glm::vec3 size (1.0f, 1.0f, 1.0f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
-glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
+glm::vec3 cameraPos (0.0f, 0.3f, 0.5f);
 glm::vec3 cameraTarget (0.0f, 0.0f, 0.0f);
 glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
@@ -72,7 +72,7 @@ const char* modelNames[] = {
 	//"model/duck.obj",
   //"model/box.obj",
 	//"model/cubeT.obj"
-  //"model/bunnyC.obj"
+  "model/bunnyC.obj",
   // Animals with textures
   "model/ZEBRA.obj",
   "model/Nala.obj",
@@ -134,15 +134,18 @@ void init()
   showAxes = 0;
 }
 
+glm::mat4 modelMatrix(1);
+glm::mat4 model_rotation_natural(1);
+
 void displayFunc() 
 {
 	framebuffer.clear();
 	//framebuffer.setClearColor(vec3(0.1, 0.3, 0.5));
 
 	// Set MVP and viewport
-	glm::mat4 modelMatrix = model_translation(translate) 
+	modelMatrix = model_translation(translate) 
 						* model_scale(size) 
-						* model_rotation(theta);
+						* model_rotation(theta) * model_rotation_natural;
 	glm::mat4 viewMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
 	glm::mat4 projectionMatrix;
 	if (projection==1) {
@@ -307,7 +310,7 @@ void displayFunc()
       // projection space
       axis[j] = projectionMatrix * axis[j];
       // Display space
-      axis[j] = axis[j]*viewportMatrix;
+      axis[j] = axis[j] * viewportMatrix;
     }
     vec3 colorAxisX = vec3(1.f, 0.f, 0.f);
     vec3 colorAxisY = vec3(0.f, 1.f, 0.f);

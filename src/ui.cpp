@@ -57,8 +57,8 @@ void printHelp()
 
 inline void reset() {
   theta = glm::vec3(0.f, 0.f, 0.f);
-  size = glm::vec3(400.f, 400.f, 400.f);
-  translate = glm::vec3(float(screenWidth_half), float(screenHeight_half), 0.f);
+  size = glm::vec3(1.f, 1.f, 1.f);
+  translate = glm::vec3(0.f, 0.f, 0.f);
 }
 
 inline void saveAsImage() {
@@ -178,19 +178,35 @@ inline void changeSpotlightAngle(float angle) {
 
 inline void rotateUp() {
   //cout << "Rotate up" << endl;
-  theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
+  //theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
+  glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
+  glm::mat4 camera2object = glm::inverse(modelMatrix);
+  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void rotateDown() {
   //cout << "Rotate down" << endl;
-  theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
+  //theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
+  glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
+  glm::mat4 camera2object = glm::inverse(modelMatrix);
+  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  model_rotation_natural = glm::rotate(model_rotation_natural, 0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void rotateLeft() {
   //cout << "Rotate left" << endl;
-  theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
+  //theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
+  glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
+  glm::mat4 camera2object = glm::inverse(modelMatrix);
+  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  model_rotation_natural = glm::rotate(model_rotation_natural, -0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void rotateRight() {
   //cout << "Rotate right" << endl;
-  theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
+  //theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
+  glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
+  glm::mat4 camera2object = glm::inverse(modelMatrix);
+  glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+  model_rotation_natural = glm::rotate(model_rotation_natural, 0.2f, glm::vec3(axis_in_object_coord));
 }
 inline void panUp(float pace) {
   //cout << "Pan up" << endl;

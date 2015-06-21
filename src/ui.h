@@ -2,11 +2,16 @@
 #define _UI_H
 
 #include <GL/freeglut.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <ctime>
+#include <cmath>
 #include "framebuffer.h"
 #include "lighting.h"
+#include "transform.h"
 
 #define PI 3.14159265
 
@@ -27,6 +32,12 @@ extern double rotateSpeed;
 extern glm::vec3 theta;
 extern glm::vec3 size;
 extern glm::vec3 translate;
+extern glm::vec3 cameraPos;
+extern glm::vec3 cameraTarget;
+extern glm::vec3 upVector;
+
+extern glm::mat4 modelMatrix;
+extern glm::mat4 model_rotation_natural;
 
 extern int shading;
 extern bool wireframe;
