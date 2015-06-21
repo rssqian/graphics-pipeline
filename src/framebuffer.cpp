@@ -89,9 +89,9 @@ void Framebuffer::writePPM(string filename) const {
 bool Framebuffer::celShading(int ix,int iy)
 {
 	int idx = iy * width + ix;
-	colorBuffer[idx].x = int(colorBuffer[idx].x/0.2) * 0.2;
-	colorBuffer[idx].y = int(colorBuffer[idx].y/0.2) * 0.2;
-	colorBuffer[idx].z = int(colorBuffer[idx].z/0.2) * 0.2;
+	colorBuffer[idx].x = int(colorBuffer[idx].x/0.25) * 0.25;
+	colorBuffer[idx].y = int(colorBuffer[idx].y/0.25) * 0.25;
+	colorBuffer[idx].z = int(colorBuffer[idx].z/0.25) * 0.25;
 	return true;
 }
 
@@ -101,38 +101,40 @@ bool Framebuffer::texturing(int ix,int iy, int filterMode)
 	if (mtlBuffer[idx]!=nullptr) {
 		glm::vec3 texCoord(texCoordBuffer[idx].x,texCoordBuffer[idx].y,texCoordBuffer[idx].z);
 		float LODu = 0, LODv = 0, temp = 0;
-		int target;
-		target = iy * width + (ix+1);
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[target]) {
-			LODu = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODv = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+		if (filterMode>=3) {
+			int target;
+			target = iy * width + (ix+1);
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[target]) {
+				LODu = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODv = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y)*(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+			}
+			target = iy * width + (ix-1);
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[iy * width + (ix-1)]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
+			target = (iy+1) * width + ix;
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy+1) * width + ix]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x); 
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
+			target = (iy-1) * width + ix;
+			if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy-1) * width + ix]) {
+				temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
+				LODu = (LODu>temp) ? LODu : temp;
+				temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
+				LODv = (LODv>temp) ? LODv : temp;
+			}
+	//		float LOD = (LOD1>LOD2) ? LOD1 : LOD2;
+	//		LOD = (LOD3>LOD) ? LOD3 : LOD;
+	//		LOD = (LOD4>LOD) ? LOD4 : LOD;
+	//		LOD = log10(LOD)/log10(2.0)/2+10;
+			//cout << LOD << endl;
 		}
-		target = iy * width + (ix-1);
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[iy * width + (ix-1)]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
-		}
-		target = (iy+1) * width + ix;
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy+1) * width + ix]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x); 
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
-		}
-		target = (iy-1) * width + ix;
-		if (target>=0 && target<width*height && mtlBuffer[idx] == mtlBuffer[(iy-1) * width + ix]) {
-			temp = abs(texCoordBuffer[idx].x-texCoordBuffer[target].x);
-			LODu = (LODu>temp) ? LODu : temp;
-			temp = abs(texCoordBuffer[idx].y-texCoordBuffer[target].y);
-			LODv = (LODv>temp) ? LODv : temp;
-		}
-//		float LOD = (LOD1>LOD2) ? LOD1 : LOD2;
-//		LOD = (LOD3>LOD) ? LOD3 : LOD;
-//		LOD = (LOD4>LOD) ? LOD4 : LOD;
-//		LOD = log10(LOD)/log10(2.0)/2+10;
-		//cout << LOD << endl;
 		getTexture(mtlBuffer[idx],texCoord,KaKdKsBuffer[idx].ambient,KaKdKsBuffer[idx].diffuse,KaKdKsBuffer[idx].specular, filterMode, LODu, LODv);
 		colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x + KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].specular.x;
 		colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].specular.y;

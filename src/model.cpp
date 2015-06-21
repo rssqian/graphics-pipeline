@@ -59,8 +59,10 @@ void readMtlLib(Model* model, const string& filename)
 				delete mtlptr->map_Ka.back();
 				mtlptr->map_Ka.pop_back();
 			}
-			if(mtlptr->map_Ka.size() != 0)
+			if(mtlptr->map_Ka.size() != 0){
+				cout << "Making Mipmap for " << fileName_s << "(map_Ka)" << endl;
 				makeMipMaps(mtlptr->map_Ka);
+			}
 		} else if (h == "map_Kd") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -71,13 +73,10 @@ void readMtlLib(Model* model, const string& filename)
 				delete mtlptr->map_Kd.back();
 				mtlptr->map_Kd.pop_back();
 			}
-			if(mtlptr->map_Kd.size() != 0)
+			if(mtlptr->map_Kd.size() != 0) {
+				cout << "Making Mipmap for " << fileName_s << "(map_Kd)" << endl;
 				makeMipMaps(mtlptr->map_Kd);
-/*			char PPMname[50];
-			for (size_t i=0; i<mtlptr->map_Kd.size(); i++) {
-				sprintf(PPMname,"%s Map_Kd Mipmap %d.ppm",mtlptr->mtlName.c_str(),i);
-				mtlptr->map_Kd[i]->writePPM(PPMname);
-			}*/
+			}
 		} else if (h == "map_Ks") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
@@ -88,9 +87,11 @@ void readMtlLib(Model* model, const string& filename)
 				delete mtlptr->map_Ks.back();
 				mtlptr->map_Ks.pop_back();
 			}
-			if(mtlptr->map_Ks.size() != 0)
+			if(mtlptr->map_Ks.size() != 0) {
+				cout << "Making Mipmap for " << fileName_s << "(map_Ks)" << endl;
 				makeMipMaps(mtlptr->map_Ks);
-		} else if (h == "map_bump") {
+			}
+		/*} else if (h == "map_bump") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
 			fileName_s = fileName;
@@ -103,7 +104,7 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = fileName;
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_d.push_back(new RGBImage);
-			mtlptr->map_d[0]->readPPM(fileName_s);
+			mtlptr->map_d[0]->readPPM(fileName_s);*/
 		} else {
 			cout << "readMtlLib(): Unknow token \"" << h << "\" ignored" << endl;
 			ifs.getline(buf,256);

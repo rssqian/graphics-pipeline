@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
+#include <glm/mat3x3.hpp>
 using namespace std;
 
 extern int textureAddressing;
@@ -26,7 +27,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[0]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[0]->w + CoordY;
+        x_y0 = CoordY * texMap[0]->w + CoordX;
         afterColor.x = texMap[0]->data[x_y0].r;
         afterColor.y = texMap[0]->data[x_y0].g;
         afterColor.z = texMap[0]->data[x_y0].b;          
@@ -38,10 +39,10 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[0]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[0]->w + CoordY;
-        x_y1 = (CoordX+1) * texMap[0]->w + CoordY;
-        x_y2 = CoordX * texMap[0]->w + CoordY + 1;
-        x_y3 = (CoordX+1) * texMap[0]->w + CoordY + 1;
+        x_y0 = CoordY * texMap[0]->w + CoordX;
+        x_y1 = (CoordY+1) * texMap[0]->w + CoordY;
+        x_y2 = CoordY * texMap[0]->w + CoordX + 1;
+        x_y3 = (CoordY+1) * texMap[0]->w + CoordX + 1;
         afterColor.x = texMap[0]->data[x_y0].r * (CoordX + 1 - imgCoordX)
                      + texMap[0]->data[x_y1].r * (imgCoordX - CoordX)
                      + texMap[0]->data[x_y2].r * (CoordY + 1 - imgCoordY)
@@ -54,6 +55,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
                      + texMap[0]->data[x_y1].b * (imgCoordX - CoordX)
                      + texMap[0]->data[x_y2].b * (CoordY + 1 - imgCoordY)
                      + texMap[0]->data[x_y3].b * (imgCoordY - CoordY);
+		//afterColor = afterColor * glm::mat3(0.25);
     }
 
     else if (filterMode==3) // 3:Nearest-Mipmap-Nearest
@@ -64,7 +66,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[int(LOD)]->w + CoordY;
+        x_y0 = CoordY * texMap[int(LOD)]->w + CoordX;
         afterColor.x = texMap[int(LOD)]->data[x_y0].r;
         afterColor.y = texMap[int(LOD)]->data[x_y0].g;
         afterColor.z = texMap[int(LOD)]->data[x_y0].b;          
@@ -76,10 +78,10 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[int(LOD)]->w + CoordY;
-        x_y1 = (CoordX+1) * texMap[int(LOD)]->w + CoordY;
-        x_y2 = CoordX * texMap[int(LOD)]->w + CoordY + 1;
-        x_y3 = (CoordX+1) * texMap[int(LOD)]->w + CoordY + 1;
+        x_y0 = CoordY * texMap[int(LOD)]->w + CoordX;
+        x_y1 = (CoordY+1) * texMap[int(LOD)]->w + CoordX;
+        x_y2 = CoordY * texMap[int(LOD)]->w + CoordX + 1;
+        x_y3 = (CoordY+1) * texMap[int(LOD)]->w + CoordX + 1;
         afterColor.x = texMap[int(LOD)]->data[x_y0].r * (CoordX + 1 - imgCoordX)
                      + texMap[int(LOD)]->data[x_y1].r * (imgCoordX - CoordX)
                      + texMap[int(LOD)]->data[x_y2].r * (CoordY + 1 - imgCoordY)
@@ -100,7 +102,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = (CoordX) * texMap[int(LOD)]->w + CoordY;
+        x_y0 = (CoordY) * texMap[int(LOD)]->w + CoordX;
         afterColor.x = texMap[int(LOD)]->data[x_y0].r * (int(LOD)+1-LOD);
         afterColor.y = texMap[int(LOD)]->data[x_y0].g * (int(LOD)+1-LOD);
         afterColor.z = texMap[int(LOD)]->data[x_y0].b * (int(LOD)+1-LOD);
@@ -108,7 +110,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)+1]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[int(LOD)+1]->w + CoordY;
+        x_y0 = CoordY * texMap[int(LOD)+1]->w + CoordX;
         afterColor.x += texMap[int(LOD)+1]->data[x_y0].r * (LOD -int(LOD));
         afterColor.y += texMap[int(LOD)+1]->data[x_y0].g * (LOD -int(LOD));
         afterColor.z += texMap[int(LOD)+1]->data[x_y0].b * (LOD -int(LOD));
@@ -120,10 +122,10 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[int(LOD)]->w + CoordY;
-        x_y1 = (CoordX+1) * texMap[int(LOD)]->w + CoordY;
-        x_y2 = CoordX * texMap[int(LOD)]->w + CoordY + 1;
-        x_y3 = (CoordX+1) * texMap[int(LOD)]->w + CoordY + 1;
+        x_y0 = CoordY * texMap[int(LOD)]->w + CoordX;
+        x_y1 = (CoordY+1) * texMap[int(LOD)]->w + CoordX;
+        x_y2 = CoordY * texMap[int(LOD)]->w + CoordX + 1;
+        x_y3 = (CoordY+1) * texMap[int(LOD)]->w + CoordX + 1;
         afterColor.x =(texMap[int(LOD)]->data[x_y0].r * (CoordX + 1 - imgCoordX)
                      + texMap[int(LOD)]->data[x_y1].r * (imgCoordX - CoordX)
                      + texMap[int(LOD)]->data[x_y2].r * (CoordY + 1 - imgCoordY)
@@ -141,10 +143,10 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         imgCoordY = (1.f-texCoord.y) * (texMap[int(LOD)+1]->h - 1);
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
-        x_y0 = CoordX * texMap[int(LOD)+1]->w + CoordY;
-        x_y1 = (CoordX+1) * texMap[int(LOD)+1]->w + CoordY;
-        x_y2 = CoordX * texMap[int(LOD)+1]->w + CoordY + 1;
-        x_y3 = (CoordX+1) * texMap[int(LOD)+1]->w + CoordY + 1;
+        x_y0 = CoordY * texMap[int(LOD)+1]->w + CoordX;
+        x_y1 = (CoordY+1) * texMap[int(LOD)+1]->w + CoordX;
+        x_y2 = CoordY * texMap[int(LOD)+1]->w + CoordX + 1;
+        x_y3 = (CoordY+1) * texMap[int(LOD)+1]->w + CoordX + 1;
         afterColor.x +=(texMap[int(LOD)+1]->data[x_y0].r * (CoordX + 1 - imgCoordX)
                       + texMap[int(LOD)+1]->data[x_y1].r * (imgCoordX - CoordX)
                       + texMap[int(LOD)+1]->data[x_y2].r * (CoordY + 1 - imgCoordY)
@@ -200,8 +202,11 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		}*/
 		//LOD=LOD+;
 		texMap = mtl->map_Ka;
-		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
-		LOD = log10(LOD)/log10(2.0)/2;
+		if (filterMode>=3) {
+			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = log10(LOD)/log10(2.0)/2;
+			if (LOD<0) LOD = 0;
+		} else LOD = 0;
 		texFiltering(LOD, filterMode, ambient_c, texCoord, texMap);
 	}
 	/* diffuse texture */
@@ -220,8 +225,11 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//actualCoord = (map->w)*imgCoord.y + imgCoord.x;
 
 		texMap = mtl->map_Kd;
-		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
-		LOD = log10(LOD)/log10(2.0)/2;
+		if (filterMode>=3) {
+			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = log10(LOD)/log10(2.0)/2;
+			if (LOD<0) LOD = 0;
+		} else LOD = 0;
 		texFiltering(LOD, filterMode, diffuse_c, texCoord, texMap);
 
 		//cout << "===Texture Mapping===" << endl;
@@ -244,8 +252,11 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		}*/
 
 		texMap = mtl->map_Ks;
-		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
-		LOD = log10(LOD)/log10(2.0)/2;
+		if (filterMode>=3) {
+			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = log10(LOD)/log10(2.0)/2;
+			if (LOD<0) LOD = 0;
+		} else LOD = 0;
 		texFiltering(LOD, filterMode, specular_c, texCoord, texMap);
 	}
 	return true;

@@ -66,7 +66,7 @@ const char* modelNames[] = {
 	//"model/ball.obj",
 	//"model/duck.obj",
 	"model/ZEBRA.obj",
-	"model/Dog.obj",
+	//"model/Dog.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
 	//"model/laurana2KC.obj",
