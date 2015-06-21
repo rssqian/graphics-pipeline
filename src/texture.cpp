@@ -15,11 +15,13 @@ size_t texCoord2imgCoord(glm::vec3& texCoord,size_t w,size_t h) {
 	return w * imgCoordY + imgCoordX;
 }
 
-void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& texCoord, vector<RGBImage*>& texMap)
+void texFiltering(float LOD, int filterMode, glm::vec3 &inputColor,glm::vec3& texCoord, const vector<RGBImage*>& texMap)
 {
     float imgCoordX, imgCoordY;
     int CoordX, CoordY;
     int x_y0, x_y1, x_y2, x_y3;
+
+	glm::vec3 afterColor;
 
     if (filterMode==1) // 1:Nearest
     {
@@ -40,7 +42,7 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
         CoordX = int(imgCoordX);
         CoordY = int(imgCoordY);
         x_y0 = CoordY * texMap[0]->w + CoordX;
-        x_y1 = (CoordY+1) * texMap[0]->w + CoordY;
+        x_y1 = (CoordY+1) * texMap[0]->w + CoordX;
         x_y2 = CoordY * texMap[0]->w + CoordX + 1;
         x_y3 = (CoordY+1) * texMap[0]->w + CoordX + 1;
         afterColor.x = texMap[0]->data[x_y0].r * (CoordX + 1 - imgCoordX)
@@ -55,7 +57,9 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
                      + texMap[0]->data[x_y1].b * (imgCoordX - CoordX)
                      + texMap[0]->data[x_y2].b * (CoordY + 1 - imgCoordY)
                      + texMap[0]->data[x_y3].b * (imgCoordY - CoordY);
-		//afterColor = afterColor * glm::mat3(0.25);
+		afterColor.x = afterColor.x / 2;
+		afterColor.y = afterColor.y / 2;
+		afterColor.z = afterColor.z / 2;
     }
 
     else if (filterMode==3) // 3:Nearest-Mipmap-Nearest
@@ -94,6 +98,9 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
                      + texMap[int(LOD)]->data[x_y1].b * (imgCoordX - CoordX)
                      + texMap[int(LOD)]->data[x_y2].b * (CoordY + 1 - imgCoordY)
                      + texMap[int(LOD)]->data[x_y3].b * (imgCoordY - CoordY);
+		afterColor.x = afterColor.x / 2;
+		afterColor.y = afterColor.y / 2;
+		afterColor.z = afterColor.z / 2;
     }
 
     else if (filterMode==5) // 5:Nearest-Mipmap-Linear
@@ -159,10 +166,17 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
                       + texMap[int(LOD)+1]->data[x_y1].b * (imgCoordX - CoordX)
                       + texMap[int(LOD)+1]->data[x_y2].b * (CoordY + 1 - imgCoordY)
                       + texMap[int(LOD)+1]->data[x_y3].b * (imgCoordY - CoordY) ) * (LOD -int(LOD));
+		afterColor.x = afterColor.x / 2;
+		afterColor.y = afterColor.y / 2;
+		afterColor.z = afterColor.z / 2;
     }
 	afterColor.x /= float(texMap[0]->bits);
 	afterColor.y /= float(texMap[0]->bits);
 	afterColor.z /= float(texMap[0]->bits);
+
+	inputColor.x = inputColor.x * afterColor.x;
+	inputColor.y = inputColor.y * afterColor.y;
+	inputColor.z = inputColor.z * afterColor.z;
 }
 
 bool getTexture(Material* mtl, glm::vec3& texCoord,
@@ -201,13 +215,13 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 								  map->data[actualCoord].b / float(map->bits) * ambient_c.z);
 		}*/
 		//LOD=LOD+;
-		texMap = mtl->map_Ka;
+		//texMap = mtl->map_Ka;
 		if (filterMode>=3) {
-			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = (LODu*mtl->map_Ka[0]->w > LODv*mtl->map_Ka[0]->h) ? LODu*mtl->map_Ka[0]->w : LODv*mtl->map_Ka[0]->h;
 			LOD = log10(LOD)/log10(2.0)/2;
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
-		texFiltering(LOD, filterMode, ambient_c, texCoord, texMap);
+		texFiltering(LOD, filterMode, ambient_c, texCoord, mtl->map_Ka);
 	}
 	/* diffuse texture */
 	if (mtl->map_Kd.size()) {
@@ -224,13 +238,13 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//imgCoord.y = unsigned int((1.f-texCoord.y) * (map->h-1));
 		//actualCoord = (map->w)*imgCoord.y + imgCoord.x;
 
-		texMap = mtl->map_Kd;
+		//texMap = mtl->map_Kd;
 		if (filterMode>=3) {
-			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = (LODu*mtl->map_Kd[0]->w > LODv*mtl->map_Kd[0]->h) ? LODu*mtl->map_Kd[0]->w : LODv*mtl->map_Kd[0]->h;
 			LOD = log10(LOD)/log10(2.0)/2;
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
-		texFiltering(LOD, filterMode, diffuse_c, texCoord, texMap);
+		texFiltering(LOD, filterMode, diffuse_c, texCoord, mtl->map_Kd);
 
 		//cout << "===Texture Mapping===" << endl;
 		//cout << "texCoord   = (" << texCoord.x << "," << texCoord.y << ")" << endl;
@@ -251,13 +265,13 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 								   map->data[actualCoord].b / float(map->bits) * specular_c.z);
 		}*/
 
-		texMap = mtl->map_Ks;
+		//texMap = mtl->map_Ks;
 		if (filterMode>=3) {
-			LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+			LOD = (LODu*mtl->map_Ks[0]->w > LODv*mtl->map_Ks[0]->h) ? LODu*mtl->map_Ks[0]->w : LODv*mtl->map_Ks[0]->h;
 			LOD = log10(LOD)/log10(2.0)/2;
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
-		texFiltering(LOD, filterMode, specular_c, texCoord, texMap);
+		texFiltering(LOD, filterMode, specular_c, texCoord, mtl->map_Ks);
 	}
 	return true;
 }
