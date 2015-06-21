@@ -64,7 +64,7 @@ const char* modelNames[] = {
 	//"model/cubeT.obj",
 	"model/Nala.obj",
 	//"model/ball.obj",
-	//"model/duck.obj",
+	"model/duck.obj",
 	"model/ZEBRA.obj",
 	//"model/Dog.obj",
 	//"model/cessna7KC.obj",
@@ -222,7 +222,7 @@ void displayFunc()
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
 		/*===Back Face Culling===*/
-		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
+		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || culling==false) {
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
