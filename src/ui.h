@@ -29,6 +29,7 @@ extern glm::vec3 size;
 extern glm::vec3 translate;
 
 extern int shading;
+extern bool toonShading;
 extern bool wireframe;
 extern bool normalDisplay;
 extern bool solid;
@@ -58,6 +59,7 @@ inline void toggleProjection();
 inline void toggleCulling();
 inline void toggleBackground();
 inline void changeShading();
+inline void toggleToonShading();
 inline void switchKaKdKsLighting();
 inline void rotateUp();
 inline void rotateDown();

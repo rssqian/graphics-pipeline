@@ -89,9 +89,23 @@ void Framebuffer::writePPM(string filename) const {
 bool Framebuffer::celShading(int ix,int iy)
 {
 	int idx = iy * width + ix;
-	colorBuffer[idx].x = int(colorBuffer[idx].x/0.25) * 0.25;
-	colorBuffer[idx].y = int(colorBuffer[idx].y/0.25) * 0.25;
-	colorBuffer[idx].z = int(colorBuffer[idx].z/0.25) * 0.25;
+	if (mtlBuffer[idx] != nullptr) {
+		float i= (KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].diffuse.z)/3.f;
+
+		if (i > 0.3) {
+			KaKdKsBuffer[idx].diffuse.x = 0.8;
+			KaKdKsBuffer[idx].diffuse.y = 0.8;
+			KaKdKsBuffer[idx].diffuse.z = 0.8;
+		} else if (i > 0.1) {
+			KaKdKsBuffer[idx].diffuse.x = 0.5;
+			KaKdKsBuffer[idx].diffuse.y = 0.5;
+			KaKdKsBuffer[idx].diffuse.z = 0.5;
+		} else {
+			KaKdKsBuffer[idx].diffuse.x = 0.3;
+			KaKdKsBuffer[idx].diffuse.y = 0.3;
+			KaKdKsBuffer[idx].diffuse.z = 0.3;
+		}
+	}
 	return true;
 }
 

@@ -49,6 +49,7 @@ void printHelp()
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
 	cout << "  t: Toggle texture/texture filtering mode  " << endl;
 	cout << "  T: Switch texture addressing mode         " << endl;
+	cout << "  z: Toon shading                           " << endl;
 	cout << "=========================================== " << endl;
 }
 
@@ -115,7 +116,7 @@ inline void toggleBackground() {
   framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 }
 inline void changeShading() {
-  if (shading == 4) shading = 0;
+  if (shading == 5) shading = 0;
   else shading++;
   cout << "Change to shading mode to: ";
   switch(shading) {
@@ -134,7 +135,17 @@ inline void changeShading() {
 	case 4:
 	  cout << "Suface normal shading";
 	  break;
+	case 5:
+	  cout << "Toon shading";
+	  break;
   }
+  cout << endl;
+}
+inline void toggleToonShading() {
+  toonShading = !toonShading;
+  cout << "Toggle toon shading: ";
+  if (toonShading) cout << "ON";
+  else cout << "OFF";
   cout << endl;
 }
 inline void switchKaKdKsLighting(){
@@ -360,6 +371,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     zoomIn(); break;
   case '-':
     zoomOut(); break;
+  case 'z':
+	  toggleToonShading(); break;
 	}
 	glutPostRedisplay();
 }
