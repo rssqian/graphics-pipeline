@@ -44,6 +44,7 @@ public:
   void setParameter(const glm::vec3& Ka,const glm::vec3& Kd,const glm::vec3& Ks,const int& Ns);
   void shading(const glm::vec3& vertex, const glm::vec3& normal, LightColor& c, float spotlightAngle = 0);
   void directionalShading(const glm::vec3& normal, LightColor& c);
+  bool projectionShadow(const glm::vec4& vertex, glm::vec4& project);
 
   glm::vec3 source;
   glm::vec3 ka;

@@ -59,6 +59,7 @@ inline void reset() {
   theta = glm::vec3(0.f, 0.f, 0.f);
   size = glm::vec3(1.f, 1.f, 1.f);
   translate = glm::vec3(0.f, 0.f, 0.f);
+  model_rotation_natural = glm::mat4(1);
 }
 
 inline void saveAsImage() {
@@ -249,7 +250,7 @@ inline void moveBackward() {
 inline void setLightSourcePosition(int x, int y) {
   float lightX = float(x - screenWidth_half)/screenWidth_half*5;
   float lightY = float(screenHeight_half - y)/screenHeight_half*5;
-  light.source = glm::vec3(lightX, lightY, 1.f);
+  light.source = glm::vec3(lightX, lightY, 5.f);
   cout << "Set light source to (" << lightX << ", " << lightY << ", 5)"<< endl;
 } 
 

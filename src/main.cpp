@@ -29,8 +29,8 @@ int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
-glm::vec3 theta (0.0f, 0.0f, 0.0f);
-glm::vec3 size (1.0f, 1.0f, 1.0f);
+glm::vec3 theta (0.0f, 0.0f, 1.0f);
+glm::vec3 size (0.5f, 0.5f, 0.5f);
 //glm::vec3 theta (0.0f, 0.0f, 0.0f);
 //glm::vec3 size (1.0f, 1.0f, 1.0f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
@@ -177,8 +177,7 @@ void displayFunc()
 		for (int j=0; j<3; j++) {
 			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])	];
 			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
-			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
-			triVertices[j].w = 1;
+			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2]; triVertices[j].w = 1;
 			if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
 				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
 				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
@@ -204,6 +203,7 @@ void displayFunc()
 
 		/*===transformation===*/
 		glm::vec4 modelVertices[3];
+		glm::vec4 MmodelVertices[3];
 		glm::vec4 MVPVertices[3];
 		glm::vec4 modelNormals[3];
 
@@ -211,8 +211,11 @@ void displayFunc()
  		for(int j=0; j<3; ++j) {
 			// model space (scaling->rotation->translation)
 			modelVertices[j] = modelMatrix * triVertices[j];
+      MmodelVertices[j] = modelVertices[j];
+      //cout << "MODEL: " << modelVertices[j].x << ", " << modelVertices[j].y << ", " << modelVertices[j].z << endl;
 			// view space
 			modelVertices[j] = viewMatrix * modelVertices[j];
+      //cout << "VIEW:  " << modelVertices[j].x << ", " << modelVertices[j].y << ", " << modelVertices[j].z << endl;
 			// projection space
 			MVPVertices[j] = projectionMatrix * modelVertices[j];
 			MVPVertices[j] = MVPVertices[j] * glm::mat4(1/MVPVertices[j].w);
@@ -265,6 +268,20 @@ void displayFunc()
 
 			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
 
+      glm::vec4 projectVertices[3];
+      glm::vec4 MVPProjectVertices[3];
+      if ( light.projectionShadow(modelVertices[0], projectVertices[0]) &&
+           light.projectionShadow(modelVertices[1], projectVertices[1]) &&
+           light.projectionShadow(modelVertices[2], projectVertices[2]) ) {
+        MVPProjectVertices[0] = projectVertices[0] * viewportMatrix;
+        MVPProjectVertices[1] = projectVertices[1] * viewportMatrix;
+        MVPProjectVertices[2] = projectVertices[2] * viewportMatrix;
+        drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.2f, 0.2f, 0.2f));
+        //drawLine(MVPProjectVertices[0], MVPProjectVertices[1], vec3(0.2f, 0.7f, 0.2f));
+        //drawLine(MVPProjectVertices[1], MVPProjectVertices[2], vec3(0.2f, 0.7f, 0.2f));
+        //drawLine(MVPProjectVertices[0], MVPProjectVertices[2], vec3(0.2f, 0.7f, 0.2f));
+      }
+
 			/*===wireframe mode===*/
 			if (wireframe==1) {
         vec3 colorWireframe = vec3(0.8f, 0.6f, 0.2f);
@@ -293,6 +310,24 @@ void displayFunc()
 
 		} // end if culling
 	} // end for each triangle
+
+  /*===show axes===*/
+  //glm::vec4 planeVertices[3];
+  //planeVertices[0] = glm::vec4(0.5f, -0.5f, 0.5f, 1.f);
+  //planeVertices[1] = glm::vec4(-0.5f, -0.5f, -0.5f, 1.f);
+  //planeVertices[2] = glm::vec4(-0.5f, -0.5f, 0.5f, 1.f);
+
+  //for(int j=0; j<3; ++j) {
+    //// model space (scaling->rotation->translation)
+    //planeVertices[j] = modelMatrix * planeVertices[j];
+    //// view space
+    //planeVertices[j] = viewMatrix * planeVertices[j];
+    //// projection space
+    //planeVertices[j] = projectionMatrix * planeVertices[j];
+    //// Display space
+    //planeVertices[j] = planeVertices[j] * viewportMatrix;
+  //}
+  //drawShadow(glm::vec3(planeVertices[0]), glm::vec3(planeVertices[1]), glm::vec3(planeVertices[2]), vec3(1.f, 0.f, 0.f));
 
   /*===show axes===*/
   if (showAxes) {

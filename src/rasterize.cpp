@@ -137,6 +137,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			
       if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
 			else light.setParameter(ka,kd,ks,ns);
+      
 			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
         if (pointLight)
           light.shading(mv_result[1], mv_result[0], c, spotlightAngle); 
@@ -161,7 +162,7 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 				vec3C.y = int(vec3C.y/0.2) * 0.2;
 				vec3C.z = int(vec3C.z/0.2) * 0.2;
 			}*/
-			framebuffer.draw(x_,y_,z_,vec3C,c,glm2vec3(mv_result[2]),mtl);
+      framebuffer.draw(x_,y_,z_,vec3C,c,glm2vec3(mv_result[2]),mtl);
 		}
 		y_--;
 	}
@@ -278,4 +279,35 @@ void rasterTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,Material*
 			drawLine(p1,p2,vec3(1.f));
 		}
 	}*/
+}
+
+void drawShadow(const glm::vec3& vA, const glm::vec3& vB, const glm::vec3& vC, const vec3& color)
+{
+  /* Find the bounded area to scan candidate pixels. */
+  float maxX = vA.x;
+  float maxY = vA.y;
+  float minX = vA.x;
+  float minY = vA.y;
+  if (vB.x > maxX) maxX = vB.x;
+  if (vC.x > maxX) maxX = vC.x;
+  if (vB.y > maxY) maxY = vB.y;
+  if (vC.y > maxY) maxY = vC.y;
+  if (vB.x < minX) minX = vB.x;
+  if (vC.x < minX) minX = vC.x;
+  if (vB.y < minY) minY = vB.y;
+  if (vC.y < minY) minY = vC.y;
+  
+  /* Check if the pixel is in the triangle. If true, draw it. */
+  float k1, k2, k3, z, c;
+  for (int x = minX; x <= maxX; ++x) {
+    for (int y = minY; y <= maxY; ++y) {
+      k1 = (x - vA.x) * (vB.y - vA.y) - (y - vA.y) * (vB.x - vA.x);
+      k2 = (x - vB.x) * (vC.y - vB.y) - (y - vB.y) * (vC.x - vB.x);
+      k3 = (x - vC.x) * (vA.y - vC.y) - (y - vC.y) * (vA.x - vC.x);
+      if ( (k1>=0 && k2>=0 && k3>=0) || (k1<=0 && k2<=0 && k3<=0) ) {
+        z = -10.f;
+        framebuffer.draw(x, y, z, color, LightColor(), vec3(0), nullptr);
+      }
+    }
+  }
 }
