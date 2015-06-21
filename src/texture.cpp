@@ -164,10 +164,11 @@ void texFiltering(float LOD, int filterMode, glm::vec3 &afterColor,glm::vec3& te
 
 bool getTexture(Material* mtl, glm::vec3& texCoord,
 				glm::vec3& ambient_c, glm::vec3& diffuse_c, glm::vec3& specular_c,
-				int filterMode, float LOD) {
+				int& filterMode, float& LODu, float& LODv) {
 	RGBImage* map;
 	vector<RGBImage*> texMap;
 	size_t actualCoord;
+	float LOD;
 
 	if (textureAddressing == 1) {				/*===mirror mode===*/
 		texCoord.x = texCoord.x - size_t(texCoord.x/2)*2;
@@ -198,6 +199,8 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		}*/
 		//LOD=LOD+;
 		texMap = mtl->map_Ka;
+		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+		LOD = log10(LOD)/log10(2.0)/2;
 		texFiltering(LOD, filterMode, ambient_c, texCoord, texMap);
 	}
 	/* diffuse texture */
@@ -216,6 +219,8 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//actualCoord = (map->w)*imgCoord.y + imgCoord.x;
 
 		texMap = mtl->map_Kd;
+		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+		LOD = log10(LOD)/log10(2.0)/2;
 		texFiltering(LOD, filterMode, diffuse_c, texCoord, texMap);
 
 		//cout << "===Texture Mapping===" << endl;
@@ -238,6 +243,8 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		}*/
 
 		texMap = mtl->map_Ks;
+		LOD = (LODu*texMap[0]->w > LODv*texMap[0]->h) ? LODu*texMap[0]->w : LODv*texMap[0]->h;
+		LOD = log10(LOD)/log10(2.0)/2;
 		texFiltering(LOD, filterMode, specular_c, texCoord, texMap);
 	}
 	return true;
