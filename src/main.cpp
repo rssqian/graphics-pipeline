@@ -20,8 +20,6 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-//int screenWidth = 4200;
-//int screenHeight = 4200;
 int screenWidth = 800;
 int screenHeight = 600;
 int screenWidth_half = screenWidth/2;
@@ -45,11 +43,13 @@ bool wireframe; //0-wireframe off, 1-wireframe on
 bool normalDisplay;
 bool solid; //0-solid mode off, 1-solid mode on
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
+bool toonShading; 
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
 bool showShadow;
 bool showAxes;
+int filterMode;
 
 int curModelIdx;
 bool culling;
@@ -69,7 +69,7 @@ const char* modelNames[] = {
   "model/quad.obj",
 	//"model/couch.obj",
 	//"model/cubeT.obj",
-  "model/ball.obj",
+  //"model/ball.obj",
 	//"model/duck.obj",
   //"model/box.obj",
 	//"model/cubeT.obj"
@@ -134,6 +134,8 @@ void init()
 	textureDisplay = 0;
   showShadow = 0;
   showAxes = 0;
+	filterMode = 0;
+	toonShading = 0;
 }
 
 glm::mat4 modelMatrix(1);
@@ -223,7 +225,7 @@ void displayFunc()
 			MVPVertices[j] = MVPVertices[j] * glm::mat4(1/MVPVertices[j].w);
 			// Display space
 			MVPVertices[j] = MVPVertices[j]*viewportMatrix;
-
+			MVPVertices[j].z = modelVertices[j].z;
 			// Normal : rotation
 			modelNormals[j] = model_rotation(theta) * triNormals[j];
  		}
@@ -232,7 +234,17 @@ void displayFunc()
 		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
 		/*===Back Face Culling===*/
-		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
+		bool cull = backFaceCulling(faceNormals, glm::vec3(modelVertices[0])); //true-need to be culled
+		if (cull==true && toonShading==true) {
+			MVPVertices[0].z = -1e20;
+			MVPVertices[1].z = -1e20;
+			MVPVertices[2].z = -1e20;
+			drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
+			drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
+			drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
+		}
+		
+		if ((cull==false&&culling==true) || culling==false) { 
 			int ix[3],iy[3];
 			float iz[3];
 			vec3 c;
@@ -313,24 +325,6 @@ void displayFunc()
 	} // end for each triangle
 
   /*===show axes===*/
-  //glm::vec4 planeVertices[3];
-  //planeVertices[0] = glm::vec4(0.5f, -0.5f, 0.5f, 1.f);
-  //planeVertices[1] = glm::vec4(-0.5f, -0.5f, -0.5f, 1.f);
-  //planeVertices[2] = glm::vec4(-0.5f, -0.5f, 0.5f, 1.f);
-
-  //for(int j=0; j<3; ++j) {
-    //// model space (scaling->rotation->translation)
-    //planeVertices[j] = modelMatrix * planeVertices[j];
-    //// view space
-    //planeVertices[j] = viewMatrix * planeVertices[j];
-    //// projection space
-    //planeVertices[j] = projectionMatrix * planeVertices[j];
-    //// Display space
-    //planeVertices[j] = planeVertices[j] * viewportMatrix;
-  //}
-  //drawShadow(glm::vec3(planeVertices[0]), glm::vec3(planeVertices[1]), glm::vec3(planeVertices[2]), vec3(1.f, 0.f, 0.f));
-
-  /*===show axes===*/
   if (showAxes) {
     glm::vec4 axis[4];
     axis[0] = glm::vec4(0.f, 0.f, 0.f, 1.f);
@@ -360,14 +354,14 @@ void displayFunc()
 	
 	for (int i=0; i<screenWidth; i++) {
 		for (int j=0; j<screenHeight; j++) {
-			//texturing
-			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
-        framebuffer.texturing(i,j);
-			}
-
 			//cel shading
 			if (shading==3) {
 				framebuffer.celShading(i,j);
+			}
+
+			//texturing
+			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
+				framebuffer.texturing(i,j,filterMode);
 			}
 		}
 	}

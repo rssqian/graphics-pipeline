@@ -1,7 +1,7 @@
 #include "material.h"
 #include <fstream>
 #include <iostream>
-#include <IL/il.h>
+//#include <IL/il.h>
 #include <stdlib.h>
 using namespace std;
 
@@ -34,13 +34,13 @@ void eat_comment(ifstream& f)
 		f.getline(linebuf,255);
 }
 
-void RGBImage::readPPM(const string& filename)
+bool RGBImage::readPPM(const string& filename)
 {
 	cout << "Reading PPM file: " << filename << endl;
 	ifstream ifs(filename.c_str(), ios::binary);
 	if (ifs.fail()) {
 		cerr << "Error opening " << filename.c_str() << endl;
-		return;
+		return false;
 	}
 
 	//get file type
@@ -54,7 +54,7 @@ void RGBImage::readPPM(const string& filename)
 		mode = 6; //binary mode
 	} else {
 		cout << "Unsupported file format" << endl;
-		return;
+		return false;
 	}
 
 	//get width
@@ -73,22 +73,22 @@ void RGBImage::readPPM(const string& filename)
 	if (mode != 3 && mode != 6) {
 		cerr << "Unsupported magic number" << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (w<1) {
 		cerr << "Unsupported width: " << w << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (h<1) {
 		cerr << "Unsupported height: " << h << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	if (bits < 1 || bits > 255) {
 		cerr << "Unsupported number of bits: " << bits << endl;
 		ifs.close();
-		return;
+		return false;
 	}
 	//cout << "w = " << w << ", h = " << h << ", bits = " << bits << endl;
 	//load image data
@@ -108,8 +108,10 @@ void RGBImage::readPPM(const string& filename)
 		}
 	}
 	ifs.close();
+	return true;
 }
 
+/*
 void RGBImage::readDevIL(const string& filename, bool alpha)
 {
     ILuint image;
@@ -147,7 +149,7 @@ void RGBImage::readDevIL(const string& filename, bool alpha)
     free(data);
 	data = nullptr;
     return;// NULL;
-}
+}*/
 
 void makeMipMaps(vector<RGBImage*>& texMap) 
 { 
@@ -166,20 +168,28 @@ void makeMipMaps(vector<RGBImage*>& texMap)
     /* find the new texture values */ 
     for (u = 0; u < MipMap->w; u++) {
 		for (v = 0; v < MipMap->h; v++) {
-			MipMap->data[MipMap->w*u+v].r = (parentMap->data[parentMap->w*u*2 + v*2].r
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].r
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].r
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].r)
+			if (0>(parentMap->w*v*2 + u*2) || (parentMap->w*v*2 + u*2)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2=" << u*2 << " v*2=" << v*2 << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*v*2 + u*2 + 1) || (parentMap->w*v*2 + u*2 + 1)>(parentMap->w*parentMap->h))
+				cout << "Mipmap num " << texMap.size() << ", u*2=" << u*2 << " v*2+1=" << v*2 + 1  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*(v*2+1) + u*2) || (parentMap->w*(v*2+1) + u*2)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2+1=" << u*2+1 << " v*2=" << v*2  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*(v*2+1) + u*2 + 1) || (parentMap->w*(v*2+1) + u*2 + 1)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2+1=" << u*2+1 << " v*2+1=" << v*2 + 1  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			MipMap->data[MipMap->w*v+u].r = (parentMap->data[parentMap->w*v*2 + u*2].r
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].r
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].r
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].r)
 											/  4;
-			MipMap->data[MipMap->w*u+v].g = (parentMap->data[parentMap->w*u*2 + v*2].g
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].g
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].g
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].g)
+			MipMap->data[MipMap->w*v+u].g = (parentMap->data[parentMap->w*v*2 + u*2].g
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].g
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].g
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].g)
 											/  4;
-			MipMap->data[MipMap->w*u+v].b = (parentMap->data[parentMap->w*u*2 + v*2].b
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].b
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].b
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].b)
+			MipMap->data[MipMap->w*v+u].b = (parentMap->data[parentMap->w*v*2 + u*2].b
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].b
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].b
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].b)
 											/  4;
 		}
     }

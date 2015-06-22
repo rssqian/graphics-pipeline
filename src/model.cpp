@@ -55,23 +55,43 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = fileName;
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_Ka.push_back(new RGBImage);
-			mtlptr->map_Ka[0]->readPPM(fileName_s);
+			if (!mtlptr->map_Ka[0]->readPPM(fileName_s)) {
+				delete mtlptr->map_Ka.back();
+				mtlptr->map_Ka.pop_back();
+			}
+			if(mtlptr->map_Ka.size() != 0){
+				cout << "Making Mipmap for " << fileName_s << "(map_Ka)" << endl;
+				makeMipMaps(mtlptr->map_Ka);
+			}
 		} else if (h == "map_Kd") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
 			fileName_s = fileName;
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_Kd.push_back(new RGBImage);
-			mtlptr->map_Kd[0]->readPPM(fileName_s);
-			cout << "w = " << mtlptr->map_Kd[0]->w << ", h = " << mtlptr->map_Kd[0]->h << ", bits = " << mtlptr->map_Kd[0]->bits << endl;
+			if (!mtlptr->map_Kd[0]->readPPM(fileName_s)) {
+				delete mtlptr->map_Kd.back();
+				mtlptr->map_Kd.pop_back();
+			}
+			if(mtlptr->map_Kd.size() != 0) {
+				cout << "Making Mipmap for " << fileName_s << "(map_Kd)" << endl;
+				makeMipMaps(mtlptr->map_Kd);
+			}
 		} else if (h == "map_Ks") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
 			fileName_s = fileName;
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_Ks.push_back(new RGBImage);
-			mtlptr->map_Ks[0]->readPPM(fileName_s);
-		} else if (h == "map_bump") {
+			if (!mtlptr->map_Ks[0]->readPPM(fileName_s)) {
+				delete mtlptr->map_Ks.back();
+				mtlptr->map_Ks.pop_back();
+			}
+			if(mtlptr->map_Ks.size() != 0) {
+				cout << "Making Mipmap for " << fileName_s << "(map_Ks)" << endl;
+				makeMipMaps(mtlptr->map_Ks);
+			}
+		/*} else if (h == "map_bump") {
 			ifs.getline(buf,256);
 			sscanf(buf, "%s", fileName);
 			fileName_s = fileName;
@@ -84,7 +104,7 @@ void readMtlLib(Model* model, const string& filename)
 			fileName_s = fileName;
 			fileName_s = "model/" + fileName_s;
 			mtlptr->map_d.push_back(new RGBImage);
-			mtlptr->map_d[0]->readPPM(fileName_s);
+			mtlptr->map_d[0]->readPPM(fileName_s);*/
 		} else {
 			cout << "readMtlLib(): Unknow token \"" << h << "\" ignored" << endl;
 			ifs.getline(buf,256);
@@ -241,7 +261,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 				cout << "Cannot found material: " << fileName << endl;
 				break;
 			}
-			cout << "using material: "<< fileName << endl;
+			cout << "using material: "<< faceMtl->mtlName << endl;
 			break;
 		case 'g':				/* group, ignored now */
 			/* eat up rest of line */
@@ -275,6 +295,7 @@ void readObjSecondPass(Model* model, ifstream& ifs)
 					triangles[tIdx].nIndices[1] = n1;
 					triangles[tIdx].nIndices[2] = n2;
 					triangles[tIdx].mtlptr = faceMtl;
+					//cout << "Triangle[" << tIdx << "] use " << faceMtl->mtlName << endl;
 				}
 				else if(sscanf(buf, "%d/%d", &v0, &t0) == 2) {	/* v/t */
 					sscanf(buf, "%d/%d %d/%d %d/%d", &v0, &t0, &v1, &t1, &v2, &t2);
@@ -336,6 +357,10 @@ Model* readObj(const string& filename)
 	ifs.close();
 
 	cout << filename.c_str() << " loaded..." << endl;
+
+	//for (int i=0; i<model->numTriangles; i++) {
+	//	cout << "Triangle[" << i << "] use " << model->triangles[i]->->mtlName << endl;
+	//}
 
 	return model;
 }

@@ -40,12 +40,14 @@ extern glm::mat4 modelMatrix;
 extern glm::mat4 model_rotation_natural;
 
 extern int shading;
+extern bool toonShading;
 extern bool wireframe;
 extern bool normalDisplay;
 extern bool solid;
 extern bool culling;
 extern bool projection;
 extern bool textureDisplay;
+extern int filterMode;
 extern int textureAddressing;
 extern bool showShadow;
 extern bool showAxes;
