@@ -58,6 +58,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="cursor">
+          <cursorShape>OpenHandCursor</cursorShape>
+         </property>
         </widget>
        </item>
        <item>
@@ -141,19 +144,24 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-	padding: 3px 10px;
-}</string>
-               </property>
+              <widget class="QLabel" name="label_10">
                <property name="text">
-                <string>Background</string>
+                <string>Model</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QPushButton" name="pushButton_4">
@@ -166,41 +174,7 @@
 }</string>
                </property>
                <property name="text">
-                <string>Save Image</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-	padding: 3px 10px;
-}</string>
-               </property>
-               <property name="text">
-                <string>Reset Position</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="text">
-                <string>Culling</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
+                <string>⤓ Save Image</string>
                </property>
               </widget>
              </item>
@@ -263,7 +237,7 @@
          <x>10</x>
          <y>10</y>
          <width>261</width>
-         <height>501</height>
+         <height>511</height>
         </rect>
        </property>
        <property name="focusPolicy">
@@ -272,6 +246,227 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Transform</string>
+        </attribute>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>390</y>
+           <width>81</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+	padding: 3px 10px;
+}</string>
+         </property>
+         <property name="text">
+          <string>↺ Reset</string>
+         </property>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_12">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>110</y>
+           <width>231</width>
+           <height>81</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QGroupBox {
+	font-weight: bold;
+	border: 0px;
+}</string>
+         </property>
+         <property name="title">
+          <string>Translation</string>
+         </property>
+         <widget class="QLabel" name="label_4">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>91</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Mouse Drag</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_6">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>60</y>
+            <width>141</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Shift + Key A/D/S/W</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_13">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>200</y>
+           <width>231</width>
+           <height>81</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QGroupBox {
+	font-weight: bold;
+	border: 0px;
+}</string>
+         </property>
+         <property name="title">
+          <string>Rotation</string>
+         </property>
+         <widget class="QLabel" name="label_5">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>141</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Shift + Mouse Drag</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_7">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>60</y>
+            <width>81</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Arrow Keys</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_14">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>290</y>
+           <width>231</width>
+           <height>101</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QGroupBox {
+	font-weight: bold;
+	border: 0px;
+}</string>
+         </property>
+         <property name="title">
+          <string>Scaling</string>
+         </property>
+         <widget class="QLabel" name="label_8">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>30</y>
+            <width>101</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Mouse Wheel</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_9">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>60</y>
+            <width>71</width>
+            <height>21</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Key - / +</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>231</width>
+           <height>91</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QGroupBox {
+	font-weight: bold;
+	border: 0px;
+}</string>
+         </property>
+         <property name="title">
+          <string>Projection</string>
+         </property>
+         <widget class="QRadioButton" name="radioButton_6">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>30</y>
+            <width>112</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="text">
+           <string>Orthogonal</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="radioButton_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>60</y>
+            <width>112</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
+          <property name="text">
+           <string>Perspective</string>
+          </property>
+         </widget>
+        </widget>
+       </widget>
        <widget class="QWidget" name="tab">
         <attribute name="title">
          <string>Lighting</string>
@@ -840,9 +1035,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>520</y>
-         <width>120</width>
-         <height>121</height>
+         <y>540</y>
+         <width>271</width>
+         <height>101</height>
         </rect>
        </property>
        <property name="autoFillBackground">
@@ -866,9 +1061,9 @@
        <widget class="QCheckBox" name="checkBox_1">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>60</y>
-          <width>112</width>
+          <x>80</x>
+          <y>30</y>
+          <width>101</width>
           <height>26</height>
          </rect>
         </property>
@@ -887,7 +1082,7 @@
          <rect>
           <x>0</x>
           <y>30</y>
-          <width>112</width>
+          <width>61</width>
           <height>26</height>
          </rect>
         </property>
@@ -904,9 +1099,9 @@
        <widget class="QCheckBox" name="checkBox_3">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>90</y>
-          <width>95</width>
+          <x>180</x>
+          <y>30</y>
+          <width>81</width>
           <height>26</height>
          </rect>
         </property>
@@ -917,76 +1112,84 @@
          <string>Normals</string>
         </property>
        </widget>
-      </widget>
-      <widget class="QGroupBox" name="groupBox_4">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>520</y>
-         <width>120</width>
-         <height>91</height>
-        </rect>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QGroupBox {
-	font-weight: bold;
-	border: 0px;
-}</string>
-       </property>
-       <property name="title">
-        <string>Projection</string>
-       </property>
-       <widget class="QRadioButton" name="radioButton_6">
+       <widget class="QPushButton" name="pushButton_6">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>30</y>
-          <width>112</width>
-          <height>26</height>
+          <x>90</x>
+          <y>70</y>
+          <width>61</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	padding: 3px 10px;
+}</string>
+        </property>
         <property name="text">
-         <string>Orthogonal</string>
+         <string>Axes</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>70</y>
+          <width>103</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	padding: 3px 10px;
+}</string>
+        </property>
+        <property name="text">
+         <string>Background</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_1">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>70</y>
+          <width>81</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	padding: 3px 10px;
+}</string>
+        </property>
+        <property name="text">
+         <string>Culling</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
         <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QRadioButton" name="radioButton_7">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>60</y>
-          <width>112</width>
-          <height>26</height>
-         </rect>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Perspective</string>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QCheckBox" name="checkBox_6">
-       <property name="geometry">
-        <rect>
-         <x>150</x>
-         <y>610</y>
-         <width>111</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="text">
-        <string>Show Axes</string>
-       </property>
       </widget>
      </widget>
     </item>
@@ -1001,6 +1204,7 @@
    <header>openglwidget.h</header>
    <slots>
     <signal>fpsChanged(QString)</signal>
+    <signal>modelChanged(QString)</signal>
     <slot>reset()</slot>
     <slot>tuneAmbientLight(int)</slot>
     <slot>tuneDiffuseLight(int)</slot>
@@ -1048,8 +1252,8 @@
    <slot>reset()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>518</x>
-     <y>618</y>
+     <x>907</x>
+     <y>474</y>
     </hint>
     <hint type="destinationlabel">
      <x>600</x>
@@ -1068,8 +1272,8 @@
      <y>599</y>
     </hint>
     <hint type="destinationlabel">
-     <x>720</x>
-     <y>629</y>
+     <x>808</x>
+     <y>657</y>
     </hint>
    </hints>
   </connection>
@@ -1080,8 +1284,8 @@
    <slot>switchToOrthogonal()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1003</x>
-     <y>584</y>
+     <x>948</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel">
      <x>790</x>
@@ -1096,8 +1300,8 @@
    <slot>switchToPerspective()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>965</x>
-     <y>614</y>
+     <x>948</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
      <x>753</x>
@@ -1144,8 +1348,8 @@
    <slot>toggleBackground()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>635</y>
+     <x>1087</x>
+     <y>649</y>
     </hint>
     <hint type="destinationlabel">
      <x>398</x>
@@ -1160,8 +1364,8 @@
    <slot>saveAsImage()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>413</x>
-     <y>629</y>
+     <x>627</x>
+     <y>648</y>
     </hint>
     <hint type="destinationlabel">
      <x>495</x>
@@ -1176,8 +1380,8 @@
    <slot>switchToSolid(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>866</x>
-     <y>572</y>
+     <x>885</x>
+     <y>601</y>
     </hint>
     <hint type="destinationlabel">
      <x>804</x>
@@ -1192,8 +1396,8 @@
    <slot>switchToWireframe(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>866</x>
-     <y>604</y>
+     <x>995</x>
+     <y>603</y>
     </hint>
     <hint type="destinationlabel">
      <x>803</x>
@@ -1208,44 +1412,12 @@
    <slot>addNormalDisplay(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>844</x>
-     <y>629</y>
+     <x>1085</x>
+     <y>598</y>
     </hint>
     <hint type="destinationlabel">
      <x>789</x>
      <y>584</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_6</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>openGLWidget</receiver>
-   <slot>toggleShowAxes(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1038</x>
-     <y>634</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>790</x>
-     <y>547</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>openGLWidget</receiver>
-   <slot>toggleCulling(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>630</x>
-     <y>629</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>625</x>
-     <y>589</y>
     </hint>
    </hints>
   </connection>
@@ -1614,6 +1786,54 @@
     <hint type="destinationlabel">
      <x>745</x>
      <y>408</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_1</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>toggleCulling(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>852</x>
+     <y>635</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>798</x>
+     <y>538</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>toggleShowAxes(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>948</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>786</x>
+     <y>543</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>modelChanged(QString)</signal>
+   <receiver>label_10</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>608</x>
+     <y>565</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>678</x>
+     <y>633</y>
     </hint>
    </hints>
   </connection>

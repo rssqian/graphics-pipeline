@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -43,13 +44,26 @@ public:
     QHBoxLayout *horizontalLayout_4;
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
-    QPushButton *pushButton_5;
+    QLabel *label_10;
+    QSpacerItem *horizontalSpacer;
     QPushButton *pushButton_4;
-    QPushButton *pushButton;
-    QCheckBox *checkBox;
     QLabel *label_fpsCounter;
     QGroupBox *groupBox_5;
     QTabWidget *tabWidget;
+    QWidget *tab_3;
+    QPushButton *pushButton;
+    QGroupBox *groupBox_12;
+    QLabel *label_4;
+    QLabel *label_6;
+    QGroupBox *groupBox_13;
+    QLabel *label_5;
+    QLabel *label_7;
+    QGroupBox *groupBox_14;
+    QLabel *label_8;
+    QLabel *label_9;
+    QGroupBox *groupBox_4;
+    QRadioButton *radioButton_6;
+    QRadioButton *radioButton_7;
     QWidget *tab;
     QGroupBox *groupBox_3;
     QSlider *horizontalSlider;
@@ -87,10 +101,9 @@ public:
     QCheckBox *checkBox_1;
     QCheckBox *checkBox_2;
     QCheckBox *checkBox_3;
-    QGroupBox *groupBox_4;
-    QRadioButton *radioButton_6;
-    QRadioButton *radioButton_7;
-    QCheckBox *checkBox_6;
+    QPushButton *pushButton_6;
+    QPushButton *pushButton_5;
+    QPushButton *pushButton_1;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -127,6 +140,7 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(openGLWidget->sizePolicy().hasHeightForWidth());
         openGLWidget->setSizePolicy(sizePolicy1);
+        openGLWidget->setCursor(QCursor(Qt::OpenHandCursor));
 
         verticalLayout->addWidget(openGLWidget);
 
@@ -172,14 +186,14 @@ public:
 
         horizontalLayout_4->addWidget(pushButton_3);
 
-        pushButton_5 = new QPushButton(groupBox_8);
-        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
-        pushButton_5->setFocusPolicy(Qt::NoFocus);
-        pushButton_5->setStyleSheet(QLatin1String("QPushButton {\n"
-"	padding: 3px 10px;\n"
-"}"));
+        label_10 = new QLabel(groupBox_8);
+        label_10->setObjectName(QStringLiteral("label_10"));
 
-        horizontalLayout_4->addWidget(pushButton_5);
+        horizontalLayout_4->addWidget(label_10);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
 
         pushButton_4 = new QPushButton(groupBox_8);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
@@ -189,23 +203,6 @@ public:
 "}"));
 
         horizontalLayout_4->addWidget(pushButton_4);
-
-        pushButton = new QPushButton(groupBox_8);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setMinimumSize(QSize(0, 0));
-        pushButton->setFocusPolicy(Qt::NoFocus);
-        pushButton->setStyleSheet(QLatin1String("QPushButton {\n"
-"	padding: 3px 10px;\n"
-"}"));
-
-        horizontalLayout_4->addWidget(pushButton);
-
-        checkBox = new QCheckBox(groupBox_8);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setFocusPolicy(Qt::NoFocus);
-        checkBox->setChecked(true);
-
-        horizontalLayout_4->addWidget(checkBox);
 
 
         horizontalLayout_3->addWidget(groupBox_8);
@@ -242,8 +239,74 @@ public:
 "}"));
         tabWidget = new QTabWidget(groupBox_5);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 10, 261, 501));
+        tabWidget->setGeometry(QRect(10, 10, 261, 511));
         tabWidget->setFocusPolicy(Qt::NoFocus);
+        tab_3 = new QWidget();
+        tab_3->setObjectName(QStringLiteral("tab_3"));
+        pushButton = new QPushButton(tab_3);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(10, 390, 81, 31));
+        pushButton->setMinimumSize(QSize(0, 0));
+        pushButton->setFocusPolicy(Qt::NoFocus);
+        pushButton->setStyleSheet(QLatin1String("QPushButton {\n"
+"	padding: 3px 10px;\n"
+"}"));
+        groupBox_12 = new QGroupBox(tab_3);
+        groupBox_12->setObjectName(QStringLiteral("groupBox_12"));
+        groupBox_12->setGeometry(QRect(10, 110, 231, 81));
+        groupBox_12->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
+        label_4 = new QLabel(groupBox_12);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(10, 30, 91, 21));
+        label_6 = new QLabel(groupBox_12);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setGeometry(QRect(10, 60, 141, 21));
+        groupBox_13 = new QGroupBox(tab_3);
+        groupBox_13->setObjectName(QStringLiteral("groupBox_13"));
+        groupBox_13->setGeometry(QRect(10, 200, 231, 81));
+        groupBox_13->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
+        label_5 = new QLabel(groupBox_13);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setGeometry(QRect(10, 30, 141, 21));
+        label_7 = new QLabel(groupBox_13);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setGeometry(QRect(10, 60, 81, 21));
+        groupBox_14 = new QGroupBox(tab_3);
+        groupBox_14->setObjectName(QStringLiteral("groupBox_14"));
+        groupBox_14->setGeometry(QRect(10, 290, 231, 101));
+        groupBox_14->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
+        label_8 = new QLabel(groupBox_14);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(10, 30, 101, 21));
+        label_9 = new QLabel(groupBox_14);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setGeometry(QRect(10, 60, 71, 21));
+        groupBox_4 = new QGroupBox(tab_3);
+        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
+        groupBox_4->setGeometry(QRect(10, 10, 231, 91));
+        groupBox_4->setStyleSheet(QLatin1String("QGroupBox {\n"
+"	font-weight: bold;\n"
+"	border: 0px;\n"
+"}"));
+        radioButton_6 = new QRadioButton(groupBox_4);
+        radioButton_6->setObjectName(QStringLiteral("radioButton_6"));
+        radioButton_6->setGeometry(QRect(0, 30, 112, 26));
+        radioButton_6->setFocusPolicy(Qt::NoFocus);
+        radioButton_6->setChecked(true);
+        radioButton_7 = new QRadioButton(groupBox_4);
+        radioButton_7->setObjectName(QStringLiteral("radioButton_7"));
+        radioButton_7->setGeometry(QRect(0, 60, 112, 26));
+        radioButton_7->setFocusPolicy(Qt::NoFocus);
+        tabWidget->addTab(tab_3, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         groupBox_3 = new QGroupBox(tab);
@@ -409,7 +472,7 @@ public:
         tabWidget->addTab(tab_2, QString());
         groupBox = new QGroupBox(groupBox_5);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(10, 520, 120, 121));
+        groupBox->setGeometry(QRect(10, 540, 271, 101));
         groupBox->setAutoFillBackground(false);
         groupBox->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
@@ -419,38 +482,44 @@ public:
         groupBox->setCheckable(false);
         checkBox_1 = new QCheckBox(groupBox);
         checkBox_1->setObjectName(QStringLiteral("checkBox_1"));
-        checkBox_1->setGeometry(QRect(0, 60, 112, 26));
+        checkBox_1->setGeometry(QRect(80, 30, 101, 26));
         checkBox_1->setFocusPolicy(Qt::NoFocus);
         checkBox_1->setChecked(false);
         checkBox_2 = new QCheckBox(groupBox);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(0, 30, 112, 26));
+        checkBox_2->setGeometry(QRect(0, 30, 61, 26));
         checkBox_2->setFocusPolicy(Qt::NoFocus);
         checkBox_2->setChecked(true);
         checkBox_3 = new QCheckBox(groupBox);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
-        checkBox_3->setGeometry(QRect(0, 90, 95, 26));
+        checkBox_3->setGeometry(QRect(180, 30, 81, 26));
         checkBox_3->setFocusPolicy(Qt::NoFocus);
-        groupBox_4 = new QGroupBox(groupBox_5);
-        groupBox_4->setObjectName(QStringLiteral("groupBox_4"));
-        groupBox_4->setGeometry(QRect(150, 520, 120, 91));
-        groupBox_4->setStyleSheet(QLatin1String("QGroupBox {\n"
-"	font-weight: bold;\n"
-"	border: 0px;\n"
+        pushButton_6 = new QPushButton(groupBox);
+        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
+        pushButton_6->setGeometry(QRect(90, 70, 61, 31));
+        pushButton_6->setFocusPolicy(Qt::NoFocus);
+        pushButton_6->setStyleSheet(QLatin1String("QPushButton {\n"
+"	padding: 3px 10px;\n"
 "}"));
-        radioButton_6 = new QRadioButton(groupBox_4);
-        radioButton_6->setObjectName(QStringLiteral("radioButton_6"));
-        radioButton_6->setGeometry(QRect(0, 30, 112, 26));
-        radioButton_6->setFocusPolicy(Qt::NoFocus);
-        radioButton_6->setChecked(true);
-        radioButton_7 = new QRadioButton(groupBox_4);
-        radioButton_7->setObjectName(QStringLiteral("radioButton_7"));
-        radioButton_7->setGeometry(QRect(0, 60, 112, 26));
-        radioButton_7->setFocusPolicy(Qt::NoFocus);
-        checkBox_6 = new QCheckBox(groupBox_5);
-        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
-        checkBox_6->setGeometry(QRect(150, 610, 111, 26));
-        checkBox_6->setFocusPolicy(Qt::NoFocus);
+        pushButton_6->setCheckable(true);
+        pushButton_6->setChecked(false);
+        pushButton_5 = new QPushButton(groupBox);
+        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+        pushButton_5->setGeometry(QRect(160, 70, 103, 31));
+        pushButton_5->setFocusPolicy(Qt::NoFocus);
+        pushButton_5->setStyleSheet(QLatin1String("QPushButton {\n"
+"	padding: 3px 10px;\n"
+"}"));
+        pushButton_5->setCheckable(true);
+        pushButton_1 = new QPushButton(groupBox);
+        pushButton_1->setObjectName(QStringLiteral("pushButton_1"));
+        pushButton_1->setGeometry(QRect(0, 70, 81, 31));
+        pushButton_1->setFocusPolicy(Qt::NoFocus);
+        pushButton_1->setStyleSheet(QLatin1String("QPushButton {\n"
+"	padding: 3px 10px;\n"
+"}"));
+        pushButton_1->setCheckable(true);
+        pushButton_1->setChecked(true);
 
         horizontalLayout_2->addWidget(groupBox_5);
 
@@ -468,8 +537,6 @@ public:
         QObject::connect(checkBox_2, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToSolid(bool)));
         QObject::connect(checkBox_1, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToWireframe(bool)));
         QObject::connect(checkBox_3, SIGNAL(toggled(bool)), openGLWidget, SLOT(addNormalDisplay(bool)));
-        QObject::connect(checkBox_6, SIGNAL(toggled(bool)), openGLWidget, SLOT(toggleShowAxes(bool)));
-        QObject::connect(checkBox, SIGNAL(toggled(bool)), openGLWidget, SLOT(toggleCulling(bool)));
         QObject::connect(horizontalSlider_2, SIGNAL(valueChanged(int)), openGLWidget, SLOT(tuneDiffuseLight(int)));
         QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), openGLWidget, SLOT(tuneAmbientLight(int)));
         QObject::connect(radioButton_8, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToZShading(bool)));
@@ -493,6 +560,9 @@ public:
         QObject::connect(radioButton_3, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToTextureWrapping(bool)));
         QObject::connect(radioButton_18, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToTextureMirroring(bool)));
         QObject::connect(radioButton_19, SIGNAL(toggled(bool)), openGLWidget, SLOT(switchToTextureClamping(bool)));
+        QObject::connect(pushButton_1, SIGNAL(toggled(bool)), openGLWidget, SLOT(toggleCulling(bool)));
+        QObject::connect(pushButton_6, SIGNAL(toggled(bool)), openGLWidget, SLOT(toggleShowAxes(bool)));
+        QObject::connect(openGLWidget, SIGNAL(modelChanged(QString)), label_10, SLOT(setText(QString)));
 
         tabWidget->setCurrentIndex(0);
 
@@ -505,11 +575,23 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "3D Graphics Engine", 0));
         pushButton_2->setText(QApplication::translate("MainWindow", "\342\227\200 Last Model", 0));
         pushButton_3->setText(QApplication::translate("MainWindow", "Next Model \342\226\266", 0));
-        pushButton_5->setText(QApplication::translate("MainWindow", "Background", 0));
-        pushButton_4->setText(QApplication::translate("MainWindow", "Save Image", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "Reset Position", 0));
-        checkBox->setText(QApplication::translate("MainWindow", "Culling", 0));
+        label_10->setText(QApplication::translate("MainWindow", "Model", 0));
+        pushButton_4->setText(QApplication::translate("MainWindow", "\342\244\223 Save Image", 0));
         label_fpsCounter->setText(QApplication::translate("MainWindow", "fps", 0));
+        pushButton->setText(QApplication::translate("MainWindow", "\342\206\272 Reset", 0));
+        groupBox_12->setTitle(QApplication::translate("MainWindow", "Translation", 0));
+        label_4->setText(QApplication::translate("MainWindow", "Mouse Drag", 0));
+        label_6->setText(QApplication::translate("MainWindow", "Shift + Key A/D/S/W", 0));
+        groupBox_13->setTitle(QApplication::translate("MainWindow", "Rotation", 0));
+        label_5->setText(QApplication::translate("MainWindow", "Shift + Mouse Drag", 0));
+        label_7->setText(QApplication::translate("MainWindow", "Arrow Keys", 0));
+        groupBox_14->setTitle(QApplication::translate("MainWindow", "Scaling", 0));
+        label_8->setText(QApplication::translate("MainWindow", "Mouse Wheel", 0));
+        label_9->setText(QApplication::translate("MainWindow", "Key - / +", 0));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "Projection", 0));
+        radioButton_6->setText(QApplication::translate("MainWindow", "Orthogonal", 0));
+        radioButton_7->setText(QApplication::translate("MainWindow", "Perspective", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MainWindow", "Transform", 0));
         groupBox_3->setTitle(QApplication::translate("MainWindow", "Lighting", 0));
         label->setText(QApplication::translate("MainWindow", "Ambient", 0));
         label_2->setText(QApplication::translate("MainWindow", "Diffuse", 0));
@@ -543,10 +625,9 @@ public:
         checkBox_1->setText(QApplication::translate("MainWindow", "Wireframe", 0));
         checkBox_2->setText(QApplication::translate("MainWindow", "Solid", 0));
         checkBox_3->setText(QApplication::translate("MainWindow", "Normals", 0));
-        groupBox_4->setTitle(QApplication::translate("MainWindow", "Projection", 0));
-        radioButton_6->setText(QApplication::translate("MainWindow", "Orthogonal", 0));
-        radioButton_7->setText(QApplication::translate("MainWindow", "Perspective", 0));
-        checkBox_6->setText(QApplication::translate("MainWindow", "Show Axes", 0));
+        pushButton_6->setText(QApplication::translate("MainWindow", "Axes", 0));
+        pushButton_5->setText(QApplication::translate("MainWindow", "Background", 0));
+        pushButton_1->setText(QApplication::translate("MainWindow", "Culling", 0));
     } // retranslateUi
 
 };

@@ -22,6 +22,7 @@ protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
+    void updateModelInfo();
     void fpsCounter();
 
     void keyPressEvent(QKeyEvent *event);
@@ -30,7 +31,8 @@ protected:
     void wheelEvent(QWheelEvent *event);
 
 signals:
-    void fpsChanged(QString);
+    void modelChanged(QString);
+    void fpsChanged(QString);    
 
 public slots:
     void printHelp();

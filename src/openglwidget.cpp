@@ -80,12 +80,13 @@ void OpenGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    updateModelInfo();
 }
 
 void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);    
 
     if (demoMode==0 || demoMode==1) 
       framebuffer.clear();
@@ -325,6 +326,18 @@ void OpenGLWidget::resizeGL(int width, int height)
 // Framebuffer need to resize too
 }
 
+void OpenGLWidget::updateModelInfo() {
+    stringstream ss;
+    string modelStr = modelNames[curModelIdx];
+    string numStr;
+    ss << modelPtr[curModelIdx]->numTriangles;
+    ss >> numStr;
+    modelStr.append(" with "+numStr+" triangles");
+    QString qstr(modelStr.c_str());
+    emit modelChanged(qstr);
+    //modelPtr[curModelIdx]->numTriangles
+}
+
 void OpenGLWidget::fpsCounter() {
     static clock_t prev = clock();
     static clock_t curr;
@@ -337,8 +350,9 @@ void OpenGLWidget::fpsCounter() {
     if (t > refreshTime) {
       stringstream ss;
       string fpsStr;
-      ss << (double)count/t << "fps";
+      ss << (double)count/t;
       ss >> fpsStr;
+      fpsStr.append(" fps");
       QString qstr(fpsStr.c_str());
       emit fpsChanged(qstr);
       prev = curr;
@@ -491,12 +505,14 @@ void OpenGLWidget::saveAsImage() {
 void OpenGLWidget::selectNextModel() {
   curModelIdx = (curModelIdx == numModels - 1)? 0 : (curModelIdx + 1);
   printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+  updateModelInfo();
   update();
 }
 
 void OpenGLWidget::selectPrevModel() {
   curModelIdx = (curModelIdx == 0)? (numModels - 1) : (curModelIdx - 1);
   printf("Switch to model \"%s\"\n", modelNames[curModelIdx]);
+  updateModelInfo();
   update();
 }
 
