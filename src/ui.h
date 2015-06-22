@@ -29,7 +29,6 @@ extern glm::vec3 size;
 extern glm::vec3 translate;
 
 extern int shading;
-extern bool toonShading;
 extern bool wireframe;
 extern bool normalDisplay;
 extern bool solid;
@@ -38,11 +37,14 @@ extern bool projection;
 extern bool textureDisplay;
 extern int filterMode;
 extern int textureAddressing;
+extern int demoMode;
 
 extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+
+extern int numDrawTriangleIdx;
 
 #endif
 
@@ -59,7 +61,6 @@ inline void toggleProjection();
 inline void toggleCulling();
 inline void toggleBackground();
 inline void changeShading();
-inline void toggleToonShading();
 inline void switchKaKdKsLighting();
 inline void rotateUp();
 inline void rotateDown();
@@ -76,6 +77,7 @@ inline void moveBackward();
 inline void setLightSourcePosition();
 inline void toggleTexture();
 inline void switchTextureModes();
+inline void toggleDemo();
 
 /* User interfaces */
 void motionFunc(int x, int y);

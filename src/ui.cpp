@@ -50,6 +50,7 @@ void printHelp()
 	cout << "  t: Toggle texture/texture filtering mode  " << endl;
 	cout << "  T: Switch texture addressing mode         " << endl;
 	cout << "  z: Toon shading                           " << endl;
+	cout << "  d: Toggle demo mode                       " << endl;
 	cout << "=========================================== " << endl;
 }
 
@@ -116,7 +117,7 @@ inline void toggleBackground() {
   framebuffer.setClearColor(isBlack? vec3(0.f) : vec3(1.f));
 }
 inline void changeShading() {
-  if (shading == 5) shading = 0;
+  if (shading == 4) shading = 0;
   else shading++;
   cout << "Change to shading mode to: ";
   switch(shading) {
@@ -135,17 +136,7 @@ inline void changeShading() {
 	case 4:
 	  cout << "Suface normal shading";
 	  break;
-	case 5:
-	  cout << "Toon shading";
-	  break;
   }
-  cout << endl;
-}
-inline void toggleToonShading() {
-  toonShading = !toonShading;
-  cout << "Toggle toon shading: ";
-  if (toonShading) cout << "ON";
-  else cout << "OFF";
   cout << endl;
 }
 inline void switchKaKdKsLighting(){
@@ -260,6 +251,34 @@ inline void switchTextureModes() {
   cout << "Switch texture addressing to: " << textureAddressing << endl;
 }
 
+inline void toggleDemo() {
+  if (demoMode == 0) { 
+    demoMode = 1;
+    cout << "Switching to DEMO mode" << endl;
+	cout << "DEMO mode: switching to wireframe" << endl;
+	culling = false;
+	wireframe = 1;
+	normalDisplay = 0;
+	solid = 0;
+	shading = 1; 
+	textureAddressing = 0; 
+	textureDisplay = 0;
+	filterMode = 0;
+	numDrawTriangleIdx = 0;
+  } else {
+	demoMode = 0;
+	cout << "Switching to MANUAL mode" << endl;
+	culling = true;
+	wireframe = 0;
+	normalDisplay = 0;
+	solid = 1;
+	shading = 1; 
+	textureAddressing = 0; 
+	textureDisplay = 0;
+	filterMode = 0;
+  }
+}
+
 void motionFunc(int x, int y) {
   if ( rotating ) {
     int deltaMouseX = x - prevMouseX;
@@ -360,19 +379,19 @@ void keyboardFunc(unsigned char key, int x, int y)
   case 'T':
     switchTextureModes(); break;
   case 'A':
-    panLeft(10); break;
+    panLeft(0.1); break;
   case 'D':
-    panRight(10); break;
+    panRight(0.1); break;
   case 'W':
-    panUp(10); break;
+    panUp(0.1); break;
   case 'S':
-    panDown(10); break;
+    panDown(0.1); break;
   case '=':
     zoomIn(); break;
   case '-':
     zoomOut(); break;
-  case 'z':
-	  toggleToonShading(); break;
+  case 'd':
+    toggleDemo(); break;
 	}
 	glutPostRedisplay();
 }
