@@ -6,9 +6,4 @@ ipch/
 # Ignore object and binary files
 *.swp
 *.o
-*.swp
 3d-graphics-engine
-<<<<<<< HEAD
-=======
-3d-graphics-engine_dbg
->>>>>>> last-day

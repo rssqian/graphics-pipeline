@@ -62,8 +62,12 @@ extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+extern float ambientIntensity;
+extern float diffuseIntensity;
+extern float specularIntensity;
 
 extern bool pointLight;
+extern bool spotlight;
 extern float spotlightAngle;
 
 int lightswitch = 0;
@@ -249,7 +253,7 @@ void OpenGLWidget::paintGL()
           MVPProjectVertices[0] = projectVertices[0] * viewportMatrix;
           MVPProjectVertices[1] = projectVertices[1] * viewportMatrix;
           MVPProjectVertices[2] = projectVertices[2] * viewportMatrix;
-          drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.15f, 0.12f, 0.1f));
+          drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.24f, 0.58f, 0.92f));
         }
       }
 
@@ -270,7 +274,7 @@ void OpenGLWidget::paintGL()
                 vec3 colorNormal;
                 for (int j=0; j<3;j++){
                     smallNormals[j] = glm::normalize(modelNormals[j]);
-                    smallNormals[j] = glm::vec4(smallNormals[j].x*130,smallNormals[j].y*130,smallNormals[j].z*130,0.f);
+                    smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
                     colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
                     colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
                     colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
@@ -333,8 +337,9 @@ void OpenGLWidget::paintGL()
 
 void OpenGLWidget::resizeGL(int width, int height)
 {
-
-
+// Framebuffer need to resize too
+//    screenWidth = width;
+//    screenHeight = height;
 }
 
 
@@ -432,6 +437,13 @@ void OpenGLWidget::toggleNormalDisplay() {
     else cout << "off" << endl;
     update();
 }
+void OpenGLWidget::addNormalDisplay(bool on) {
+    normalDisplay = on;
+    cout << "Toggle normal display: ";
+    if (normalDisplay) cout << "on" << endl;
+    else cout << "off" << endl;
+    update();
+}
 void OpenGLWidget::toggleSolidView() {
   solid = !solid;
   if (solid) cout << "Add solid to view" << endl;
@@ -466,14 +478,31 @@ void OpenGLWidget::toggleCulling() {
   cout << "Toggle back-face culling to: " << culling << endl;
   update();
 }
+void OpenGLWidget::toggleCulling(bool on) {
+  culling = on;
+  cout << "Toggle back-face culling to: " << culling << endl;
+  update();
+}
 void OpenGLWidget::toggleShadow() {
   showShadow = !showShadow;
   if (showShadow) cout << "Show shadow. Please turn off back-face culling." << endl;
   else cout << "Hide shadow. You may turn on back-face culling." << endl;
   update();
 }
+void OpenGLWidget::toggleShadow(bool on) {
+  showShadow = on;
+  if (showShadow) cout << "Show shadow. Please turn off back-face culling." << endl;
+  else cout << "Hide shadow. You may turn on back-face culling." << endl;
+  update();
+}
 void OpenGLWidget::toggleShowAxes() {
   showAxes = !showAxes;
+  if (showAxes) cout << "Show axes" << endl;
+  else cout << "Hide axes" << endl;
+  update();
+}
+void OpenGLWidget::toggleShowAxes(bool on) {
+  showAxes = on;
   if (showAxes) cout << "Show axes" << endl;
   else cout << "Hide axes" << endl;
   update();
@@ -520,38 +549,48 @@ void OpenGLWidget::toggleToonShading() {
   cout << endl;
   update();
 }
-void OpenGLWidget::switchToNoShading() {
+void OpenGLWidget::switchToZShading(bool on) {
   shading = 0;
-  cout << "Change to shading mode to: No shading" << endl;
+  cout << "Change to shading mode to: Z shading" << endl;
   update();
 }
-void OpenGLWidget::switchToFlatShading() {
+void OpenGLWidget::switchToFlatShading(bool on) {
   shading = 1;
   cout << "Change to shading mode to: Flat shading" << endl;
   update();
 }
-void OpenGLWidget::switchToPhongShading() {
+void OpenGLWidget::switchToPhongShading(bool on) {
   shading = 2;
   cout << "Change to shading mode to: Phong shading" << endl;
+  update();
+}
+void OpenGLWidget::switchToCellShading(bool on) {
+  shading = 3;
+  cout << "Change to shading mode to: Cell shading" << endl;
+  update();
+}
+void OpenGLWidget::switchToNormalShading(bool on) {
+  shading = 4;
+  cout << "Change to shading mode to: Normal shading" << endl;
   update();
 }
 
 void OpenGLWidget::tuneAmbientLight(int v) {
   float value = float(v)/10;
   cout << "Tune ambient light:" << value << endl;
-  light.ka = glm::vec3(value);
+  ambientIntensity = value;
   update();
 }
 void OpenGLWidget::tuneDiffuseLight(int v) {
   float value = float(v)/10;
   cout << "Tune diffuse light:" << value << endl;
-  light.kd = glm::vec3(value);
+  diffuseIntensity = value;
   update();
 }
 void OpenGLWidget::tuneSpecularLight(int v) {
   float value = float(v)/10;
   cout << "Tune specular light:" << value << endl;
-  light.ks = glm::vec3(value);
+  specularIntensity = value;
   update();
 }
 
@@ -581,8 +620,23 @@ void OpenGLWidget::togglePointLight() {
   else cout << "Directional light source" << endl;
   update();
 }
-void OpenGLWidget::changeSpotlightAngle(float angle) {
-  spotlightAngle += angle;
+void OpenGLWidget::switchToPointLight(bool on) {
+  pointLight = 1;
+  cout << "Point light source" << endl;
+  update();
+}
+void OpenGLWidget::switchToDirectionalLight(bool on) {
+  pointLight = 0;
+  cout << "Directional light source" << endl;
+  update();
+}
+void OpenGLWidget::turnOnSpotlight(bool on) {
+  spotlight = on;
+  update();
+}
+void OpenGLWidget::changeSpotlightAngle(int step) {
+  float angle = float(step)/1000;
+  spotlightAngle = angle;
   if (spotlightAngle > 1) spotlightAngle = 1;
   if (spotlightAngle < 0) spotlightAngle = 0;
   cout << "Spotlight angle: " << spotlightAngle << endl;
@@ -590,60 +644,60 @@ void OpenGLWidget::changeSpotlightAngle(float angle) {
 }
 
 void OpenGLWidget::rotateUp() {
-  cout << "Rotate up" << endl;
+  //cout << "Rotate up" << endl;
   theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
   update();
 }
 void OpenGLWidget::rotateDown() {
-  cout << "Rotate down" << endl;
+  //cout << "Rotate down" << endl;
   theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
   update();
 }
 void OpenGLWidget::rotateLeft() {
-  cout << "Rotate left" << endl;
+  //cout << "Rotate left" << endl;
   theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
   update();
 }
 void OpenGLWidget::rotateRight() {
-  cout << "Rotate right" << endl;
+  //cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
   update();
 }
 void OpenGLWidget::pan(float xPace, float yPace) {
-  cout << "Pan: " << xPace << ", " << yPace << endl;
+  //cout << "Pan: " << xPace << ", " << yPace << endl;
   translate.x += xPace/5;
   translate.y -= yPace/5;
   update();
 }
 void OpenGLWidget::panUp(float pace) {
-  cout << "Pan up" << endl;
+  //cout << "Pan up" << endl;
   translate.y += pace;
   update();
 }
 void OpenGLWidget::panDown(float pace) {
-  cout << "Pan down" << endl;
+  //cout << "Pan down" << endl;
   translate.y -= pace;
   update();
 }
 void OpenGLWidget::panLeft(float pace) {
-  cout << "Pan left" << endl;
+  //cout << "Pan left" << endl;
   translate.x -= pace;
   update();
 }
 void OpenGLWidget::panRight(float pace) {
-  cout << "Pan right" << endl;
+  //cout << "Pan right" << endl;
   translate.x += pace;
   update();
 }
 void OpenGLWidget::zoomIn() {
-  cout << "Zoom in" << endl;
+  //cout << "Zoom in" << endl;
   model_size.x += 0.1;
   model_size.y += 0.1;
   update();
 }
 void OpenGLWidget::zoomOut() {
   if(model_size.x>(0.01-1)){
-    cout << "Zoom out" << endl;
+    //cout << "Zoom out" << endl;
     model_size.x -= 0.1;
     model_size.y -= 0.1;
     update();
@@ -652,12 +706,12 @@ void OpenGLWidget::zoomOut() {
     cout << "It can't be smaller!" << endl;
 }
 void OpenGLWidget::moveForward() {
-  cout << "Move forward" << endl;
+  //cout << "Move forward" << endl;
   translate.z -= 0.1;
   update();
 }
 void OpenGLWidget::moveBackward() {
-  cout << "Move backward" << endl;
+  //cout << "Move backward" << endl;
   translate.z += 0.1;
   update();
 }
@@ -699,6 +753,62 @@ void OpenGLWidget::switchTextureModes() {
   cout << "Switch texture addressing to: " << textureAddressing << endl;
   update();
 }
+void OpenGLWidget::switchToTextureNearest(bool on) {
+  textureDisplay = 1;
+  filterMode = 1;
+  cout << "Nearest Mode" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureLinear(bool on) {
+  textureDisplay = 1;
+  filterMode = 2;
+  cout << "Linear Mode" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureNMN(bool on) {
+  textureDisplay = 1;
+  filterMode = 3;
+  cout << "Nearest-Mipmap-Nearest Mode" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureLMN(bool on) {
+  textureDisplay = 1;
+  filterMode = 4;
+  cout << "Linear-Mipmap-Nearest Mode" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureNML(bool on) {
+  textureDisplay = 1;
+  filterMode = 5;
+  cout << "Nearest-Mipmap-Linear Mode" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureLML(bool on) {
+  textureDisplay = 1;
+  filterMode = 6;
+  cout << "Linear-Mipmap-Linear Mode" << endl;
+  update();
+}
+void OpenGLWidget::turnOffTexture(bool on) {
+  textureDisplay = 0;
+  filterMode = 0;
+  cout << "Turn off texture" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureWrapping(bool on) {
+  textureAddressing = 0;
+  cout << "Texture Addressing: Wrapping" << endl;
+  update();
+}
+void OpenGLWidget::switchToTextureMirroring(bool on) {
+  textureAddressing = 1;
+  cout << "Texture Addressing: Mirroring" << endl;
+}
+void OpenGLWidget::switchToTextureClamping(bool on) {
+  textureAddressing = 2;
+  cout << "Texture Addressing: Clamping" << endl;
+  update();
+}
 
 void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 
@@ -737,9 +847,9 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_D:
           togglePointLight(); break;
         case Qt::Key_X:
-          changeSpotlightAngle(-0.001); break;
+          changeSpotlightAngle(-1); break;
         case Qt::Key_Y:
-          changeSpotlightAngle(0.001); break;
+          changeSpotlightAngle(1); break;
         case Qt::Key_W:
             toggleWireframe(); break;
         case Qt::Key_N:
@@ -794,13 +904,13 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
     else {
         if (event->buttons() == Qt::LeftButton) {
             if (delta.x() > 20)
-                panRight(0.1);
+                panRight(0.01);
             else if (delta.x() < -20)
-                panLeft(0.1);
+                panLeft(0.01);
             if (delta.y() > 20)
-                panDown(0.1);
+                panDown(0.01);
             else if (delta.y() < -20)
-                panUp(0.1);
+                panUp(0.01);
         }
     }
 }

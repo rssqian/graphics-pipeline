@@ -21,15 +21,15 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 600;
-int screenHeight = 400;
+int screenWidth = 800;
+int screenHeight = 600;
 int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
 glm::vec3 theta (0.0f, 0.0f, 0.0f);
-glm::vec3 model_size (1.0f, 1.0f, 1.0f);
+glm::vec3 model_size (1.5f, 1.5f, 1.5f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
 glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
@@ -61,8 +61,12 @@ Lighting light;
 glm::vec3 ka(1.f);
 glm::vec3 kd(1.f);
 glm::vec3 ks(1.f);
+float ambientIntensity = 0.2;
+float diffuseIntensity = 1.0;
+float specularIntensity = 0.2;
 int ns = 1;
 bool pointLight; // 0 - directional light source, 1 - point light source
+bool spotlight;
 float spotlightAngle = 0; // 0 to turn off
 
 /* model names */
@@ -77,11 +81,11 @@ const char* modelNames[] = {
   "model/bunnyC.obj",
   // Animals with textures
   "model/ZEBRA.obj",
-  "model/Nala.obj",
-  "model/Dog.obj",
+//  "model/Nala.obj",
+//  "model/Dog.obj",
   "model/Tiger.obj",
   "model/Giraffe.obj",
-  "model/cat.obj",
+//  "model/cat.obj",
   "model/Deer.obj",
   "model/Killer_Whale.obj",
   "model/Rabbit.obj"
@@ -128,15 +132,16 @@ void init()
 	wireframe = 0;
 	normalDisplay = 0;
 	solid = 1;
-	shading = 2; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
-  pointLight = 1;
+    shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading
+    pointLight = 1;
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
-  showShadow = 0;
-  showAxes = 0;
+    showShadow = 0;
+    showAxes = 0;
 	filterMode = 0;
 	toonShading = 0;
+    spotlight = 0;
 }
 
 int main(int argc, char** argv)

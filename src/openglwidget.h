@@ -41,26 +41,36 @@ public slots:
     void toggleWireframe();
     void switchToWireframe(bool);
     void toggleNormalDisplay();
+    void addNormalDisplay(bool);
     void toggleSolidView();
     void switchToSolid(bool);
     void toggleProjection();
     void switchToOrthogonal();
     void switchToPerspective();
     void toggleCulling();
+    void toggleCulling(bool);
     void toggleShadow();
+    void toggleShadow(bool);
     void toggleShowAxes();
+    void toggleShowAxes(bool);
     void toggleBackground();
     void changeShading();
     void toggleToonShading();
-    void switchToNoShading();
-    void switchToFlatShading();
-    void switchToPhongShading();
+    void switchToZShading(bool);
+    void switchToFlatShading(bool);
+    void switchToPhongShading(bool);
+    void switchToCellShading(bool);
+    void switchToNormalShading(bool);
     void tuneAmbientLight(int);
     void tuneDiffuseLight(int);
     void tuneSpecularLight(int);
     void switchKaKdKsLighting();
+    void switchToDirectionalLight(bool);
     void togglePointLight();
-    void changeSpotlightAngle(float);
+    void switchToPointLight(bool);
+
+    void turnOnSpotlight(bool);
+    void changeSpotlightAngle(int);
     void rotateUp();
     void rotateDown();
     void rotateLeft();
@@ -77,6 +87,16 @@ public slots:
     void setLightSourcePosition(int,int);
     void toggleTexture();
     void switchTextureModes();
+    void switchToTextureNearest(bool);
+    void switchToTextureLinear(bool);
+    void switchToTextureNMN(bool);
+    void switchToTextureLMN(bool);
+    void switchToTextureNML(bool);
+    void switchToTextureLML(bool);
+    void turnOffTexture(bool);
+    void switchToTextureWrapping(bool);
+    void switchToTextureMirroring(bool);
+    void switchToTextureClamping(bool);
 };
 
 #endif // OPENGLWIDGET_H

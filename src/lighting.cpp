@@ -1,6 +1,8 @@
 #include "lighting.h"
 #include <glm/glm.hpp>
 
+extern bool spotlight;
+
 Lighting::Lighting() {
   source = glm::vec3(-3.f, 3.f, 5.f);
   ka = glm::vec3(0.f);
@@ -17,21 +19,18 @@ void Lighting::shading(const glm::vec3& vertex, const glm::vec3& normal, LightCo
   // Check if in spotlight
   glm::vec3 lightDirection(glm::normalize(source - vertex));
   float vertexSpotlightAngle = glm::dot(lightDirection, glm::normalize(source));
-  if ( spotlightAngle > 0 && vertexSpotlightAngle < spotlightAngle) {
+  if ( spotlight && vertexSpotlightAngle < spotlightAngle) {
     c = LightColor(glm::vec3(0.1f), glm::vec3(0.f), glm::vec3(0.f));
     return;
   }
 
   // Ambient Light
-  float ambientIntensity = 0.2;
   float ambient = ambientIntensity;
   // Diffuse Light
-  float diffuseIntensity = 0.6;
   glm::vec3 normalN = glm::normalize(normal);
   float diffuse = diffuseIntensity * glm::dot(normalN, lightDirection);
   diffuse = diffuse > 0 ? diffuse : 0;
   // Specular Light
-  float specularIntensity = 0.2;
   glm::vec3 viewDirection = glm::normalize(cameraTarget - cameraPos);
   glm::vec3 reflectDirection(glm::reflect(lightDirection, normalN)); 
   float specularDot = glm::dot(reflectDirection, viewDirection);
@@ -51,16 +50,13 @@ void Lighting::shading(const glm::vec3& vertex, const glm::vec3& normal, LightCo
 void Lighting::directionalShading(const glm::vec3& normal, LightColor& c)
 {
   // Ambient Light
-  float ambientIntensity = 0.2;
   float ambient = ambientIntensity;
   // Diffuse Light
-  float diffuseIntensity = 0.6;
   glm::vec3 normalN = glm::normalize(normal);
   glm::vec3 sourceN = glm::normalize(source);
   float diffuse = diffuseIntensity * glm::dot(normalN, sourceN);
   diffuse = diffuse > 0 ? diffuse : 0;
   // Specular Light
-  float specularIntensity = 0.2;
   glm::vec3 viewDirection = cameraTarget - cameraPos;
   glm::vec3 reflectDirection(glm::reflect(sourceN, normalN)); 
   float specularDot = glm::dot(reflectDirection, viewDirection);

@@ -3,6 +3,9 @@
 #include <iostream>
 using namespace std;
 
+extern int screenWidth;
+extern int screenHeight;
+
 void drawLine(const glm::vec4& p1,const glm::vec4& p2,const vec3& c)
 {
 	float m,B;

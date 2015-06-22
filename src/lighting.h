@@ -11,6 +11,10 @@ extern glm::vec3 cameraPos;
 extern glm::vec3 cameraTarget;
 extern bool textureDisplay;
 
+extern float ambientIntensity;
+extern float diffuseIntensity;
+extern float specularIntensity;
+
 class LightColor
 {
 public:
