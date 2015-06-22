@@ -34,7 +34,8 @@ HEADERS  += src/mainwindow.h \
     src/rasterize.h \
     src/transform.h \
     src/texture.h \
-    src/material.h
+    src/material.h \
+    src/vec3.h
 
 FORMS    += src/mainwindow.ui
 

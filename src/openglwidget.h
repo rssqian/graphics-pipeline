@@ -40,15 +40,18 @@ public slots:
     void selectPrevModel();
     void toggleWireframe();
     void switchToWireframe(bool);
+    void toggleNormalDisplay();
     void toggleSolidView();
     void switchToSolid(bool);
     void toggleProjection();
     void switchToOrthogonal();
     void switchToPerspective();
     void toggleCulling();
-    void toggleTexture();
+    void toggleShadow();
+    void toggleShowAxes();
     void toggleBackground();
     void changeShading();
+    void toggleToonShading();
     void switchToNoShading();
     void switchToFlatShading();
     void switchToPhongShading();
@@ -56,6 +59,8 @@ public slots:
     void tuneDiffuseLight(int);
     void tuneSpecularLight(int);
     void switchKaKdKsLighting();
+    void togglePointLight();
+    void changeSpotlightAngle(float);
     void rotateUp();
     void rotateDown();
     void rotateLeft();
@@ -70,6 +75,8 @@ public slots:
     void moveForward();
     void moveBackward();
     void setLightSourcePosition(int,int);
+    void toggleTexture();
+    void switchTextureModes();
 };
 
 #endif // OPENGLWIDGET_H

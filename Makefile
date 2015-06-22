@@ -213,7 +213,8 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/rasterize.h \
 		src/transform.h \
 		src/texture.h \
-		src/material.h src/main.cpp \
+		src/material.h \
+		src/vec3.h src/main.cpp \
 		src/mainwindow.cpp \
 		src/openglwidget.cpp \
 		src/model.cpp \
@@ -546,7 +547,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents src/mainwindow.h src/openglwidget.h src/model.h src/framebuffer.h src/lighting.h src/rasterize.h src/transform.h src/texture.h src/material.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/mainwindow.h src/openglwidget.h src/model.h src/framebuffer.h src/lighting.h src/rasterize.h src/transform.h src/texture.h src/material.h src/vec3.h $(DISTDIR)/
 	$(COPY_FILE) --parents src/main.cpp src/mainwindow.cpp src/openglwidget.cpp src/model.cpp src/framebuffer.cpp src/lighting.cpp src/rasterize.cpp src/transform.cpp src/texture.cpp src/material.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents src/mainwindow.ui $(DISTDIR)/
 
@@ -602,9 +603,11 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 main.o: src/main.cpp src/model.h \
 		src/material.h \
 		src/framebuffer.h \
+		src/lighting.h \
+		src/vec3.h \
+		src/texture.h \
 		src/transform.h \
 		src/rasterize.h \
-		src/lighting.h \
 		src/mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
 
@@ -616,9 +619,11 @@ openglwidget.o: src/openglwidget.cpp src/openglwidget.h \
 		src/model.h \
 		src/material.h \
 		src/framebuffer.h \
+		src/lighting.h \
+		src/vec3.h \
+		src/texture.h \
 		src/transform.h \
-		src/rasterize.h \
-		src/lighting.h
+		src/rasterize.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglwidget.o src/openglwidget.cpp
 
 model.o: src/model.cpp src/model.h \
@@ -627,12 +632,15 @@ model.o: src/model.cpp src/model.h \
 
 framebuffer.o: src/framebuffer.cpp src/framebuffer.h \
 		src/material.h \
+		src/lighting.h \
+		src/vec3.h \
+		src/texture.h \
 		src/model.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o framebuffer.o src/framebuffer.cpp
 
 lighting.o: src/lighting.cpp src/lighting.h \
 		src/material.h \
-		src/framebuffer.h
+		src/vec3.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o lighting.o src/lighting.cpp
 
 rasterize.o: src/rasterize.cpp src/rasterize.h \
@@ -640,17 +648,23 @@ rasterize.o: src/rasterize.cpp src/rasterize.h \
 		src/material.h \
 		src/framebuffer.h \
 		src/lighting.h \
+		src/vec3.h \
 		src/texture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rasterize.o src/rasterize.cpp
 
 transform.o: src/transform.cpp src/framebuffer.h \
 		src/material.h \
+		src/lighting.h \
+		src/vec3.h \
+		src/texture.h \
 		src/transform.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o transform.o src/transform.cpp
 
 texture.o: src/texture.cpp src/texture.h \
 		src/material.h \
-		src/framebuffer.h
+		src/framebuffer.h \
+		src/lighting.h \
+		src/vec3.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o texture.o src/texture.cpp
 
 material.o: src/material.cpp src/material.h

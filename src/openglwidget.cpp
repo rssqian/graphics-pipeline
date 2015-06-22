@@ -39,10 +39,15 @@ extern float FoV;
 /*mode*/
 extern bool wireframe;
 extern bool solid;
-extern bool showNormals;
+extern bool normalDisplay;
 extern int shading; //0-no shading, 1-flat shading, 2-smooth shading
 extern bool projection; //0-orthogonal, 1-perspective
 extern bool textureDisplay;
+extern int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
+extern bool toonShading;
+extern bool showShadow;
+extern bool showAxes;
+extern int filterMode;
 
 extern int curModelIdx;
 extern bool culling;
@@ -50,10 +55,16 @@ extern Framebuffer framebuffer;
 extern char* modelNames[];
 extern int numModels;
 
+extern glm::mat4 modelMatrix;
+extern glm::mat4 model_rotation_natural;
+
 extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+
+extern bool pointLight;
+extern float spotlightAngle;
 
 int lightswitch = 0;
 QPoint offset;
@@ -91,153 +102,228 @@ void OpenGLWidget::paintGL()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     framebuffer.clear();
+    //framebuffer.setClearColor(vec3(0.1, 0.3, 0.5));
 
-	// Set MVP and viewport
-	glm::mat4 modelMatrix = model_translation(translate) 
+    // Set MVP and viewport
+    modelMatrix = model_translation(translate)
                         * model_scale(model_size)
-						* model_rotation(theta);
-	glm::mat4 viewMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
-	glm::mat4 projectionMatrix;
-	if (projection==1) {
-		projectionMatrix = glm::mat4(1);
-		projectionMatrix[3][3]=0;
-		projectionMatrix[2][3]=-1;
-	} else {
-		projectionMatrix = glm::mat4(1);
-		projectionMatrix[2][2]=0;
-	}
-	glm::mat4 viewportMatrix = glm::mat4(1);
-	/*scale*/
-	viewportMatrix[0][0]=screenHeight_half;
-	viewportMatrix[1][1]=screenHeight_half;
-	/*trans*/
-	viewportMatrix[0][3]=screenWidth_half;
-	viewportMatrix[1][3]=screenHeight_half;
+                        * model_rotation(theta) * model_rotation_natural;
+    glm::mat4 viewMatrix = glm::lookAt(cameraPos,cameraTarget,upVector);
+    glm::mat4 projectionMatrix;
+    if (projection==1) {
+        projectionMatrix = glm::mat4(1);
+        projectionMatrix[3][3]=0;
+        projectionMatrix[2][3]=-1;
+    } else {
+        projectionMatrix = glm::mat4(1);
+        projectionMatrix[2][2]=0;
+    }
+    glm::mat4 viewportMatrix = glm::mat4(1);
+    /*scale*/
+    viewportMatrix[0][0]=screenHeight_half;
+    viewportMatrix[1][1]=screenHeight_half;
+    /*trans*/
+    viewportMatrix[0][3]=screenWidth_half;
+    viewportMatrix[1][3]=screenHeight_half;
 
-	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
-		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
-		float* verticePtr = modelPtr[curModelIdx]->vertices;
-		float* normalPtr = modelPtr[curModelIdx]->normals;
-		/*===texCoord===*/
-		float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
+    for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
+        Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
+        float* verticePtr = modelPtr[curModelIdx]->vertices;
+        float* normalPtr = modelPtr[curModelIdx]->normals;
+        float* texCoordPtr = modelPtr[curModelIdx]->texCoords;
 
-		glm::vec4 triVertices[3];
-		glm::vec4 triNormals[3];
-		/*===texCoord===*/
-		glm::vec3 triTexCoord[3];
+        glm::vec4 triVertices[3];
+        glm::vec4 triNormals[3];
+        glm::vec3 triTexCoord[3];
 
-		for (int j=0; j<3; j++) {
-			triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])	];
-			triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
-			triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2];
-			triVertices[j].w = 1;
-			/*===texCoord===*/
-			if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
-				triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
-				triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
-				triTexCoord[j].z = 1;
-			} else {
-				triTexCoord[j].x = 0;
-				triTexCoord[j].y = 0;
-				triTexCoord[j].z = 1;
-			}
-			if ((shading==2 || shading==3 || shading==4)&& modelPtr[curModelIdx]->numNormals!=0) {
-				triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])	];
-				triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
-				triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
-				triNormals[j].w = 1;
-			} else {
-				triNormals[j].x = 0;
-				triNormals[j].y = 0;
-				triNormals[j].z = 0;
-				triNormals[j].w = 1; // unsure
-			}
-		}
-		Material* mtl = trianglePtr -> mtlptr;
+        for (int j=0; j<3; j++) {
+            triVertices[j].x = verticePtr[3*(trianglePtr[i].vIndices[j])	];
+            triVertices[j].y = verticePtr[3*(trianglePtr[i].vIndices[j])+1];
+            triVertices[j].z = verticePtr[3*(trianglePtr[i].vIndices[j])+2]; triVertices[j].w = 1;
+            if (textureDisplay==1 && solid==1 && modelPtr[curModelIdx]->numTexCoords!=0) {
+                triTexCoord[j].x = texCoordPtr[2*(trianglePtr[i].tcIndices[j])	];
+                triTexCoord[j].y = texCoordPtr[2*(trianglePtr[i].tcIndices[j])+1];
+                triTexCoord[j].z = 1;
+            } else {
+                triTexCoord[j].x = 0;
+                triTexCoord[j].y = 0;
+                triTexCoord[j].z = 1;
+            }
+            if ((shading==2 || shading==3 || shading==4) && modelPtr[curModelIdx]->numNormals!=0) {
+                triNormals[j].x = normalPtr[3*(trianglePtr[i].nIndices[j])	];
+                triNormals[j].y = normalPtr[3*(trianglePtr[i].nIndices[j])+1];
+                triNormals[j].z = normalPtr[3*(trianglePtr[i].nIndices[j])+2];
+                triNormals[j].w = 1;
+            } else {
+                triNormals[j].x = 0;
+                triNormals[j].y = 0;
+                triNormals[j].z = 0;
+                triNormals[j].w = 1; // unsure
+            }
+        }
+        Material* mtl = trianglePtr[i].mtlptr;
 
-		glm::vec4 modelVertices[3];
-		glm::vec4 MVPVertices[3];
-		glm::vec4 modelNormals[3];
-		glm::vec4 smallNormals[3];
+        /*===transformation===*/
+        glm::vec4 modelVertices[3];
+        glm::vec4 MmodelVertices[3];
+        glm::vec4 MVPVertices[3];
+        glm::vec4 modelNormals[3];
 
- 		for(int j=0;j<3;j++) {
-			// model space (scaling->rotation->translation)
-			modelVertices[j] = modelMatrix * triVertices[j];
-			// view space
-			modelVertices[j] = viewMatrix * modelVertices[j];
-			// projection space
-			MVPVertices[j] = projectionMatrix * modelVertices[j];
-			MVPVertices[j] = MVPVertices[j] * glm::mat4(1/MVPVertices[j].w);
-			// Display space
-			MVPVertices[j] = MVPVertices[j]*viewportMatrix;
 
-			// Normal : rotation
-			modelNormals[j] = model_rotation(theta) * triNormals[j];
+        for(int j=0; j<3; ++j) {
+            // model space (scaling->rotation->translation)
+            modelVertices[j] = modelMatrix * triVertices[j];
+      MmodelVertices[j] = modelVertices[j];
+      //cout << "MODEL: " << modelVertices[j].x << ", " << modelVertices[j].y << ", " << modelVertices[j].z << endl;
+            // view space
+            modelVertices[j] = viewMatrix * modelVertices[j];
+      //cout << "VIEW:  " << modelVertices[j].x << ", " << modelVertices[j].y << ", " << modelVertices[j].z << endl;
+            // projection space
+            MVPVertices[j] = projectionMatrix * modelVertices[j];
+            MVPVertices[j] = MVPVertices[j] * glm::mat4(1/MVPVertices[j].w);
+            // Display space
+            MVPVertices[j] = MVPVertices[j]*viewportMatrix;
+            MVPVertices[j].z = modelVertices[j].z;
+            // Normal : rotation
+            modelNormals[j] = model_rotation(theta) * triNormals[j];
+        }
+        glm::vec3 v1 ( modelVertices[0]-modelVertices[1] );
+        glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
+        glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
 
-			smallNormals[j] = glm::normalize(modelNormals[j]);
-			smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
- 		}
-		glm::vec3 v1 ( modelVertices[0]-modelVertices[1] );
-		glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
-		glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
+        /*===Back Face Culling===*/
+        bool cull = backFaceCulling(faceNormals, glm::vec3(modelVertices[0])); //true-need to be culled
+        if (cull==true && toonShading==true) {
+            MVPVertices[0].z = -1e20;
+            MVPVertices[1].z = -1e20;
+            MVPVertices[2].z = -1e20;
+            drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
+            drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
+            drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
+        }
 
-		//Back Face Culling
-		if (!backFaceCulling(faceNormals, glm::vec3(modelVertices[0])) || !culling) {
-			int ix[3],iy[3];
-			float iz[3];
-			vec3 c;
-			LightColor RGBIntensity(glm::vec3(1.f),glm::vec3(1.f),glm::vec3(1.f));
-			if (shading==1) {
-				glm::vec3 centerVertex = glm::vec3(modelVertices[0]+modelVertices[1]+modelVertices[2]) / 3.f;
-				glm::vec3 ambient_c,diffuse_c,specular_c;
-				light.shading(centerVertex, faceNormals,mtl,RGBIntensity);
-				//c.x = ambient_c.x + diffuse_c.x + specular_c.x;
-				//c.y = ambient_c.y + diffuse_c.y + specular_c.y;
-				//c.z = ambient_c.z + diffuse_c.z + specular_c.z;
-			} //else c = color;
-			glm::vec3* displayVertices = new glm::vec3[3];
-			for (int j=0; j<3;j++)
-				displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,modelVertices[j].z);
+        if ((cull==false&&culling==true) || culling==false) {
+            int ix[3],iy[3];
+            float iz[3];
+            vec3 c;
+            LightColor KaKdKsIntensity(glm::vec3(1.f),glm::vec3(1.f),glm::vec3(1.f));
 
-			vector<glm::vec3*> displayNormals;
-			glm::vec3* temp_normal = new glm::vec3[3];
-			for (int j=0; j<3;j++)
-				temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
-			displayNormals.push_back(temp_normal);
+            /*===flat shading===*/
+            if (shading==1) {
+                glm::vec3 centerVertex = glm::vec3(modelVertices[0]+modelVertices[1]+modelVertices[2]) / 3.f;
+                //glm::vec3 ambient_c,diffuse_c,specular_c;
+        if (textureDisplay && mtl!=nullptr) light.setParameter(mtl->Ka,mtl->Kd,mtl->Ks,mtl->Ns);
+                else light.setParameter(ka,kd,ks,ns);
+        if (pointLight)
+                  light.shading(centerVertex, faceNormals, KaKdKsIntensity, spotlightAngle);
+        else
+                  light.directionalShading(faceNormals, KaKdKsIntensity);
+            }
 
-			glm::vec3* temp_vertex = new glm::vec3[3];
-			for (int j=0; j<3;j++)
-				temp_vertex[j] = glm::vec3(modelVertices[j].x,modelVertices[j].y,modelVertices[j].z);
-			displayNormals.push_back(temp_vertex);
+            /*===Rasteriztion===*/
+            glm::vec3* displayVertices = new glm::vec3[3];
+            for (int j=0; j<3;j++)
+                displayVertices[j] = glm::vec3(MVPVertices[j].x,MVPVertices[j].y,modelVertices[j].z);
 
-			/*===texCoord===*/
-			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
+            vector<glm::vec3*> displayNormals;
+            glm::vec3* temp_normal = new glm::vec3[3];
+            for (int j=0; j<3;j++)
+                temp_normal[j] = glm::vec3(modelNormals[j].x,modelNormals[j].y,modelNormals[j].z);
+            displayNormals.push_back(temp_normal);
 
-      if (solid) {
-        rasterTriangle(displayVertices,displayNormals,mtl,RGBIntensity);
-      }
-			if (wireframe) {
-        vec3 wireColor = vec3(1.f, 0.5f, 0.5f);
-        // Move wireframe to the front, so not covered by solid view
-        MVPVertices[0].z = 0.f;
-        MVPVertices[1].z = 0.f;
-        MVPVertices[2].z = 0.f;
-				drawLine(MVPVertices[0], MVPVertices[1], wireColor);
-				drawLine(MVPVertices[1], MVPVertices[2], wireColor);
-				drawLine(MVPVertices[2], MVPVertices[0], wireColor);
-      }
-      // Display Normal
-			if (showNormals) {
-        vec3 colorNormal;
-        for (int j=0; j<3;j++){
-          colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
-          colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
-          colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
-          drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
+            glm::vec3* temp_vertex = new glm::vec3[3];
+            for (int j=0; j<3;j++)
+                temp_vertex[j] = glm::vec3(modelVertices[j].x,modelVertices[j].y,modelVertices[j].z);
+            displayNormals.push_back(temp_vertex);
+
+            if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
+
+            if (solid==1) rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
+
+      if (showShadow) {
+        glm::vec4 projectVertices[3];
+        glm::vec4 MVPProjectVertices[3];
+        if ( light.projectionShadow(modelVertices[0], projectVertices[0]) &&
+             light.projectionShadow(modelVertices[1], projectVertices[1]) &&
+             light.projectionShadow(modelVertices[2], projectVertices[2]) ) {
+          MVPProjectVertices[0] = projectVertices[0] * viewportMatrix;
+          MVPProjectVertices[1] = projectVertices[1] * viewportMatrix;
+          MVPProjectVertices[2] = projectVertices[2] * viewportMatrix;
+          drawShadow(glm::vec3(MVPProjectVertices[0]), glm::vec3(MVPProjectVertices[1]), glm::vec3(MVPProjectVertices[2]), vec3(0.15f, 0.12f, 0.1f));
         }
       }
-		}
-	}
+
+            /*===wireframe mode===*/
+            if (wireframe==1) {
+        vec3 colorWireframe = vec3(0.8f, 0.6f, 0.2f);
+                MVPVertices[0].z = 0.f;
+                MVPVertices[1].z = 0.f;
+                MVPVertices[2].z = 0.f;
+                drawLine(MVPVertices[0], MVPVertices[1], colorWireframe);
+                drawLine(MVPVertices[1], MVPVertices[2], colorWireframe);
+                drawLine(MVPVertices[2], MVPVertices[0], colorWireframe);
+            }
+
+            /*===display normal===*/
+            if (normalDisplay) {
+                glm::vec4 smallNormals[3];
+                vec3 colorNormal;
+                for (int j=0; j<3;j++){
+                    smallNormals[j] = glm::normalize(modelNormals[j]);
+                    smallNormals[j] = glm::vec4(smallNormals[j].x*130,smallNormals[j].y*130,smallNormals[j].z*130,0.f);
+                    colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
+                    colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
+                    colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
+                    drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
+                }
+            }
+
+
+        } // end if culling
+    } // end for each triangle
+
+  /*===show axes===*/
+  if (showAxes) {
+    glm::vec4 axis[4];
+    axis[0] = glm::vec4(0.f, 0.f, 0.f, 1.f);
+    axis[1] = glm::vec4(1.f, 0.f, 0.f, 1.f);
+    axis[2] = glm::vec4(0.f, 1.f, 0.f, 1.f);
+    axis[3] = glm::vec4(0.f, 0.f, 1.f, 1.f);
+
+    for(int j=0; j<4; ++j) {
+      // model space (scaling->rotation->translation)
+      axis[j] = modelMatrix * axis[j];
+      // view space
+      axis[j] = viewMatrix * axis[j];
+      // projection space
+      axis[j] = projectionMatrix * axis[j];
+      // Display space
+      axis[j] = axis[j] * viewportMatrix;
+    }
+    vec3 colorAxisX = vec3(1.f, 0.f, 0.f);
+    vec3 colorAxisY = vec3(0.f, 1.f, 0.f);
+    vec3 colorAxisZ = vec3(0.f, 0.f, 1.f);
+    drawLine(axis[0], axis[1], colorAxisX);
+    drawLine(axis[0], axis[2], colorAxisY);
+    drawLine(axis[0], axis[3], colorAxisZ);
+  }
+
+    /* Per Pixel Shading */
+
+    for (int i=0; i<screenWidth; i++) {
+        for (int j=0; j<screenHeight; j++) {
+            //cel shading
+            if (shading==3) {
+                framebuffer.celShading(i,j);
+            }
+
+            //texturing
+            if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
+                framebuffer.texturing(i,j,filterMode);
+            }
+        }
+    }
+
       /* display */
     glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
   //  glutSwapBuffers();
@@ -255,34 +341,54 @@ void OpenGLWidget::resizeGL(int width, int height)
 
 void OpenGLWidget::printHelp()
 {
-    printf("===========================================\n");
-    printf("  HELP MENU                                \n");
-    printf("===========================================\n");
-    printf("  h: Show help menu                      \n");
-    printf("  M/m: Select model                      \n");
-    printf("  UP/DOWN: Rotate along x-axis           \n");
-    printf("  LEFT/RIGHT: Rotate along y-axis        \n");
-    printf("  MOUSE MIDDLE DRAG: Rotate              \n");
-    printf("  W/S/A/D / MOUSE LEFT DRAG: Moving aroun\n");
-    printf("  PAGEUP/PAGEDN: Moving forward/backward \n");
-    printf("  +/- / MOUSE WHEEL: Zoom in/out         \n");
-    printf("  MOUSE RIGHT CLICK: Set light source position\n");
-    printf("  c: Toggle back-face culling            \n");
-    printf("  b: Toggle background color             \n");
-    printf("  l: Toggle lighting mode                \n");
-    printf("  k: Toggle ambient/diffuse/specular lights\n");
-    printf("  w: Toggle wireframe mode               \n");
-    printf("  p: Toggle projection mode              \n");
-    printf("  r: Reset model                         \n");
-    printf("  s: Save image as ppm format            \n");
-    printf("  q: Quit                                \n");
-    printf("===========================================\n\n");
+	cout << "===========================================" << endl;
+	cout << "  HELP MENU                                " << endl;
+	cout << "===========================================" << endl;
+	cout << "  h: Show help menu                       " << endl;
+	cout << "  M/m: Select model                       " << endl;
+	cout << "  r: Reset model                          " << endl;
+	cout << "  s: Save image as ppm format             " << endl;
+	cout << "  q: Quit                                 " << endl;
+  cout << endl;
+	cout << "  <Moving around with keyboard>           " << endl;
+	cout << "  --------------------------------------- " << endl;
+	cout << "  Up/Down: Rotate along x-axis            " << endl;
+	cout << "  Left/Right: Rotate along y-axis         " << endl;
+	cout << "  PageUp/PageDown: Moving forward/backward  " << endl;
+	cout << "  +/- : Zoom in/out          " << endl;
+  cout << endl;
+	cout << "  <Moving around with mouse>              " << endl;
+	cout << "  --------------------------------------- " << endl;
+	cout << "  Mouse Middle Drag: Rotate               " << endl;
+	cout << "  W/S/A/D / MOUSE LEFT DRAG: Moving aroun " << endl;
+	cout << "  Mouse Wheel: Zoom in/out                " << endl;
+	cout << "  Mouse Right Click: Set light source position " << endl;
+  cout << endl;
+	cout << "  <View options>                          " << endl;
+	cout << "  --------------------------------------- " << endl;
+	cout << "  w: Toggle wireframe mode                " << endl;
+	cout << "  n: Toggle normal-display mode           " << endl;
+	cout << "  f: Toggle Solid mode                    " << endl;
+	cout << "  p: Toggle projection mode               " << endl;
+	cout << "  c: Toggle back-face culling             " << endl;
+	cout << "  a: Toggle axes (X-axis: Red, Y-axis: Green, Z-axis: Blue) " << endl;
+	cout << "  b: Toggle background color              " << endl;
+	cout << "  l: Toggle lighting mode                 " << endl;
+	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
+	cout << "  d: Toggle point/directional light source  " << endl;
+	cout << "  o: Toggle shadow                         " << endl;
+	cout << "  z/x: Increase/Decrease spotlight angle (point light) " << endl;
+	cout << "  t: Toggle texture/texture filtering mode  " << endl;
+	cout << "  T: Switch texture addressing mode         " << endl;
+	cout << "  z: Toon shading                           " << endl;
+	cout << "=========================================== " << endl;
 }
 
 void OpenGLWidget::reset() {
   theta = glm::vec3(0.f, 0.f, 0.f);
-  model_size = glm::vec3(400.f, 400.f, 400.f);
-  translate = glm::vec3(float(screenWidth_half), float(screenHeight_half), 0.f);
+  model_size = glm::vec3(1.f, 1.f, 1.f);
+  translate = glm::vec3(0.f, 0.f, 0.f);
+  model_rotation_natural = glm::mat4(1);
   update();
 }
 
@@ -319,6 +425,13 @@ void OpenGLWidget::switchToWireframe(bool on) {
   else cout << "Remove wireframe from view" << endl;
   update();
 }
+void OpenGLWidget::toggleNormalDisplay() {
+    normalDisplay = !normalDisplay;
+    cout << "Toggle normal display: ";
+    if (normalDisplay) cout << "on" << endl;
+    else cout << "off" << endl;
+    update();
+}
 void OpenGLWidget::toggleSolidView() {
   solid = !solid;
   if (solid) cout << "Add solid to view" << endl;
@@ -353,11 +466,17 @@ void OpenGLWidget::toggleCulling() {
   cout << "Toggle back-face culling to: " << culling << endl;
   update();
 }
-void OpenGLWidget::toggleTexture() {
-    textureDisplay = !textureDisplay;
-    cout << "Toggle texture: ";
-    if (textureDisplay) cout << "on" << endl;
-    else cout << "off" << endl;
+void OpenGLWidget::toggleShadow() {
+  showShadow = !showShadow;
+  if (showShadow) cout << "Show shadow. Please turn off back-face culling." << endl;
+  else cout << "Hide shadow. You may turn on back-face culling." << endl;
+  update();
+}
+void OpenGLWidget::toggleShowAxes() {
+  showAxes = !showAxes;
+  if (showAxes) cout << "Show axes" << endl;
+  else cout << "Hide axes" << endl;
+  update();
 }
 void OpenGLWidget::toggleBackground() {
   cout << "Toggle background color" << endl;
@@ -367,7 +486,7 @@ void OpenGLWidget::toggleBackground() {
   update();
 }
 void OpenGLWidget::changeShading() {
-  if (shading == 4) shading = 0;
+  if (shading == 5) shading = 0;
   else shading++;
   cout << "Change to shading mode to: ";
   switch(shading) {
@@ -386,10 +505,21 @@ void OpenGLWidget::changeShading() {
     case 4:
       cout << "Suface normal shading";
       break;
+    case 5:
+      cout << "Toon shading";
+      break;
   }
   update();
 }
 
+void OpenGLWidget::toggleToonShading() {
+  toonShading = !toonShading;
+  cout << "Toggle toon shading: ";
+  if (toonShading) cout << "ON";
+  else cout << "OFF";
+  cout << endl;
+  update();
+}
 void OpenGLWidget::switchToNoShading() {
   shading = 0;
   cout << "Change to shading mode to: No shading" << endl;
@@ -428,33 +558,35 @@ void OpenGLWidget::tuneSpecularLight(int v) {
 void OpenGLWidget::switchKaKdKsLighting(){
   if (lightswitch == 3)  lightswitch= 0;
   else lightswitch++;
+  light.displayLight = lightswitch;
   switch(lightswitch) {
     case 0:
       cout << "Change to lights to: Full lighting" << endl;
-      light.ka = ka;
-      light.kd = kd;
-      light.ks = ks;
       break;
     case 1:
       cout << "Change to lights to: Ambient light only" << endl;
-      light.ka = ka;
-      light.kd = glm::vec3(0.f);
-      light.ks = glm::vec3(0.f);
       break;
     case 2:
       cout << "Change to lights to: Diffuse light only" << endl;
-      light.ka = glm::vec3(0.f);
-      light.kd = kd;
-      light.ks = glm::vec3(0.f);
       break;
     case 3:
       cout << "Change to lights to: Specular light only" << endl;
-      light.ka = glm::vec3(0.f);
-      light.kd = glm::vec3(0.f);
-      light.ks = ks;
       break;
   }
-
+  update();
+}
+void OpenGLWidget::togglePointLight() {
+  pointLight = !pointLight;
+  if (pointLight) cout << "Point light source" << endl;
+  else cout << "Directional light source" << endl;
+  update();
+}
+void OpenGLWidget::changeSpotlightAngle(float angle) {
+  spotlightAngle += angle;
+  if (spotlightAngle > 1) spotlightAngle = 1;
+  if (spotlightAngle < 0) spotlightAngle = 0;
+  cout << "Spotlight angle: " << spotlightAngle << endl;
+  update();
 }
 
 void OpenGLWidget::rotateUp() {
@@ -535,6 +667,38 @@ void OpenGLWidget::setLightSourcePosition(int x, int y) {
   update();
 }
 
+void OpenGLWidget::toggleTexture() {
+  
+  if (filterMode==6) 
+  {
+	  filterMode=0; 
+	  textureDisplay = !textureDisplay;
+  }
+  else if(filterMode==0) 
+  {
+	  filterMode++;
+	  textureDisplay = !textureDisplay;
+  }
+  else filterMode++;
+  cout << "Toggle texture: ";
+  if (filterMode==0) cout << "Off" << endl;
+  else if(filterMode==1) cout << "Nearest Mode" << endl;
+  else if(filterMode==2) cout << "Linear Mode" << endl;
+  else if(filterMode==3) cout << "Nearest-Mipmap-Nearest Mode" << endl;
+  else if(filterMode==4) cout << "Linear-Mipmap-Nearest Mode" << endl;
+  else if(filterMode==5) cout << "Nearest-Mipmap-Linear Mode" << endl;
+  else if(filterMode==6) cout << "Linear-Mipmap-Linear Mode" << endl;
+  //if (textureDisplay) cout << "on" << endl;
+  //else cout << "off" << endl;
+  update();
+}
+
+void OpenGLWidget::switchTextureModes() {
+  if (textureAddressing == 2) textureAddressing = 0;
+  else textureAddressing++;
+  cout << "Switch texture addressing to: " << textureAddressing << endl;
+  update();
+}
 
 void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 
@@ -550,6 +714,8 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
             panUp(0.1); break;
         case Qt::Key_S:
             panDown(0.1); break;
+        case Qt::Key_T:
+            switchTextureModes(); break;
     }
   }
   else {
@@ -568,14 +734,30 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
             changeShading(); break;
         case Qt::Key_K:
             switchKaKdKsLighting(); break;
+        case Qt::Key_D:
+          togglePointLight(); break;
+        case Qt::Key_X:
+          changeSpotlightAngle(-0.001); break;
+        case Qt::Key_Y:
+          changeSpotlightAngle(0.001); break;
         case Qt::Key_W:
             toggleWireframe(); break;
+        case Qt::Key_N:
+            toggleNormalDisplay(); break;
+        case Qt::Key_F:
+            toggleSolidView(); break;
         case Qt::Key_P:
             toggleProjection(); break;
+        case Qt::Key_O:
+          toggleShadow(); break;
+        case Qt::Key_A:
+          toggleShowAxes(); break;
         case Qt::Key_T:
           toggleTexture(); break;
         case Qt::Key_B:
             toggleBackground(); break;
+        case Qt::Key_Z:
+          toggleToonShading(); break;
 
         case Qt::Key_Plus:
         case Qt::Key_Equal:

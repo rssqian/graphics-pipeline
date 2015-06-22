@@ -63,6 +63,9 @@
        <height>26</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Wireframe</string>
      </property>
@@ -78,6 +81,9 @@
        <width>112</width>
        <height>26</height>
       </rect>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Solid</string>

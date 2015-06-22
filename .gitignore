@@ -1,11 +1,14 @@
 # Ignore files created by Visual Studio
 Release/
-include/
 ipch/
-lib/
 3dmm_hw1.*
 *.dll
 # Ignore object and binary files
+*.swp
 *.o
 *.swp
 3d-graphics-engine
+<<<<<<< HEAD
+=======
+3d-graphics-engine_dbg
+>>>>>>> last-day

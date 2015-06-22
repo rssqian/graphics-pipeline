@@ -76,10 +76,12 @@ public:
         radioButton = new QRadioButton(groupBox);
         radioButton->setObjectName(QStringLiteral("radioButton"));
         radioButton->setGeometry(QRect(0, 60, 112, 26));
+        radioButton->setFocusPolicy(Qt::NoFocus);
         radioButton->setChecked(false);
         radioButton_2 = new QRadioButton(groupBox);
         radioButton_2->setObjectName(QStringLiteral("radioButton_2"));
         radioButton_2->setGeometry(QRect(0, 30, 112, 26));
+        radioButton_2->setFocusPolicy(Qt::NoFocus);
         radioButton_2->setChecked(true);
         groupBox_2 = new QGroupBox(centralWidget);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));

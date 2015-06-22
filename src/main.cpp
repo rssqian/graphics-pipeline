@@ -23,8 +23,8 @@ Model** modelPtr;
 /* frame size */
 int screenWidth = 600;
 int screenHeight = 400;
-int screenWidth_half = 300;
-int screenHeight_half = 200;
+int screenWidth_half = screenWidth/2;
+int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
@@ -38,44 +38,53 @@ glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
-bool wireframe;
-bool solid;
-bool showNormals;
+bool wireframe; //0-wireframe off, 1-wireframe on
+bool normalDisplay;
+bool solid; //0-solid mode off, 1-solid mode on
 int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
+bool toonShading; 
 bool projection; //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
+bool showShadow;
+bool showAxes;
+int filterMode;
 
 int curModelIdx;
 bool culling;
 Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
+glm::mat4 modelMatrix(1);
+glm::mat4 model_rotation_natural(1);
 
 Lighting light;
-glm::vec3 ka(0.2f);
-glm::vec3 kd(0.5f);
-glm::vec3 ks(0.8f);
+glm::vec3 ka(1.f);
+glm::vec3 kd(1.f);
+glm::vec3 ks(1.f);
+int ns = 1;
+bool pointLight; // 0 - directional light source, 1 - point light source
+float spotlightAngle = 0; // 0 to turn off
 
 /* model names */
 const char* modelNames[] = {
   "model/quad.obj",
-  //"model/couch.obj",
-  //"model/cessna7KC.obj",
-  //"model/santa7KC.obj",
-  //"model/laurana2KC.obj",
-  //"model/shuttle.obj",
-  //"model/sphere.obj",
-  //"model/Miku.obj",
-  //"model/blaze.obj",
-  //"model/ateneal.obj",
-  //"model/venusm.obj",
-  "model/bunnyC.obj"
-  //"model/duck4KN.obj",
-  //"model/happy10KN.obj",
-  //"model/dragon10KN.obj",
-  //"model/elephant16KN.obj",
-  //"model/Statue_of_Liberty.obj",
-  //"model/Nissan_Pathfinder.obj"
+	//"model/couch.obj",
+	//"model/cubeT.obj",
+  //"model/ball.obj",
+	//"model/duck.obj",
+  //"model/box.obj",
+	//"model/cubeT.obj"
+  "model/bunnyC.obj",
+  // Animals with textures
+  "model/ZEBRA.obj",
+  "model/Nala.obj",
+  "model/Dog.obj",
+  "model/Tiger.obj",
+  "model/Giraffe.obj",
+  "model/cat.obj",
+  "model/Deer.obj",
+  "model/Killer_Whale.obj",
+  "model/Rabbit.obj"
 };
 int numModels = sizeof(modelNames) / sizeof(char*);
 
@@ -117,12 +126,17 @@ void init()
 	curModelIdx = 0;
 	culling = true;
 	wireframe = 0;
-  solid = 1;
-  showNormals = 1;
-	shading = 1; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
+	normalDisplay = 0;
+	solid = 1;
+	shading = 2; //0-no shading, 1-flat shading, 2-smooth shading 3-Cell shading, 4-normal shading 
+  pointLight = 1;
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
+  showShadow = 0;
+  showAxes = 0;
+	filterMode = 0;
+	toonShading = 0;
 }
 
 int main(int argc, char** argv)
@@ -134,7 +148,6 @@ int main(int argc, char** argv)
   QApplication app(argc, argv);
 
   /* Begin Set Dark UI Theme */
-
   qApp->setStyle(QStyleFactory::create("Fusion"));
 
   QPalette darkPalette;
