@@ -49,6 +49,7 @@ public:
     QPushButton *pushButton_4;
     QLabel *label_fpsCounter;
     QGroupBox *groupBox_5;
+    QVBoxLayout *verticalLayout_2;
     QTabWidget *tabWidget;
     QWidget *tab_3;
     QPushButton *pushButton;
@@ -104,13 +105,18 @@ public:
     QPushButton *pushButton_6;
     QPushButton *pushButton_5;
     QPushButton *pushButton_1;
+    QSpacerItem *verticalSpacer;
+    QLabel *label_11;
+    QLabel *label_12;
+    QLabel *label_13;
+    QLabel *label_14;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::ApplicationModal);
-        MainWindow->resize(1104, 667);
+        MainWindow->resize(1104, 956);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout_2 = new QHBoxLayout(centralWidget);
@@ -237,9 +243,13 @@ public:
         groupBox_5->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	border: 0px;\n"
 "}"));
+        verticalLayout_2 = new QVBoxLayout(groupBox_5);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         tabWidget = new QTabWidget(groupBox_5);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(10, 10, 261, 511));
+        tabWidget->setMinimumSize(QSize(0, 600));
         tabWidget->setFocusPolicy(Qt::NoFocus);
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -260,7 +270,7 @@ public:
 "}"));
         label_4 = new QLabel(groupBox_12);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(10, 30, 141, 21));
+        label_4->setGeometry(QRect(10, 30, 181, 21));
         label_6 = new QLabel(groupBox_12);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setGeometry(QRect(10, 60, 141, 21));
@@ -273,7 +283,7 @@ public:
 "}"));
         label_5 = new QLabel(groupBox_13);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(10, 30, 141, 21));
+        label_5->setGeometry(QRect(10, 30, 191, 21));
         label_7 = new QLabel(groupBox_13);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(10, 60, 81, 21));
@@ -471,9 +481,12 @@ public:
         radioButton_19->setGeometry(QRect(0, 90, 151, 26));
         radioButton_19->setFocusPolicy(Qt::NoFocus);
         tabWidget->addTab(tab_2, QString());
+
+        verticalLayout_2->addWidget(tabWidget);
+
         groupBox = new QGroupBox(groupBox_5);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(10, 540, 271, 101));
+        groupBox->setMinimumSize(QSize(0, 200));
         groupBox->setAutoFillBackground(false);
         groupBox->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
@@ -497,7 +510,7 @@ public:
         checkBox_3->setFocusPolicy(Qt::NoFocus);
         pushButton_6 = new QPushButton(groupBox);
         pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
-        pushButton_6->setGeometry(QRect(90, 70, 61, 31));
+        pushButton_6->setGeometry(QRect(80, 70, 61, 31));
         pushButton_6->setFocusPolicy(Qt::NoFocus);
         pushButton_6->setStyleSheet(QLatin1String("QPushButton {\n"
 "	padding: 3px 10px;\n"
@@ -506,7 +519,7 @@ public:
         pushButton_6->setChecked(false);
         pushButton_5 = new QPushButton(groupBox);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
-        pushButton_5->setGeometry(QRect(160, 70, 103, 31));
+        pushButton_5->setGeometry(QRect(150, 70, 101, 31));
         pushButton_5->setFocusPolicy(Qt::NoFocus);
         pushButton_5->setStyleSheet(QLatin1String("QPushButton {\n"
 "	padding: 3px 10px;\n"
@@ -514,13 +527,45 @@ public:
         pushButton_5->setCheckable(true);
         pushButton_1 = new QPushButton(groupBox);
         pushButton_1->setObjectName(QStringLiteral("pushButton_1"));
-        pushButton_1->setGeometry(QRect(0, 70, 81, 31));
+        pushButton_1->setGeometry(QRect(0, 70, 71, 31));
         pushButton_1->setFocusPolicy(Qt::NoFocus);
         pushButton_1->setStyleSheet(QLatin1String("QPushButton {\n"
 "	padding: 3px 10px;\n"
 "}"));
         pushButton_1->setCheckable(true);
         pushButton_1->setChecked(true);
+
+        verticalLayout_2->addWidget(groupBox);
+
+        verticalSpacer = new QSpacerItem(20, 60, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_2->addItem(verticalSpacer);
+
+        label_11 = new QLabel(groupBox_5);
+        label_11->setObjectName(QStringLiteral("label_11"));
+        label_11->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        verticalLayout_2->addWidget(label_11);
+
+        label_12 = new QLabel(groupBox_5);
+        label_12->setObjectName(QStringLiteral("label_12"));
+        label_12->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        verticalLayout_2->addWidget(label_12);
+
+        label_13 = new QLabel(groupBox_5);
+        label_13->setObjectName(QStringLiteral("label_13"));
+        label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        verticalLayout_2->addWidget(label_13);
+
+        label_14 = new QLabel(groupBox_5);
+        label_14->setObjectName(QStringLiteral("label_14"));
+        label_14->setStyleSheet(QStringLiteral("font-weight:bold;"));
+        label_14->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        verticalLayout_2->addWidget(label_14);
+
 
         horizontalLayout_2->addWidget(groupBox_5);
 
@@ -581,10 +626,10 @@ public:
         label_fpsCounter->setText(QApplication::translate("MainWindow", "fps", 0));
         pushButton->setText(QApplication::translate("MainWindow", "\342\206\272 Reset", 0));
         groupBox_12->setTitle(QApplication::translate("MainWindow", "Translation", 0));
-        label_4->setText(QApplication::translate("MainWindow", "Shift + Mouse Drag", 0));
+        label_4->setText(QApplication::translate("MainWindow", "Mouse Right Button Drag", 0));
         label_6->setText(QApplication::translate("MainWindow", "Shift + Key A/D/S/W", 0));
         groupBox_13->setTitle(QApplication::translate("MainWindow", "Rotation", 0));
-        label_5->setText(QApplication::translate("MainWindow", "Mouse Drag", 0));
+        label_5->setText(QApplication::translate("MainWindow", "Mouse Left Button Drag", 0));
         label_7->setText(QApplication::translate("MainWindow", "Arrow Keys", 0));
         groupBox_14->setTitle(QApplication::translate("MainWindow", "Scaling", 0));
         label_8->setText(QApplication::translate("MainWindow", "Mouse Wheel", 0));
@@ -605,7 +650,7 @@ public:
         radioButton_10->setText(QApplication::translate("MainWindow", "Normal Map", 0));
         groupBox_9->setTitle(QApplication::translate("MainWindow", "Light Source", 0));
         radioButton_12->setText(QApplication::translate("MainWindow", "Directional Light", 0));
-        radioButton_11->setText(QApplication::translate("MainWindow", "Point Light (Right Click)", 0));
+        radioButton_11->setText(QApplication::translate("MainWindow", "Point Light (Middle Click)", 0));
         checkBox_4->setText(QApplication::translate("MainWindow", "Spotlight", 0));
         checkBox_5->setText(QApplication::translate("MainWindow", "Shadow", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Lighting", 0));
@@ -629,6 +674,10 @@ public:
         pushButton_6->setText(QApplication::translate("MainWindow", "Axes", 0));
         pushButton_5->setText(QApplication::translate("MainWindow", "Background", 0));
         pushButton_1->setText(QApplication::translate("MainWindow", "Culling", 0));
+        label_11->setText(QApplication::translate("MainWindow", "Chih-Wei Wu", 0));
+        label_12->setText(QApplication::translate("MainWindow", "Ching-Ting Chang", 0));
+        label_13->setText(QApplication::translate("MainWindow", "Shan-Yuan Teng", 0));
+        label_14->setText(QApplication::translate("MainWindow", "June 2015", 0));
     } // retranslateUi
 
 };

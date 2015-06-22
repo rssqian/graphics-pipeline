@@ -21,8 +21,8 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 800;
-int screenHeight = 600;
+int screenWidth = 974;
+int screenHeight = 955;
 int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
@@ -57,6 +57,7 @@ Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
 glm::mat4 modelMatrix(1);
 glm::mat4 model_rotation_natural(1);
+bool rotationNatural;
 
 Lighting light;
 glm::vec3 ka(1.f);
@@ -147,6 +148,7 @@ void init()
 	toonShading = 0;
     spotlight = 0;
     demoMode = 0;
+    rotationNatural = 1;
 }
 
 int main(int argc, char** argv)

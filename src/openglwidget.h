@@ -99,6 +99,7 @@ public slots:
     void switchToTextureMirroring(bool);
     void switchToTextureClamping(bool);
     void enterDemoMode();
+    void toggleNaturalRotation();
 };
 
 #endif // OPENGLWIDGET_H

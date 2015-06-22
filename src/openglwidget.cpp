@@ -58,6 +58,7 @@ extern int demoMode;
 
 extern glm::mat4 modelMatrix;
 extern glm::mat4 model_rotation_natural;
+extern bool rotationNatural;
 
 extern Lighting light;
 extern glm::vec3 ka;
@@ -153,7 +154,6 @@ void OpenGLWidget::paintGL()
 
         /*===transformation===*/
         glm::vec4 modelVertices[3];
-        glm::vec4 MmodelVertices[3];
         glm::vec4 MVPVertices[3];
         glm::vec4 modelNormals[3];
 
@@ -161,7 +161,6 @@ void OpenGLWidget::paintGL()
         for(int j=0; j<3; ++j) {
             // model space (scaling->rotation->translation)
             modelVertices[j] = modelMatrix * triVertices[j];
-      MmodelVertices[j] = modelVertices[j];
       //cout << "MODEL: " << modelVertices[j].x << ", " << modelVertices[j].y << ", " << modelVertices[j].z << endl;
             // view space
             modelVertices[j] = viewMatrix * modelVertices[j];
@@ -173,12 +172,12 @@ void OpenGLWidget::paintGL()
             MVPVertices[j] = MVPVertices[j]*viewportMatrix;
             MVPVertices[j].z = modelVertices[j].z;
             // Normal : rotation
-            modelNormals[j] = model_rotation(theta) * triNormals[j];
+            modelNormals[j] = model_rotation(theta) * model_rotation_natural* triNormals[j];
         }
         glm::vec3 v1 ( modelVertices[0]-modelVertices[1] );
         glm::vec3 v2 ( modelVertices[0]-modelVertices[2] );
         glm::vec3 faceNormals = glm::normalize(glm::cross(v1,v2));
-
+        
         /*===Back Face Culling===*/
         bool cull = backFaceCulling(faceNormals, glm::vec3(modelVertices[0])); //true-need to be culled
 
@@ -743,22 +742,55 @@ void OpenGLWidget::changeSpotlightAngle(int step) {
 
 void OpenGLWidget::rotateUp() {
   //cout << "Rotate up" << endl;
-  theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
+  if (rotationNatural) {
+    glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
+    glm::mat4 camera2object = glm::inverse(modelMatrix);
+    glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+    model_rotation_natural = glm::rotate(model_rotation_natural, -0.05f, glm::vec3(axis_in_object_coord));
+  }
+  else {
+    theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
+  }
+
   update();
 }
 void OpenGLWidget::rotateDown() {
   //cout << "Rotate down" << endl;
-  theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
+  if (rotationNatural) {
+    glm::vec4 axis_in_camera_coord(1.f, 0.f, 0.f, 0.f);
+    glm::mat4 camera2object = glm::inverse(modelMatrix);
+    glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+    model_rotation_natural = glm::rotate(model_rotation_natural, 0.05f, glm::vec3(axis_in_object_coord));
+  }
+  else {
+    theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
+  }
   update();
 }
 void OpenGLWidget::rotateLeft() {
   //cout << "Rotate left" << endl;
-  theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
+  if (rotationNatural) {
+    glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
+    glm::mat4 camera2object = glm::inverse(modelMatrix);
+    glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+    model_rotation_natural = glm::rotate(model_rotation_natural, 0.05f, glm::vec3(axis_in_object_coord));
+  }
+  else {
+    theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
+  }
   update();
 }
 void OpenGLWidget::rotateRight() {
   //cout << "Rotate right" << endl;
-  theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
+  if (rotationNatural) {
+    glm::vec4 axis_in_camera_coord(0.f, 1.f, 0.f, 0.f);
+    glm::mat4 camera2object = glm::inverse(modelMatrix);
+    glm::vec4 axis_in_object_coord = camera2object * axis_in_camera_coord;
+    model_rotation_natural = glm::rotate(model_rotation_natural, -0.05f, glm::vec3(axis_in_object_coord));
+  }
+  else {
+    theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
+  }
   update();
 }
 void OpenGLWidget::pan(float xPace, float yPace) {
@@ -910,6 +942,13 @@ void OpenGLWidget::switchToTextureClamping(bool on) {
 void OpenGLWidget::enterDemoMode() {
   demoMode = 1;
 }
+void OpenGLWidget::toggleNaturalRotation() {
+  rotationNatural = !rotationNatural;
+  cout << "Natural rotation: ";
+  if (rotationNatural) cout << "ON" << endl;
+  else cout << "OFF" << endl;
+  update();
+}
 
 void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 
@@ -971,6 +1010,8 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
           toggleToonShading(); break;
         case Qt::Key_E:
           enterDemoMode(); break;
+        case Qt::Key_I:
+          toggleNaturalRotation(); break;
 
         case Qt::Key_Plus:
         case Qt::Key_Equal:
@@ -996,32 +1037,30 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
     QPoint delta = event->pos() - offset;
-    if (event->modifiers() == Qt::SHIFT) {
-        if (event->buttons() == Qt::LeftButton) {
-            if (delta.x() > 20)
-                panRight(0.01);
-            else if (delta.x() < -20)
-                panLeft(0.01);
-            if (delta.y() > 20)
-                panDown(0.01);
-            else if (delta.y() < -20)
-                panUp(0.01);
-        }
+    if (event->buttons() == Qt::RightButton) {
+        if (delta.x() > 20)
+            panRight(0.01);
+        else if (delta.x() < -20)
+            panLeft(0.01);
+        if (delta.y() > 20)
+            panDown(0.01);
+        else if (delta.y() < -20)
+            panUp(0.01);
     }
     else {
         if (event->buttons() == Qt::LeftButton) {
-            if (delta.x() < -20) rotateLeft();
-            if (delta.x() > 20) rotateRight();
-            if (delta.y() < -20) rotateUp();
-            if (delta.y() > 20) rotateDown();
+            if (delta.x() < -50) rotateRight();
+            else if (delta.x() > 50) rotateLeft();
+            else if (delta.y() < -50) rotateUp();
+            else if (delta.y() > 50) rotateDown();
         }
     }
 }
 
 void OpenGLWidget::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton)
+    if (event->button())
         offset = event->pos();
-    if (event->button() == Qt::RightButton)
+    if (event->button() == Qt::MiddleButton)
         setLightSourcePosition(event->x(), event->y());
 }
 

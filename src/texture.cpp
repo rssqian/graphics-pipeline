@@ -218,7 +218,7 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//texMap = mtl->map_Ka;
 		if (filterMode>=3) {
 			LOD = (LODu*mtl->map_Ka[0]->w > LODv*mtl->map_Ka[0]->h) ? LODu*mtl->map_Ka[0]->w : LODv*mtl->map_Ka[0]->h;
-			LOD = log10(LOD)/log10(2.0)/2;
+			LOD = log10(LOD)/log10(2.0);
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
 		texFiltering(LOD, filterMode, ambient_c, texCoord, mtl->map_Ka);
@@ -241,7 +241,7 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//texMap = mtl->map_Kd;
 		if (filterMode>=3) {
 			LOD = (LODu*mtl->map_Kd[0]->w > LODv*mtl->map_Kd[0]->h) ? LODu*mtl->map_Kd[0]->w : LODv*mtl->map_Kd[0]->h;
-			LOD = log10(LOD)/log10(2.0)/2;
+			LOD = log10(LOD)/log10(2.0);
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
 		texFiltering(LOD, filterMode, diffuse_c, texCoord, mtl->map_Kd);
@@ -268,7 +268,7 @@ bool getTexture(Material* mtl, glm::vec3& texCoord,
 		//texMap = mtl->map_Ks;
 		if (filterMode>=3) {
 			LOD = (LODu*mtl->map_Ks[0]->w > LODv*mtl->map_Ks[0]->h) ? LODu*mtl->map_Ks[0]->w : LODv*mtl->map_Ks[0]->h;
-			LOD = log10(LOD)/log10(2.0)/2;
+			LOD = log10(LOD)/log10(2.0);
 			if (LOD<0) LOD = 0;
 		} else LOD = 0;
 		texFiltering(LOD, filterMode, specular_c, texCoord, mtl->map_Ks);
