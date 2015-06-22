@@ -167,13 +167,21 @@ inline void rotateDown() {
   //cout << "Rotate down" << endl;
   theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
 }
-inline void rotateLeft() {
+inline void rotateLeftY() {
   //cout << "Rotate left" << endl;
   theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
 }
-inline void rotateRight() {
+inline void rotateRightY() {
   //cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
+}
+inline void rotateLeftX() {
+  //cout << "Rotate left" << endl;
+  theta.z = (theta.z < 0)? (PI*2) : (theta.z - rotateSpeed);
+}
+inline void rotateRightX() {
+  //cout << "Rotate right" << endl;
+  theta.z = (theta.z > PI*2)? 0 : (theta.z + rotateSpeed);
 }
 inline void panUp(int pace) {
   //cout << "Pan up" << endl;
@@ -288,9 +296,9 @@ void motionFunc(int x, int y) {
     else if ( deltaMouseY < -100 )
       rotateDown();
     else if ( deltaMouseX < -100 )
-      rotateLeft();
+      rotateLeftY();
     else if ( deltaMouseX > 100 )
-      rotateRight();
+      rotateRightY();
   }
   if ( panning ) {
     int deltaMouseX = x - prevMouseX;
@@ -392,6 +400,10 @@ void keyboardFunc(unsigned char key, int x, int y)
     zoomOut(); break;
   case 'd':
     toggleDemo(); break;
+  case '/':
+	rotateRightX(); break;
+  case '.':
+	rotateLeftX(); break;
 	}
 	glutPostRedisplay();
 }
@@ -401,9 +413,9 @@ void specialFunc(int key, int x, int y)
 {
 	switch (key) {
 	case GLUT_KEY_RIGHT:
-    rotateRight(); break;
+    rotateRightY(); break;
 	case GLUT_KEY_LEFT:
-    rotateLeft(); break;
+    rotateLeftY(); break;
 	case GLUT_KEY_UP:
     rotateUp(); break;
 	case GLUT_KEY_DOWN:

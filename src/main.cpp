@@ -22,8 +22,8 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 1280;
-int screenHeight = 720;
+int screenWidth = 1024;
+int screenHeight = 768;
 int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
@@ -51,6 +51,7 @@ int filterMode;		//0-off, 1-nearest, 2-linear, 3-nearest_mipmap_nearest,
 int demoMode;		//0-off, 1-wireframe, 2-flat shading, 3-phong shading, 4-cel shading, 5-phong shading with texture,6-normal shading
 
 int curModelIdx;
+int numDrawTriangleIdx = 0;
 bool culling;
 Framebuffer framebuffer(screenWidth, screenHeight);
 vec3 color(1.f);
@@ -94,6 +95,7 @@ int numModels = sizeof(modelNames) / sizeof(char*);
 
 void demoModeTransition()
 {
+	static int demoMode6 = 0;
 	switch (demoMode) {
 	case 0:
 		break;
@@ -108,6 +110,7 @@ void demoModeTransition()
 		textureAddressing = 0; 
 		textureDisplay = 0;
 		filterMode = 0;
+		numDrawTriangleIdx = 0;
 		break;
 	case 2:  //flat shading
 		demoMode++;
@@ -120,6 +123,7 @@ void demoModeTransition()
 		textureAddressing = 0; 
 		textureDisplay = 0;
 		filterMode = 0;
+		numDrawTriangleIdx = 0;
 		break;
 	case 3:  //phong shading
 		demoMode++;
@@ -132,6 +136,7 @@ void demoModeTransition()
 		textureAddressing = 0; 
 		textureDisplay = 0;
 		filterMode = 0;
+		numDrawTriangleIdx = 0;
 		break;
 	case 4:  //cel shading
 		demoMode++;
@@ -144,6 +149,7 @@ void demoModeTransition()
 		textureAddressing = 0; 
 		textureDisplay = 1;
 		filterMode = 1;
+		numDrawTriangleIdx = 0;
 		break;
 	case 5:  //phong shading with texture
 		demoMode++;
@@ -156,18 +162,25 @@ void demoModeTransition()
 		textureAddressing = 0; 
 		textureDisplay = 0;
 		filterMode = 0;
+		numDrawTriangleIdx = 0;
 		break;
 	case 6:  //normal shading
-		demoMode = 1;
-		cout << "DEMO mode: switching to wireframe" << endl;
-		culling = false;
-		wireframe = 1;
-		normalDisplay = 0;
-		solid = 0;
-		shading = 1; 
-		textureAddressing = 0; 
-		textureDisplay = 0;
-		filterMode = 0;
+		if (demoMode6==300) {
+			demoMode = 1;
+			cout << "DEMO mode: switching to wireframe" << endl;
+			culling = false;
+			wireframe = 1;
+			normalDisplay = 0;
+			solid = 0;
+			shading = 1; 
+			textureAddressing = 0; 
+			textureDisplay = 0;
+			filterMode = 0;
+			numDrawTriangleIdx = 0;
+			demoMode6 = 0;
+		} else {
+			demoMode6++;
+		}
 		break;
 	}
 }
@@ -222,7 +235,7 @@ void init()
 
 void displayFunc() 
 {
-	if (demoMode==0 || demoMode==1) 
+	//if (demoMode==0 || demoMode==1) 
 		framebuffer.clear();
 
 	// Set MVP and viewport
@@ -247,7 +260,118 @@ void displayFunc()
 	viewportMatrix[0][3]=screenWidth_half;
 	viewportMatrix[1][3]=screenHeight_half;
 
+	if (demoMode==0) numDrawTriangleIdx = modelPtr[curModelIdx]->numTriangles;
+	else {
+		//cout << numDrawTriangleIdx << endl;
+		if (demoMode==1) numDrawTriangleIdx += 8;
+		else numDrawTriangleIdx += (20);
+		if (numDrawTriangleIdx>modelPtr[curModelIdx]->numTriangles) numDrawTriangleIdx = modelPtr[curModelIdx]->numTriangles;
+	}
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {
+		if (i>=numDrawTriangleIdx) {
+			switch (demoMode) {
+			case 1:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 0;
+				shading = 1;
+				break;
+			case 2:
+				culling = false;
+				wireframe = 1;
+				normalDisplay = 0;
+				solid = 0;
+				shading = 1;
+				break;
+			case 3:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 1; 
+				textureDisplay = 0;
+				break;
+			case 4:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 2;  
+				textureDisplay = 0;
+				break;
+			case 5:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 3; 
+				textureDisplay = 0;
+				break;
+			case 6:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 2; 
+				textureAddressing = 0; 
+				textureDisplay = 1;
+				filterMode = 1;
+				break;
+			}
+		} else {
+			switch (demoMode) {
+			case 1:
+				culling = false;
+				wireframe = 1;
+				normalDisplay = 0;
+				solid = 0;
+				shading = 1;
+				break;
+			case 2:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 1; 
+				textureDisplay = 0;
+				break;
+			case 3:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 2;  
+				textureDisplay = 0;
+				break;
+			case 4:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 3; 
+				textureDisplay = 0;
+				break;
+			case 5:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 2; 
+				textureAddressing = 0; 
+				textureDisplay = 1;
+				filterMode = 1;
+				break;
+			case 6:
+				culling = true;
+				wireframe = 0;
+				normalDisplay = 0;
+				solid = 1;
+				shading = 4; 
+				textureDisplay = 0;
+				break;
+			}
+		}
 		Triangle* trianglePtr = modelPtr[curModelIdx]->triangles;
 		float* verticePtr = modelPtr[curModelIdx]->vertices;
 		float* normalPtr = modelPtr[curModelIdx]->normals;
@@ -357,7 +481,7 @@ void displayFunc()
 			/*===wireframe mode===*/
 			if (wireframe==1) {
 				vec3 wireframeColor(1.f);
-				if (demoMode == 1) {
+				if (demoMode != 0) {
 					MVPVertices[0].z = -1e20;
 					MVPVertices[1].z = -1e20;
 					MVPVertices[2].z = -1e20;
@@ -387,13 +511,13 @@ void displayFunc()
 				}
 			}
 
-			if (demoMode!=0) {
+			/*if (demoMode!=0) {
 				if ((demoMode==1 && i%5==0) || (demoMode!=1 && i%2==0)) {
-					Sleep(1/*1*pow(0.5,int(modelPtr[curModelIdx]->numTriangles/300))*/);
+					Sleep(1);
 					glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
 					glutSwapBuffers();
 				}
-			}
+			}*/
 		}
 	}
 	
@@ -407,18 +531,26 @@ void displayFunc()
 			//}
 
 			//texturing
-			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 /*&& (filterMode>=3)*/) {
+			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 && (filterMode>=3)) {
 				framebuffer.texturing(i,j,filterMode);
 			}
 
 		}
 	}
 
-	demoModeTransition();
-
 	/* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
 	glutSwapBuffers();
+
+	if (demoMode!=0) {
+		if (numDrawTriangleIdx == modelPtr[curModelIdx]->numTriangles) demoModeTransition();
+		if (demoMode==1) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.02);
+		else if (demoMode==2) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.025);
+		else if (demoMode==3) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.03);
+		else if (demoMode==4) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.035);
+		else if (demoMode==5) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.04);
+		else if (demoMode==6) theta.y = (theta.y>PI*2) ? 0 : (theta.y + 0.035);
+	}
 
 	/* FPS counter */
 	static clock_t prev = clock();
@@ -428,8 +560,10 @@ void displayFunc()
 	static int count = 0;
 	++count;
 	curr = clock();
-	//cout << "1: curr = " << curr << "\tprev = " << prev << endl;
+	//cout << "0: curr = " << curr << "\tprev = " << prev << endl;
 	double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
+	//cout << "1: curr = " << curr << "\tprev = " << prev << "\tdelta = " << curr - prev <<  endl;
+	//Sleep(800-(curr - prev));
 	
 	if (t > refreshTime) {
 		//cout << "2: curr = " << curr << "\tprev = " << prev <<	"\tt = " << t << endl;

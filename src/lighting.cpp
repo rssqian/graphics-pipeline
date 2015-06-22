@@ -6,7 +6,7 @@ void Lighting::shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,Light
 	//cout << vertex.x << " , " << vertex.y << " , " << vertex.z << endl;
 
   //ambient
-  float ambientIntensity = 1;
+  float ambientIntensity = 0.2;
   float ambient = ambientIntensity;
   //diffuse
   float diffuseIntensity = 1;
@@ -15,11 +15,13 @@ void Lighting::shading(glm::vec3 vertex, glm::vec3 normal,Material* mtlptr,Light
   float diffuse = diffuseIntensity * glm::dot(normal, lightDirection);
   diffuse = diffuse > 0 ? diffuse : 0;
   //specular
+  float specularIntensity = 0.5;
   glm::vec3 viewDirection = cameraTarget - cameraPos;
   glm::vec3 reflectDirection(glm::reflect(glm::normalize(lightDirection), glm::normalize(normal))); 
   float specularDot = glm::dot(reflectDirection, viewDirection);
   specularDot = specularDot > 0 ? specularDot : 0;
-  float specular = glm::pow(specularDot, ns);
+  float specular = specularIntensity * glm::pow(specularDot, ns);
+
 
   float attenuation = 1;
   //glm::vec3 color = ka * ambient + attenuation*(kd * diffuse + ks * specular);
