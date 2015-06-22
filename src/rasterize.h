@@ -16,6 +16,7 @@ extern int curModelIdx;
 extern bool textureDisplay;
 extern bool wireframe;
 extern bool solid;
+extern int filterMode;
 extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;

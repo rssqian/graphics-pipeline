@@ -7,6 +7,8 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <cstdio>
+#include <WinBase.h>
 #include "model.h"
 #include "framebuffer.h"
 #include "transform.h"
@@ -20,15 +22,15 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 800;
-int screenHeight = 600;
-int screenWidth_half = 400;
-int screenHeight_half = 300;
+int screenWidth = 1280;
+int screenHeight = 720;
+int screenWidth_half = screenWidth/2;
+int screenHeight_half = screenHeight/2;
 
 /* theta */
 double rotateSpeed = 0.05;
-glm::vec3 theta (0.0f, 0.0f, 0.0f);
-glm::vec3 size (1.0f, 1.0f, 1.0f);
+glm::vec3 theta (0.0f, 0.5f, 0.0f);
+glm::vec3 size (1.5f, 1.5f, 1.5f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
 
 glm::vec3 cameraPos (0.0f, 0.0f, 1.0f);
@@ -37,15 +39,16 @@ glm::vec3 upVector (0.0f, 1.0f, 0.0f);
 float FoV=45.0f;
 
 /*mode*/
-bool wireframe; //0-wireframe off, 1-wireframe on
+bool wireframe;		//0-wireframe off, 1-wireframe on
 bool normalDisplay;
-bool solid; //0-solid mode off, 1-solid mode on
-int shading; //0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
-bool toonShading; 
-bool projection; //0-orthogonal, 1-perspective
+bool solid;			//0-solid mode off, 1-solid mode on
+int shading;		//0-z shading, 1-flat shading, 2-smooth shading, 3-cell shading, 4-normal shading
+bool projection;	 //0-orthogonal, 1-perspective
 int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
-int filterMode;
+int filterMode;		//0-off, 1-nearest, 2-linear, 3-nearest_mipmap_nearest, 
+					//4-Linear-Mipmap-Nearest, 5-Nearest-Mipmap-Linear, 6-Linear-Mipmap-Linear
+int demoMode;		//0-off, 1-wireframe, 2-flat shading, 3-phong shading, 4-cel shading, 5-phong shading with texture,6-normal shading
 
 int curModelIdx;
 bool culling;
@@ -60,13 +63,14 @@ int ns = 1;
 
 /* model names */
 const char* modelNames[] = {
+	"model/Deer.obj",
 	"model/quad.obj",
-	//"model/couch.obj",
+	"model/couch.obj",
 	//"model/cubeT.obj",
 	"model/Nala.obj",
 	//"model/ball.obj",
 	"model/duck.obj",
-	"model/ZEBRA.obj",
+	//"model/ZEBRA.obj",
 	//"model/Dog.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
@@ -74,11 +78,11 @@ const char* modelNames[] = {
 	//"model/shuttle.obj",
 	//"model/sphere.obj",
 	//"model/KioMiku/Miku.obj",
-	//"model/Giraffe.obj",
+	"model/Giraffe.obj",
 	//"model/blaze.obj",
 	//"model/ateneal.obj",
 	//"model/venusm.obj",
-	"model/bunnyC.obj"
+	//"model/bunnyC.obj"
 	//"model/duck4KN.obj",
 	//"model/happy10KN.obj",
 	//"model/dragon10KN.obj",
@@ -87,6 +91,86 @@ const char* modelNames[] = {
 	//"model/Nissan_Pathfinder.obj"
 };
 int numModels = sizeof(modelNames) / sizeof(char*);
+
+void demoModeTransition()
+{
+	switch (demoMode) {
+	case 0:
+		break;
+	case 1:  //wireframe
+		demoMode++;
+		cout << "DEMO mode: switching to flat shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 1; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 2:  //flat shading
+		demoMode++;
+		cout << "DEMO mode: switching to phong shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 2;  
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 3:  //phong shading
+		demoMode++;
+		cout << "DEMO mode: switching to cel shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 3; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 4:  //cel shading
+		demoMode++;
+		cout << "DEMO mode: switching to phong shading with texture" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 2; 
+		textureAddressing = 0; 
+		textureDisplay = 1;
+		filterMode = 1;
+		break;
+	case 5:  //phong shading with texture
+		demoMode++;
+		cout << "DEMO mode: switching to normal shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 4; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 6:  //normal shading
+		demoMode = 1;
+		cout << "DEMO mode: switching to wireframe" << endl;
+		culling = false;
+		wireframe = 1;
+		normalDisplay = 0;
+		solid = 0;
+		shading = 1; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	}
+}
 
 void init() 
 {
@@ -133,12 +217,13 @@ void init()
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
 	textureDisplay = 0;
 	filterMode = 0;
-	toonShading = 0;
+	demoMode = 0;
 }
 
 void displayFunc() 
 {
-	framebuffer.clear();
+	if (demoMode==0 || demoMode==1) 
+		framebuffer.clear();
 
 	// Set MVP and viewport
 	glm::mat4 modelMatrix = model_translation(translate) 
@@ -225,14 +310,14 @@ void displayFunc()
 
 		/*===Back Face Culling===*/
 		bool cull = backFaceCulling(faceNormals, glm::vec3(modelVertices[0])); //true-need to be culled
-		if (cull==true && toonShading==true) {
-			MVPVertices[0].z = -1e20;
-			MVPVertices[1].z = -1e20;
-			MVPVertices[2].z = -1e20;
+		/*if (cull==true && toonShading==true) {
+			//MVPVertices[0].z = -1e20;
+			//MVPVertices[1].z = -1e20;
+			//MVPVertices[2].z = -1e20;
 			drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
 			drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
 			drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
-		}
+		}*/
 		
 		if ((cull==false&&culling==true) || culling==false) { 
 			int ix[3],iy[3];
@@ -267,16 +352,25 @@ void displayFunc()
 
 			if (textureDisplay==1 && solid==1) displayNormals.push_back(triTexCoord);
 
-			if (solid==1)rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
+			if (solid==1) rasterTriangle(displayVertices,displayNormals,mtl,KaKdKsIntensity);
 
 			/*===wireframe mode===*/
 			if (wireframe==1) {
-				MVPVertices[0].z = 0.f;
-				MVPVertices[1].z = 0.f;
-				MVPVertices[2].z = 0.f;
-				drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
-				drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
+				vec3 wireframeColor(1.f);
+				if (demoMode == 1) {
+					MVPVertices[0].z = -1e20;
+					MVPVertices[1].z = -1e20;
+					MVPVertices[2].z = -1e20;
+					wireframeColor = vec3(0.5f);
+				} else {
+					MVPVertices[0].z += 0.01f;
+					MVPVertices[1].z += 0.01f;
+					MVPVertices[2].z += 0.01f;
+					wireframeColor.x = 1.f;
+				}
+				drawLine(MVPVertices[0],MVPVertices[1],wireframeColor);
+				drawLine(MVPVertices[1],MVPVertices[2],wireframeColor);
+				drawLine(MVPVertices[2],MVPVertices[0],wireframeColor);
 			}
 
 			/*===display normal===*/
@@ -292,24 +386,35 @@ void displayFunc()
 					drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
 				}
 			}
+
+			if (demoMode!=0) {
+				if ((demoMode==1 && i%5==0) || (demoMode!=1 && i%2==0)) {
+					Sleep(1/*1*pow(0.5,int(modelPtr[curModelIdx]->numTriangles/300))*/);
+					glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
+					glutSwapBuffers();
+				}
+			}
 		}
 	}
 	
 	/* Per Pixel Shading */ 
-	
 	for (int i=0; i<screenWidth; i++) {
 		for (int j=0; j<screenHeight; j++) {
+			
 			//cel shading
-			if (shading==3) {
-				framebuffer.celShading(i,j);
-			}
+			//if (shading==3) {
+			//	framebuffer.celShading(i,j);
+			//}
 
 			//texturing
-			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
+			if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 /*&& (filterMode>=3)*/) {
 				framebuffer.texturing(i,j,filterMode);
 			}
+
 		}
 	}
+
+	demoModeTransition();
 
 	/* display */
 	glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
@@ -318,17 +423,19 @@ void displayFunc()
 	/* FPS counter */
 	static clock_t prev = clock();
 	static clock_t curr;
-	static char title[20];
+	static char title[50];
 	static double refreshTime = 0.5;
 	static int count = 0;
 	++count;
 	curr = clock();
+	//cout << "1: curr = " << curr << "\tprev = " << prev << endl;
 	double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
 	
 	if (t > refreshTime) {
-		//cout << "curr = " << curr << "\tprev = " << prev <<	"\tt = " << t << endl;
-		//cout << "fps = " << 
+		//cout << "2: curr = " << curr << "\tprev = " << prev <<	"\tt = " << t << endl;
+		//cout << "fps = " << (double)count/t << endl;
 		sprintf(title, "3D Graphics Engine: %.2lf fps",	(double)count/t);
+		//cout << "3: curr = " << curr << "\tprev = " << prev <<	"\tt = " << t << endl;
 		glutSetWindowTitle(title);
 		prev = curr;
 		count = 0;

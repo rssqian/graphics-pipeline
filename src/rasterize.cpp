@@ -139,25 +139,21 @@ void rasterStandingTriangle(Primitive MVP_vertex,vector<Primitive>& v_MV_value,M
 			if ((shading==2 || shading==3) && modelPtr[curModelIdx]->numNormals!=0) { 
 				light.shading(mv_result[1], mv_result[0],mtl,c); 
 			}
-			/*if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4 && mtl!=nullptr) {
-				getTexture(mtl,mv_result[2],c.ambient,c.diffuse,c.specular);
-			}*/
+
 			vec3 vec3C = glm2vec3(c.ambient + c.diffuse + c.specular);
-			//vec3 vec3C(	(c.ambient.x + c.diffuse.x + c.specular.x),
-			//			(c.ambient.y + c.diffuse.y + c.specular.y),
-			//			(c.ambient.z + c.diffuse.z + c.specular.z));
 			if (shading==4 && modelPtr[curModelIdx]->numNormals!=0) {
 				mv_result[0] = glm::normalize(mv_result[0]);
 				vec3C.x = (glm::dot(mv_result[0],glm::vec3(1.f,0.f,0.f)) + 1.f) / 2.f;
 				vec3C.y = (glm::dot(mv_result[0],glm::vec3(0.f,1.f,0.f)) + 1.f) / 2.f;
 				vec3C.z = (glm::dot(mv_result[0],glm::vec3(0.f,0.f,1.f)) + 1.f) / 2.f;
 			}
-			/*if (shading==3) {
-				vec3C.x = int(vec3C.x/0.2) * 0.2;
-				vec3C.y = int(vec3C.y/0.2) * 0.2;
-				vec3C.z = int(vec3C.z/0.2) * 0.2;
-			}*/
-			framebuffer.draw(x_,y_,z_,vec3C,c,glm2vec3(mv_result[2]),mtl);
+			bool draw = framebuffer.draw(x_,y_,z_,vec3C,c,glm2vec3(mv_result[2]),mtl);
+			if (draw && shading==3) {
+				framebuffer.celShading(x_,y_);
+			}
+			if (textureDisplay && solid==1 && shading!=0 && shading!=4 && filterMode<=2 && draw) {
+				framebuffer.texturing(x_,y_,filterMode);
+			}
 		}
 		y_--;
 	}
