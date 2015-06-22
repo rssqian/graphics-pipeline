@@ -2,11 +2,12 @@
 # 
 
 newmtl Giraffe
-Ns 96.078431
+Ns 1
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd Giraffe_D.tga
+map_Kd Giraffe_D.ppm
+map_Ks Giraffe_S.ppm

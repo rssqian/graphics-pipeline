@@ -998,14 +998,6 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
     QPoint delta = event->pos() - offset;
     if (event->modifiers() == Qt::SHIFT) {
         if (event->buttons() == Qt::LeftButton) {
-            if (delta.x() < -20) rotateLeft();
-            if (delta.x() > 20) rotateRight();
-            if (delta.y() < -20) rotateUp();
-            if (delta.y() > 20) rotateDown();
-        }
-    }
-    else {
-        if (event->buttons() == Qt::LeftButton) {
             if (delta.x() > 20)
                 panRight(0.01);
             else if (delta.x() < -20)
@@ -1014,6 +1006,14 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event) {
                 panDown(0.01);
             else if (delta.y() < -20)
                 panUp(0.01);
+        }
+    }
+    else {
+        if (event->buttons() == Qt::LeftButton) {
+            if (delta.x() < -20) rotateLeft();
+            if (delta.x() > 20) rotateRight();
+            if (delta.y() < -20) rotateUp();
+            if (delta.y() > 20) rotateDown();
         }
     }
 }

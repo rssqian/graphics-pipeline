@@ -253,20 +253,20 @@ public:
 "}"));
         groupBox_12 = new QGroupBox(tab_3);
         groupBox_12->setObjectName(QStringLiteral("groupBox_12"));
-        groupBox_12->setGeometry(QRect(10, 110, 231, 81));
+        groupBox_12->setGeometry(QRect(10, 290, 231, 81));
         groupBox_12->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
 "	border: 0px;\n"
 "}"));
         label_4 = new QLabel(groupBox_12);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(10, 30, 91, 21));
+        label_4->setGeometry(QRect(10, 30, 141, 21));
         label_6 = new QLabel(groupBox_12);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setGeometry(QRect(10, 60, 141, 21));
         groupBox_13 = new QGroupBox(tab_3);
         groupBox_13->setObjectName(QStringLiteral("groupBox_13"));
-        groupBox_13->setGeometry(QRect(10, 200, 231, 81));
+        groupBox_13->setGeometry(QRect(10, 110, 231, 81));
         groupBox_13->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
 "	border: 0px;\n"
@@ -279,7 +279,7 @@ public:
         label_7->setGeometry(QRect(10, 60, 81, 21));
         groupBox_14 = new QGroupBox(tab_3);
         groupBox_14->setObjectName(QStringLiteral("groupBox_14"));
-        groupBox_14->setGeometry(QRect(10, 290, 231, 101));
+        groupBox_14->setGeometry(QRect(10, 200, 231, 101));
         groupBox_14->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
 "	border: 0px;\n"
@@ -392,7 +392,7 @@ public:
         radioButton_12->setFocusPolicy(Qt::NoFocus);
         radioButton_11 = new QRadioButton(groupBox_9);
         radioButton_11->setObjectName(QStringLiteral("radioButton_11"));
-        radioButton_11->setGeometry(QRect(0, 60, 151, 26));
+        radioButton_11->setGeometry(QRect(0, 60, 241, 26));
         radioButton_11->setFocusPolicy(Qt::NoFocus);
         radioButton_11->setChecked(true);
         horizontalSlider_4 = new QSlider(groupBox_9);
@@ -424,6 +424,7 @@ public:
         radioButton->setObjectName(QStringLiteral("radioButton"));
         radioButton->setGeometry(QRect(0, 30, 112, 26));
         radioButton->setFocusPolicy(Qt::NoFocus);
+        radioButton->setChecked(true);
         radioButton_2 = new QRadioButton(groupBox_10);
         radioButton_2->setObjectName(QStringLiteral("radioButton_2"));
         radioButton_2->setGeometry(QRect(0, 60, 191, 26));
@@ -432,7 +433,7 @@ public:
         radioButton_13->setObjectName(QStringLiteral("radioButton_13"));
         radioButton_13->setGeometry(QRect(0, 210, 171, 26));
         radioButton_13->setFocusPolicy(Qt::NoFocus);
-        radioButton_13->setChecked(true);
+        radioButton_13->setChecked(false);
         radioButton_14 = new QRadioButton(groupBox_10);
         radioButton_14->setObjectName(QStringLiteral("radioButton_14"));
         radioButton_14->setGeometry(QRect(0, 90, 201, 26));
@@ -580,10 +581,10 @@ public:
         label_fpsCounter->setText(QApplication::translate("MainWindow", "fps", 0));
         pushButton->setText(QApplication::translate("MainWindow", "\342\206\272 Reset", 0));
         groupBox_12->setTitle(QApplication::translate("MainWindow", "Translation", 0));
-        label_4->setText(QApplication::translate("MainWindow", "Mouse Drag", 0));
+        label_4->setText(QApplication::translate("MainWindow", "Shift + Mouse Drag", 0));
         label_6->setText(QApplication::translate("MainWindow", "Shift + Key A/D/S/W", 0));
         groupBox_13->setTitle(QApplication::translate("MainWindow", "Rotation", 0));
-        label_5->setText(QApplication::translate("MainWindow", "Shift + Mouse Drag", 0));
+        label_5->setText(QApplication::translate("MainWindow", "Mouse Drag", 0));
         label_7->setText(QApplication::translate("MainWindow", "Arrow Keys", 0));
         groupBox_14->setTitle(QApplication::translate("MainWindow", "Scaling", 0));
         label_8->setText(QApplication::translate("MainWindow", "Mouse Wheel", 0));
@@ -604,7 +605,7 @@ public:
         radioButton_10->setText(QApplication::translate("MainWindow", "Normal Map", 0));
         groupBox_9->setTitle(QApplication::translate("MainWindow", "Light Source", 0));
         radioButton_12->setText(QApplication::translate("MainWindow", "Directional Light", 0));
-        radioButton_11->setText(QApplication::translate("MainWindow", "Point Light", 0));
+        radioButton_11->setText(QApplication::translate("MainWindow", "Point Light (Right Click)", 0));
         checkBox_4->setText(QApplication::translate("MainWindow", "Spotlight", 0));
         checkBox_5->setText(QApplication::translate("MainWindow", "Shadow", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "Lighting", 0));

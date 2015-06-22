@@ -27,7 +27,7 @@ int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
 /* theta */
-double rotateSpeed = 0.05;
+double rotateSpeed = 0.02;
 glm::vec3 theta (0.0f, 0.0f, 0.0f);
 glm::vec3 model_size (1.5f, 1.5f, 1.5f);
 glm::vec3 translate (0.0f, 0.0f, 0.0f);
@@ -72,24 +72,27 @@ float spotlightAngle = 0; // 0 to turn off
 
 /* model names */
 const char* modelNames[] = {
-  "model/quad.obj",
-	//"model/couch.obj",
-	//"model/cubeT.obj",
+    "model/about.obj",
+
+  //"model/couch.obj",
+    "model/bunnyC.obj",
+
+
   //"model/ball.obj",
-	//"model/duck.obj",
-  //"model/box.obj",
-	//"model/cubeT.obj"
-  "model/bunnyC.obj",
-  // Animals with textures
-  "model/ZEBRA.obj",
-//  "model/Nala.obj",
-//  "model/Dog.obj",
-  "model/Tiger.obj",
-  "model/Giraffe.obj",
-//  "model/cat.obj",
-  "model/Deer.obj",
-  "model/Killer_Whale.obj",
-  "model/Rabbit.obj"
+    "model/duck.obj",
+    "model/cubeT.obj",
+
+  /* Animals with textures */
+
+    "model/ZEBRA.obj",
+    "model/Nala.obj",
+  //"model/Dog.obj",
+    "model/Tiger.obj",
+    "model/Giraffe.obj",
+  //"model/cat.obj",
+    "model/Deer.obj",
+    "model/Rabbit.obj",
+    "model/quad.obj"
 };
 int numModels = sizeof(modelNames) / sizeof(char*);
 
@@ -137,10 +140,10 @@ void init()
     pointLight = 1;
 	projection = 0; //0-orthogonal, 1-perspective
 	textureAddressing = 0; //0-wrapping, 1-mirror, 2-clamping
-	textureDisplay = 0;
+    textureDisplay = 1;
     showShadow = 0;
     showAxes = 0;
-	filterMode = 0;
+    filterMode = 1;
 	toonShading = 0;
     spotlight = 0;
     demoMode = 0;

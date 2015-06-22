@@ -281,7 +281,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>110</y>
+           <y>290</y>
            <width>231</width>
            <height>81</height>
           </rect>
@@ -300,12 +300,12 @@
            <rect>
             <x>10</x>
             <y>30</y>
-            <width>91</width>
+            <width>141</width>
             <height>21</height>
            </rect>
           </property>
           <property name="text">
-           <string>Mouse Drag</string>
+           <string>Shift + Mouse Drag</string>
           </property>
          </widget>
          <widget class="QLabel" name="label_6">
@@ -326,7 +326,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>200</y>
+           <y>110</y>
            <width>231</width>
            <height>81</height>
           </rect>
@@ -350,7 +350,7 @@
            </rect>
           </property>
           <property name="text">
-           <string>Shift + Mouse Drag</string>
+           <string>Mouse Drag</string>
           </property>
          </widget>
          <widget class="QLabel" name="label_7">
@@ -371,7 +371,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>290</y>
+           <y>200</y>
            <width>231</width>
            <height>101</height>
           </rect>
@@ -751,7 +751,7 @@
            <rect>
             <x>0</x>
             <y>60</y>
-            <width>151</width>
+            <width>241</width>
             <height>26</height>
            </rect>
           </property>
@@ -759,7 +759,7 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="text">
-           <string>Point Light</string>
+           <string>Point Light (Right Click)</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -858,6 +858,9 @@
           <property name="text">
            <string>Nearest</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
          <widget class="QRadioButton" name="radioButton_2">
           <property name="geometry">
@@ -891,7 +894,7 @@
            <string>Off</string>
           </property>
           <property name="checked">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
          <widget class="QRadioButton" name="radioButton_14">
