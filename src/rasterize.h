@@ -6,6 +6,7 @@
 #include "lighting.h"
 #include <glm/vec3.hpp>
 #include <vector>
+#include <unistd.h> // For demoMode usleep()
 
 extern Model** modelPtr;
 extern Framebuffer framebuffer;
@@ -14,6 +15,7 @@ extern bool cell;
 extern bool projection;
 extern int curModelIdx;
 extern bool textureDisplay;
+extern int filterMode;
 extern bool wireframe;
 extern bool solid;
 extern Lighting light;

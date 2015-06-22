@@ -48,7 +48,8 @@ int textureAddressing; //0-wrapping, 1-mirror, 2-clamping
 bool textureDisplay;
 bool showShadow;
 bool showAxes;
-int filterMode;
+int filterMode;	//0-off, 1-nearest, 2-linear, 3-nearest_mipmap_nearest, 4-Linear-Mipmap-Nearest, 5-Nearest-Mipmap-Linear, 6-Linear-Mipmap-Linear
+int demoMode; //0-off, 1-wireframe, 2-flat shading, 3-phong shading, 4-cel shading, 5-phong shading with texture,6-normal shading
 
 int curModelIdx;
 bool culling;
@@ -142,6 +143,7 @@ void init()
 	filterMode = 0;
 	toonShading = 0;
     spotlight = 0;
+    demoMode = 0;
 }
 
 int main(int argc, char** argv)

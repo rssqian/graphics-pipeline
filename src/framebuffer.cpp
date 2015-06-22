@@ -2,9 +2,6 @@
 #include "model.h"
 #include <cmath>
 
-extern int shading;
-extern vec3 color;
-
 Framebuffer::Framebuffer(int w, int h)
   : width(w), height(h), clearColor(0.f)
 {
@@ -43,9 +40,9 @@ void Framebuffer::setClearColor(const vec3 color)
 	clearColor = color;
 }
 
-void Framebuffer::draw(int ix, int iy, float z, vec3 c, LightColor KaKdKs, vec3 texCoord, Material* mtlptr) const {
+bool Framebuffer::draw(int ix, int iy, float z, vec3 c, LightColor KaKdKs, vec3 texCoord, Material* mtlptr) const {
 	if(ix < 0 || ix >= width || iy < 0 || iy >= height) {
-		return;
+		return false;
 	}
 	int idx = iy * width + ix;
 	if (z >= depthBuffer[idx]) {
@@ -60,7 +57,9 @@ void Framebuffer::draw(int ix, int iy, float z, vec3 c, LightColor KaKdKs, vec3 
 		KaKdKsBuffer[idx] = KaKdKs;
 		texCoordBuffer[idx] = texCoord;
 		mtlBuffer[idx] = mtlptr;
+    return true;
 	}
+  return false;
 }
 
 const vec3* Framebuffer::getPixels() const {
@@ -89,7 +88,7 @@ void Framebuffer::writePPM(string filename) const {
 bool Framebuffer::celShading(int ix,int iy)
 {
 	int idx = iy * width + ix;
-	if (mtlBuffer[idx] != nullptr) {
+	if (depthBuffer[idx] > DEPTH_INF) {
 		float i= (KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].diffuse.z)/3.f;
 
 		if (i > 0.3) {
@@ -105,6 +104,9 @@ bool Framebuffer::celShading(int ix,int iy)
 			KaKdKsBuffer[idx].diffuse.y = 0.3;
 			KaKdKsBuffer[idx].diffuse.z = 0.3;
 		}
+    colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x + KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].specular.x;
+		colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].specular.y;
+		colorBuffer[idx].z = KaKdKsBuffer[idx].ambient.z + KaKdKsBuffer[idx].diffuse.z + KaKdKsBuffer[idx].specular.z;
 	}
 	return true;
 }
@@ -150,9 +152,23 @@ bool Framebuffer::texturing(int ix,int iy, int filterMode)
 			//cout << LOD << endl;
 		}
 		getTexture(mtlBuffer[idx],texCoord,KaKdKsBuffer[idx].ambient,KaKdKsBuffer[idx].diffuse,KaKdKsBuffer[idx].specular, filterMode, LODu, LODv);
-		colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x + KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].specular.x;
-		colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].specular.y;
-		colorBuffer[idx].z = KaKdKsBuffer[idx].ambient.z + KaKdKsBuffer[idx].diffuse.z + KaKdKsBuffer[idx].specular.z;
+		if (light.displayLight == 0) {
+			colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x + KaKdKsBuffer[idx].diffuse.x + KaKdKsBuffer[idx].specular.x;
+			colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y + KaKdKsBuffer[idx].diffuse.y + KaKdKsBuffer[idx].specular.y;
+			colorBuffer[idx].z = KaKdKsBuffer[idx].ambient.z + KaKdKsBuffer[idx].diffuse.z + KaKdKsBuffer[idx].specular.z;
+		} else if (light.displayLight == 1) {
+			colorBuffer[idx].x = KaKdKsBuffer[idx].ambient.x;
+			colorBuffer[idx].y = KaKdKsBuffer[idx].ambient.y;
+			colorBuffer[idx].z = KaKdKsBuffer[idx].ambient.z;
+		} else if (light.displayLight == 2) {
+			colorBuffer[idx].x = KaKdKsBuffer[idx].diffuse.x;
+			colorBuffer[idx].y = KaKdKsBuffer[idx].diffuse.y;
+			colorBuffer[idx].z = KaKdKsBuffer[idx].diffuse.z;
+		} else {
+			colorBuffer[idx].x = KaKdKsBuffer[idx].specular.x;
+			colorBuffer[idx].y = KaKdKsBuffer[idx].specular.y;
+			colorBuffer[idx].z = KaKdKsBuffer[idx].specular.z;
+		}
 	}
 	return true;
 }

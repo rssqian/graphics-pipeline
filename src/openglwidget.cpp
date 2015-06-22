@@ -54,6 +54,7 @@ extern bool culling;
 extern Framebuffer framebuffer;
 extern char* modelNames[];
 extern int numModels;
+extern int demoMode;
 
 extern glm::mat4 modelMatrix;
 extern glm::mat4 model_rotation_natural;
@@ -73,26 +74,7 @@ extern float spotlightAngle;
 int lightswitch = 0;
 QPoint offset;
 
-void OpenGLWidget::fpsCounter() {
-    static clock_t prev = clock();
-    static clock_t curr;
-    static double refreshTime = 0.5;
-    static int count = 0;
-    ++count;
-    curr = clock();
-    double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
-
-    if (t > refreshTime) {
-      stringstream ss;
-      string fpsStr;
-      ss << (double)count/t << "fps";
-      ss >> fpsStr;
-      QString qstr(fpsStr.c_str());
-      emit fpsChanged(qstr);
-      prev = curr;
-      count = 0;
-    }
-}
+void demoModeTransition();
 
 void OpenGLWidget::initializeGL()
 {
@@ -105,7 +87,8 @@ void OpenGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    framebuffer.clear();
+    if (demoMode==0 || demoMode==1) 
+      framebuffer.clear();
     //framebuffer.setClearColor(vec3(0.1, 0.3, 0.5));
 
     // Set MVP and viewport
@@ -197,14 +180,6 @@ void OpenGLWidget::paintGL()
 
         /*===Back Face Culling===*/
         bool cull = backFaceCulling(faceNormals, glm::vec3(modelVertices[0])); //true-need to be culled
-        if (cull==true && toonShading==true) {
-            MVPVertices[0].z = -1e20;
-            MVPVertices[1].z = -1e20;
-            MVPVertices[2].z = -1e20;
-            drawLine(MVPVertices[0],MVPVertices[1],vec3(1.f,0.f,0.f));
-            drawLine(MVPVertices[1],MVPVertices[2],vec3(1.f,0.f,0.f));
-            drawLine(MVPVertices[2],MVPVertices[0],vec3(1.f,0.f,0.f));
-        }
 
         if ((cull==false&&culling==true) || culling==false) {
             int ix[3],iy[3];
@@ -257,31 +232,46 @@ void OpenGLWidget::paintGL()
         }
       }
 
-            /*===wireframe mode===*/
-            if (wireframe==1) {
+       /*===wireframe mode===*/
+      if (wireframe==1) {
         vec3 colorWireframe = vec3(0.8f, 0.6f, 0.2f);
-                MVPVertices[0].z = 0.f;
-                MVPVertices[1].z = 0.f;
-                MVPVertices[2].z = 0.f;
-                drawLine(MVPVertices[0], MVPVertices[1], colorWireframe);
-                drawLine(MVPVertices[1], MVPVertices[2], colorWireframe);
-                drawLine(MVPVertices[2], MVPVertices[0], colorWireframe);
-            }
+				if (demoMode == 1) {
+					MVPVertices[0].z = -1e20;
+					MVPVertices[1].z = -1e20;
+					MVPVertices[2].z = -1e20;
+                    colorWireframe = vec3(0.5f);
+				} else {
+					MVPVertices[0].z += 0.01f;
+					MVPVertices[1].z += 0.01f;
+					MVPVertices[2].z += 0.01f;
+                    colorWireframe.x = 1.f;
+				}
+        drawLine(MVPVertices[0], MVPVertices[1], colorWireframe);
+        drawLine(MVPVertices[1], MVPVertices[2], colorWireframe);
+        drawLine(MVPVertices[2], MVPVertices[0], colorWireframe);
+      }
 
-            /*===display normal===*/
-            if (normalDisplay) {
-                glm::vec4 smallNormals[3];
-                vec3 colorNormal;
-                for (int j=0; j<3;j++){
-                    smallNormals[j] = glm::normalize(modelNormals[j]);
-                    smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
-                    colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
-                    colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
-                    colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
-                    drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
-                }
-            }
+      /*===display normal===*/
+      if (normalDisplay) {
+          glm::vec4 smallNormals[3];
+          vec3 colorNormal;
+          for (int j=0; j<3;j++){
+              smallNormals[j] = glm::normalize(modelNormals[j]);
+              smallNormals[j] = glm::vec4(smallNormals[j].x*30,smallNormals[j].y*30,smallNormals[j].z*30,0.f);
+              colorNormal.x = (glm::dot(smallNormals[j],glm::vec4(1.f,0.f,0.f,0.f)) + 1.f) / 2.f;
+              colorNormal.y = (glm::dot(smallNormals[j],glm::vec4(0.f,1.f,0.f,0.f)) + 1.f) / 2.f;
+              colorNormal.z = (glm::dot(smallNormals[j],glm::vec4(0.f,0.f,1.f,0.f)) + 1.f) / 2.f;
+              drawLine(MVPVertices[j],(smallNormals[j]+MVPVertices[j]),colorNormal);
+          }
+      }
 
+			if (demoMode!=0) {
+				if ((demoMode==1 && i%5==0) || (demoMode!=1 && i%2==0)) {
+                    usleep(1);
+                    glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
+                    update();
+				}
+			}
 
         } // end if culling
     } // end for each triangle
@@ -313,14 +303,8 @@ void OpenGLWidget::paintGL()
   }
 
     /* Per Pixel Shading */
-
     for (int i=0; i<screenWidth; i++) {
         for (int j=0; j<screenHeight; j++) {
-            //cel shading
-            if (shading==3) {
-                framebuffer.celShading(i,j);
-            }
-
             //texturing
             if (textureDisplay==1 && solid==1 && shading!=0 && shading!=4) {
                 framebuffer.texturing(i,j,filterMode);
@@ -328,9 +312,10 @@ void OpenGLWidget::paintGL()
         }
     }
 
-      /* display */
+    demoModeTransition();
+
+    /* display */
     glDrawPixels(screenWidth, screenHeight, GL_RGB, GL_FLOAT, (const GLvoid*)framebuffer.getPixels());
-  //  glutSwapBuffers();
 
     fpsCounter();
 }
@@ -338,11 +323,108 @@ void OpenGLWidget::paintGL()
 void OpenGLWidget::resizeGL(int width, int height)
 {
 // Framebuffer need to resize too
-//    screenWidth = width;
-//    screenHeight = height;
 }
 
+void OpenGLWidget::fpsCounter() {
+    static clock_t prev = clock();
+    static clock_t curr;
+    static double refreshTime = 0.5;
+    static int count = 0;
+    ++count;
+    curr = clock();
+    double t = (double)(curr - prev)/(double)CLOCKS_PER_SEC;
 
+    if (t > refreshTime) {
+      stringstream ss;
+      string fpsStr;
+      ss << (double)count/t << "fps";
+      ss >> fpsStr;
+      QString qstr(fpsStr.c_str());
+      emit fpsChanged(qstr);
+      prev = curr;
+      count = 0;
+    }
+}
+
+void demoModeTransition()
+{
+	switch (demoMode) {
+	case 0:
+		break;
+	case 1:  //wireframe
+		demoMode++;
+		cout << "DEMO mode: switching to flat shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 1; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 2:  //flat shading
+		demoMode++;
+		cout << "DEMO mode: switching to phong shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 2;  
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 3:  //phong shading
+		demoMode++;
+		cout << "DEMO mode: switching to cel shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 3; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 4:  //cel shading
+		demoMode++;
+		cout << "DEMO mode: switching to phong shading with texture" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 2; 
+		textureAddressing = 0; 
+		textureDisplay = 1;
+		filterMode = 1;
+		break;
+	case 5:  //phong shading with texture
+		demoMode++;
+		cout << "DEMO mode: switching to normal shading" << endl;
+		culling = true;
+		wireframe = 0;
+		normalDisplay = 0;
+		solid = 1;
+		shading = 4; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	case 6:  //normal shading
+		demoMode = 1;
+		cout << "DEMO mode: switching to wireframe" << endl;
+		culling = false;
+		wireframe = 1;
+		normalDisplay = 0;
+		solid = 0;
+		shading = 1; 
+		textureAddressing = 0; 
+		textureDisplay = 0;
+		filterMode = 0;
+		break;
+	}
+}
 
 void OpenGLWidget::printHelp()
 {
@@ -809,6 +891,9 @@ void OpenGLWidget::switchToTextureClamping(bool on) {
   cout << "Texture Addressing: Clamping" << endl;
   update();
 }
+void OpenGLWidget::enterDemoMode() {
+  demoMode = 1;
+}
 
 void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
 
@@ -868,6 +953,8 @@ void OpenGLWidget::keyPressEvent(QKeyEvent *event) {
             toggleBackground(); break;
         case Qt::Key_Z:
           toggleToonShading(); break;
+        case Qt::Key_E:
+          enterDemoMode(); break;
 
         case Qt::Key_Plus:
         case Qt::Key_Equal:

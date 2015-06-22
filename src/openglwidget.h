@@ -68,7 +68,6 @@ public slots:
     void switchToDirectionalLight(bool);
     void togglePointLight();
     void switchToPointLight(bool);
-
     void turnOnSpotlight(bool);
     void changeSpotlightAngle(int);
     void rotateUp();
@@ -97,6 +96,7 @@ public slots:
     void switchToTextureWrapping(bool);
     void switchToTextureMirroring(bool);
     void switchToTextureClamping(bool);
+    void enterDemoMode();
 };
 
 #endif // OPENGLWIDGET_H

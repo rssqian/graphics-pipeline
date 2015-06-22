@@ -16,6 +16,8 @@ extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
 extern int ns;
+extern int shading;
+extern vec3 color;
 
 class Framebuffer {
 public:
@@ -23,7 +25,7 @@ public:
 	~Framebuffer();
 	void clear() const;
 	void setClearColor(const vec3 color);
-	void draw(int ix, int iy, float depth, vec3 color, LightColor KaKdKs, vec3 texCoord, Material* mtlptr) const;
+	bool draw(int ix, int iy, float depth, vec3 color, LightColor KaKdKs, vec3 texCoord, Material* mtlptr) const;
 	const vec3* getPixels() const;
 	void writePPM(string fileName) const;
 	// You can add new member functions here.

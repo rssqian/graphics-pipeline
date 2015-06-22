@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_OpenGLWidget_t {
-    QByteArrayData data[63];
-    char stringdata[987];
+    QByteArrayData data[64];
+    char stringdata[1001];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -91,7 +91,8 @@ QT_MOC_LITERAL(58, 880, 18), // "switchToTextureLML"
 QT_MOC_LITERAL(59, 899, 14), // "turnOffTexture"
 QT_MOC_LITERAL(60, 914, 23), // "switchToTextureWrapping"
 QT_MOC_LITERAL(61, 938, 24), // "switchToTextureMirroring"
-QT_MOC_LITERAL(62, 963, 23) // "switchToTextureClamping"
+QT_MOC_LITERAL(62, 963, 23), // "switchToTextureClamping"
+QT_MOC_LITERAL(63, 987, 13) // "enterDemoMode"
 
     },
     "OpenGLWidget\0fpsChanged\0\0printHelp\0"
@@ -121,7 +122,7 @@ QT_MOC_LITERAL(62, 963, 23) // "switchToTextureClamping"
     "switchToTextureLML\0turnOffTexture\0"
     "switchToTextureWrapping\0"
     "switchToTextureMirroring\0"
-    "switchToTextureClamping"
+    "switchToTextureClamping\0enterDemoMode"
 };
 #undef QT_MOC_LITERAL
 
@@ -131,7 +132,7 @@ static const uint qt_meta_data_OpenGLWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      64,   14, // methods
+      65,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -139,72 +140,73 @@ static const uint qt_meta_data_OpenGLWidget[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  334,    2, 0x06 /* Public */,
+       1,    1,  339,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,  337,    2, 0x0a /* Public */,
-       4,    0,  338,    2, 0x0a /* Public */,
-       5,    0,  339,    2, 0x0a /* Public */,
-       6,    0,  340,    2, 0x0a /* Public */,
-       7,    0,  341,    2, 0x0a /* Public */,
-       8,    0,  342,    2, 0x0a /* Public */,
-       9,    1,  343,    2, 0x0a /* Public */,
-      10,    0,  346,    2, 0x0a /* Public */,
-      11,    1,  347,    2, 0x0a /* Public */,
-      12,    0,  350,    2, 0x0a /* Public */,
-      13,    1,  351,    2, 0x0a /* Public */,
-      14,    0,  354,    2, 0x0a /* Public */,
-      15,    0,  355,    2, 0x0a /* Public */,
-      16,    0,  356,    2, 0x0a /* Public */,
-      17,    0,  357,    2, 0x0a /* Public */,
-      17,    1,  358,    2, 0x0a /* Public */,
-      18,    0,  361,    2, 0x0a /* Public */,
-      18,    1,  362,    2, 0x0a /* Public */,
-      19,    0,  365,    2, 0x0a /* Public */,
-      19,    1,  366,    2, 0x0a /* Public */,
-      20,    0,  369,    2, 0x0a /* Public */,
-      21,    0,  370,    2, 0x0a /* Public */,
-      22,    0,  371,    2, 0x0a /* Public */,
-      23,    1,  372,    2, 0x0a /* Public */,
-      24,    1,  375,    2, 0x0a /* Public */,
-      25,    1,  378,    2, 0x0a /* Public */,
-      26,    1,  381,    2, 0x0a /* Public */,
-      27,    1,  384,    2, 0x0a /* Public */,
-      28,    1,  387,    2, 0x0a /* Public */,
-      29,    1,  390,    2, 0x0a /* Public */,
-      30,    1,  393,    2, 0x0a /* Public */,
-      31,    0,  396,    2, 0x0a /* Public */,
-      32,    1,  397,    2, 0x0a /* Public */,
-      33,    0,  400,    2, 0x0a /* Public */,
-      34,    1,  401,    2, 0x0a /* Public */,
-      35,    1,  404,    2, 0x0a /* Public */,
-      36,    1,  407,    2, 0x0a /* Public */,
-      37,    0,  410,    2, 0x0a /* Public */,
-      38,    0,  411,    2, 0x0a /* Public */,
-      39,    0,  412,    2, 0x0a /* Public */,
-      40,    0,  413,    2, 0x0a /* Public */,
-      41,    2,  414,    2, 0x0a /* Public */,
-      42,    1,  419,    2, 0x0a /* Public */,
-      43,    1,  422,    2, 0x0a /* Public */,
-      44,    1,  425,    2, 0x0a /* Public */,
-      45,    1,  428,    2, 0x0a /* Public */,
-      46,    0,  431,    2, 0x0a /* Public */,
-      47,    0,  432,    2, 0x0a /* Public */,
-      48,    0,  433,    2, 0x0a /* Public */,
-      49,    0,  434,    2, 0x0a /* Public */,
-      50,    2,  435,    2, 0x0a /* Public */,
-      51,    0,  440,    2, 0x0a /* Public */,
-      52,    0,  441,    2, 0x0a /* Public */,
-      53,    1,  442,    2, 0x0a /* Public */,
-      54,    1,  445,    2, 0x0a /* Public */,
-      55,    1,  448,    2, 0x0a /* Public */,
-      56,    1,  451,    2, 0x0a /* Public */,
-      57,    1,  454,    2, 0x0a /* Public */,
-      58,    1,  457,    2, 0x0a /* Public */,
-      59,    1,  460,    2, 0x0a /* Public */,
-      60,    1,  463,    2, 0x0a /* Public */,
-      61,    1,  466,    2, 0x0a /* Public */,
-      62,    1,  469,    2, 0x0a /* Public */,
+       3,    0,  342,    2, 0x0a /* Public */,
+       4,    0,  343,    2, 0x0a /* Public */,
+       5,    0,  344,    2, 0x0a /* Public */,
+       6,    0,  345,    2, 0x0a /* Public */,
+       7,    0,  346,    2, 0x0a /* Public */,
+       8,    0,  347,    2, 0x0a /* Public */,
+       9,    1,  348,    2, 0x0a /* Public */,
+      10,    0,  351,    2, 0x0a /* Public */,
+      11,    1,  352,    2, 0x0a /* Public */,
+      12,    0,  355,    2, 0x0a /* Public */,
+      13,    1,  356,    2, 0x0a /* Public */,
+      14,    0,  359,    2, 0x0a /* Public */,
+      15,    0,  360,    2, 0x0a /* Public */,
+      16,    0,  361,    2, 0x0a /* Public */,
+      17,    0,  362,    2, 0x0a /* Public */,
+      17,    1,  363,    2, 0x0a /* Public */,
+      18,    0,  366,    2, 0x0a /* Public */,
+      18,    1,  367,    2, 0x0a /* Public */,
+      19,    0,  370,    2, 0x0a /* Public */,
+      19,    1,  371,    2, 0x0a /* Public */,
+      20,    0,  374,    2, 0x0a /* Public */,
+      21,    0,  375,    2, 0x0a /* Public */,
+      22,    0,  376,    2, 0x0a /* Public */,
+      23,    1,  377,    2, 0x0a /* Public */,
+      24,    1,  380,    2, 0x0a /* Public */,
+      25,    1,  383,    2, 0x0a /* Public */,
+      26,    1,  386,    2, 0x0a /* Public */,
+      27,    1,  389,    2, 0x0a /* Public */,
+      28,    1,  392,    2, 0x0a /* Public */,
+      29,    1,  395,    2, 0x0a /* Public */,
+      30,    1,  398,    2, 0x0a /* Public */,
+      31,    0,  401,    2, 0x0a /* Public */,
+      32,    1,  402,    2, 0x0a /* Public */,
+      33,    0,  405,    2, 0x0a /* Public */,
+      34,    1,  406,    2, 0x0a /* Public */,
+      35,    1,  409,    2, 0x0a /* Public */,
+      36,    1,  412,    2, 0x0a /* Public */,
+      37,    0,  415,    2, 0x0a /* Public */,
+      38,    0,  416,    2, 0x0a /* Public */,
+      39,    0,  417,    2, 0x0a /* Public */,
+      40,    0,  418,    2, 0x0a /* Public */,
+      41,    2,  419,    2, 0x0a /* Public */,
+      42,    1,  424,    2, 0x0a /* Public */,
+      43,    1,  427,    2, 0x0a /* Public */,
+      44,    1,  430,    2, 0x0a /* Public */,
+      45,    1,  433,    2, 0x0a /* Public */,
+      46,    0,  436,    2, 0x0a /* Public */,
+      47,    0,  437,    2, 0x0a /* Public */,
+      48,    0,  438,    2, 0x0a /* Public */,
+      49,    0,  439,    2, 0x0a /* Public */,
+      50,    2,  440,    2, 0x0a /* Public */,
+      51,    0,  445,    2, 0x0a /* Public */,
+      52,    0,  446,    2, 0x0a /* Public */,
+      53,    1,  447,    2, 0x0a /* Public */,
+      54,    1,  450,    2, 0x0a /* Public */,
+      55,    1,  453,    2, 0x0a /* Public */,
+      56,    1,  456,    2, 0x0a /* Public */,
+      57,    1,  459,    2, 0x0a /* Public */,
+      58,    1,  462,    2, 0x0a /* Public */,
+      59,    1,  465,    2, 0x0a /* Public */,
+      60,    1,  468,    2, 0x0a /* Public */,
+      61,    1,  471,    2, 0x0a /* Public */,
+      62,    1,  474,    2, 0x0a /* Public */,
+      63,    0,  477,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString,    2,
@@ -273,6 +275,7 @@ static const uint qt_meta_data_OpenGLWidget[] = {
     QMetaType::Void, QMetaType::Bool,    2,
     QMetaType::Void, QMetaType::Bool,    2,
     QMetaType::Void, QMetaType::Bool,    2,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -346,6 +349,7 @@ void OpenGLWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 61: _t->switchToTextureWrapping((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 62: _t->switchToTextureMirroring((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 63: _t->switchToTextureClamping((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 64: _t->enterDemoMode(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -387,13 +391,13 @@ int OpenGLWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 64)
+        if (_id < 65)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 64;
+        _id -= 65;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 64)
+        if (_id < 65)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 64;
+        _id -= 65;
     }
     return _id;
 }
