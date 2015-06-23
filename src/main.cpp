@@ -22,8 +22,8 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 1024;
-int screenHeight = 768;
+int screenWidth = 1280;
+int screenHeight = 720;
 int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
@@ -69,10 +69,12 @@ const char* modelNames[] = {
 	"model/couch.obj",
 	//"model/cubeT.obj",
 	"model/Nala.obj",
-	//"model/ball.obj",
+	"model/ball.obj",
 	"model/duck.obj",
-	//"model/ZEBRA.obj",
-	//"model/Dog.obj",
+	"model/ZEBRA.obj",
+	"model/Dog.obj",
+	"model/texturedknot.obj",
+	"model/laurana500.obj",
 	//"model/cessna7KC.obj",
 	//"model/santa7KC.obj",
 	//"model/laurana2KC.obj",
@@ -80,7 +82,7 @@ const char* modelNames[] = {
 	//"model/sphere.obj",
 	//"model/KioMiku/Miku.obj",
 	"model/Giraffe.obj",
-	//"model/blaze.obj",
+	//"model/blaze.obj"
 	//"model/ateneal.obj",
 	//"model/venusm.obj",
 	//"model/bunnyC.obj"
@@ -263,8 +265,8 @@ void displayFunc()
 	if (demoMode==0) numDrawTriangleIdx = modelPtr[curModelIdx]->numTriangles;
 	else {
 		//cout << numDrawTriangleIdx << endl;
-		if (demoMode==1) numDrawTriangleIdx += 8;
-		else numDrawTriangleIdx += (20);
+		if (demoMode==1) numDrawTriangleIdx += 16;
+		else numDrawTriangleIdx += (40);
 		if (numDrawTriangleIdx>modelPtr[curModelIdx]->numTriangles) numDrawTriangleIdx = modelPtr[curModelIdx]->numTriangles;
 	}
 	for (int i=0; i<modelPtr[curModelIdx]->numTriangles; i++) {

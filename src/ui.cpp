@@ -273,6 +273,7 @@ inline void toggleDemo() {
 	textureDisplay = 0;
 	filterMode = 0;
 	numDrawTriangleIdx = 0;
+	theta = glm::vec3(0.f);
   } else {
 	demoMode = 0;
 	cout << "Switching to MANUAL mode" << endl;
@@ -284,6 +285,7 @@ inline void toggleDemo() {
 	textureAddressing = 0; 
 	textureDisplay = 0;
 	filterMode = 0;
+	
   }
 }
 
