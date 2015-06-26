@@ -2,16 +2,22 @@
 
 A program to read and show given 3D model files (.obj) with rasterization and lighting.
 
-[3DMM Final Proposal on Google Slides](https://docs.google.com/presentation/d/1ktccoMu1ihUhZ7n7Hlv9xIq7cAkNMgr-hRX6ejyMrG4/edit?usp=sharing)
+### Screenshots
 
-![Program Flow](program-flow.png)
+![Screenshot - Translate](screenshot-translate.png)
+![Screenshot - Lighting](screenshot-lighting.png)
+![Screenshot - Texture](screenshot-texture.png)
+
+### How it works
+
+![3D Graphics Pipeline](graphics-pipeline.png)
 
 ### How to compile & execute
 
-#### Command Line
-
-OpenGL/freeglut is needed to compile the program.
+Qt5 is needed to compile the program.
 To compile the program, run command:
+
+`qmake-qt5 3d-graphics-engine.pro`
 
 `make`
 
@@ -24,14 +30,3 @@ To remove the program, run command:
 Run the program:
 
 `./3d-graphics-engine`
-
-#### Visual Studio
-1. Open Visual Studio 2010 or newer version of Visual Studio.
-2. Add all the header files to the header folder of the solution explorer.
-3. Add all the source files to the source folder of the solution explorer.
-4. Switch the compiling mode to "Release" mode.
-5. Press F5 to start debugging.
-
-### How to use the program
-
-After you start running the program, hit `h` to view the hotkeys.

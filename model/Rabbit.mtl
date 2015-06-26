@@ -1,0 +1,14 @@
+# 
+# 
+newmtl Rabbit
+Ns 1
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Rabbit_D.ppm
+map_Ks Rabbit_S.ppm
+
+

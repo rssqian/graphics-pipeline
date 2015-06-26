@@ -1,0 +1,26 @@
+# 
+# 
+newmtl Deer_body
+Ns 1
+Ka 0.000000 0.000000 0.000000
+Kd 2.000000 2.000000 2.000000
+Ks 1.500000 1.500000 1.500000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Deer_body_D.ppm
+map_Ks Deer_body_S.ppm
+
+
+newmtl Deer_horns
+Ns 1
+Ka 0.000000 0.000000 0.000000
+Kd 2.000000 2.000000 2.000000
+Ks 1.500000 1.500000 1.500000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd Deer_horns_D.ppm
+map_Ks Deer_horns_S.ppm
+
+

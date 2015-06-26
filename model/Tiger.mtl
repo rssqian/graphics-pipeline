@@ -1,0 +1,12 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+newmtl Material
+Ka  0.2 0.2 0.2
+Kd  2.0 2.0 2.0
+Ks  0.8 0.8 0.8
+d  1.0
+Ns  10.0
+illum 2
+map_Kd bengal_tiger.ppm
+#
+# EOF

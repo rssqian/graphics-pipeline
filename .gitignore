@@ -1,0 +1,11 @@
+# Ignore files created by Qt
+*.user
+# Ignore files created by Visual Studio
+Release/
+ipch/
+3dmm_hw1.*
+*.dll
+# Ignore object and binary files
+*.swp
+*.o
+3d-graphics-engine

@@ -14,7 +14,7 @@ glm::mat4 model_rotation(glm::vec3) ;
 //glm::mat4 viewMatrix(glm::vec3 cameraPos,glm::vec3 cameraTarget,glm::vec3 upVector);
 //glm::mat4 projectionMatrix(float FoV);
 
-bool backFaceCulling(glm::vec3);
+bool backFaceCulling(glm::vec3, glm::vec3);
 
 //void toScreenSpace(vec3& v,int& ix,int& iy,float& iz);
 
