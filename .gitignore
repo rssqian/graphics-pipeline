@@ -1,3 +1,5 @@
+# Ignore files created by Qt
+*.user
 # Ignore files created by Visual Studio
 Release/
 ipch/

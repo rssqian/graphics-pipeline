@@ -10,7 +10,7 @@ A program to read and show given 3D model files (.obj) with rasterization and li
 
 ### How it works
 
-![Program Flow](program-flow.png)
+![3D Graphics Pipeline](graphics-pipeline.png)
 
 ### How to compile & execute
 
