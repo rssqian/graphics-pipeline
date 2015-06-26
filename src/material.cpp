@@ -168,20 +168,28 @@ void makeMipMaps(vector<RGBImage*>& texMap)
     /* find the new texture values */ 
     for (u = 0; u < MipMap->w; u++) {
 		for (v = 0; v < MipMap->h; v++) {
-			MipMap->data[MipMap->w*u+v].r = (parentMap->data[parentMap->w*u*2 + v*2].r
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].r
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].r
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].r)
+			if (0>(parentMap->w*v*2 + u*2) || (parentMap->w*v*2 + u*2)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2=" << u*2 << " v*2=" << v*2 << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*v*2 + u*2 + 1) || (parentMap->w*v*2 + u*2 + 1)>(parentMap->w*parentMap->h))
+				cout << "Mipmap num " << texMap.size() << ", u*2=" << u*2 << " v*2+1=" << v*2 + 1  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*(v*2+1) + u*2) || (parentMap->w*(v*2+1) + u*2)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2+1=" << u*2+1 << " v*2=" << v*2  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			if (0>(parentMap->w*(v*2+1) + u*2 + 1) || (parentMap->w*(v*2+1) + u*2 + 1)>(parentMap->w*parentMap->h)) 
+				cout << "Mipmap num " << texMap.size() << ", u*2+1=" << u*2+1 << " v*2+1=" << v*2 + 1  << " exceeding w=" << parentMap->w << " h=" << parentMap->h << endl;
+			MipMap->data[MipMap->w*v+u].r = (parentMap->data[parentMap->w*v*2 + u*2].r
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].r
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].r
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].r)
 											/  4;
-			MipMap->data[MipMap->w*u+v].g = (parentMap->data[parentMap->w*u*2 + v*2].g
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].g
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].g
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].g)
+			MipMap->data[MipMap->w*v+u].g = (parentMap->data[parentMap->w*v*2 + u*2].g
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].g
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].g
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].g)
 											/  4;
-			MipMap->data[MipMap->w*u+v].b = (parentMap->data[parentMap->w*u*2 + v*2].b
-										    + parentMap->data[parentMap->w*u*2 + v*2 + 1].b
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2].b
-											+  parentMap->data[parentMap->w*(u*2+1) + v*2 + 1].b)
+			MipMap->data[MipMap->w*v+u].b = (parentMap->data[parentMap->w*v*2 + u*2].b
+										    + parentMap->data[parentMap->w*v*2 + u*2 + 1].b
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2].b
+											+  parentMap->data[parentMap->w*(v*2+1) + u*2 + 1].b)
 											/  4;
 		}
     }

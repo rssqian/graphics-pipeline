@@ -37,11 +37,16 @@ extern bool projection;
 extern bool textureDisplay;
 extern int filterMode;
 extern int textureAddressing;
+extern int demoMode;
 
 extern Lighting light;
 extern glm::vec3 ka;
 extern glm::vec3 kd;
 extern glm::vec3 ks;
+extern bool pointLight;
+extern float spotlightAngle;
+
+extern int numDrawTriangleIdx;
 
 #endif
 
@@ -61,8 +66,10 @@ inline void changeShading();
 inline void switchKaKdKsLighting();
 inline void rotateUp();
 inline void rotateDown();
-inline void rotateLeft();
-inline void rotateRight();
+inline void rotateLeftY();
+inline void rotateRightY();
+inline void rotateLeftX();
+inline void rotateRightX();
 inline void panUp();
 inline void panDown();
 inline void panLeft();
@@ -74,6 +81,7 @@ inline void moveBackward();
 inline void setLightSourcePosition();
 inline void toggleTexture();
 inline void switchTextureModes();
+inline void toggleDemo();
 
 /* User interfaces */
 void motionFunc(int x, int y);

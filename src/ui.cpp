@@ -47,9 +47,12 @@ void printHelp()
 	cout << "  b: Toggle background color              " << endl;
 	cout << "  l: Toggle lighting mode                 " << endl;
 	cout << "  k: Switch ambient/diffuse/specular lights " << endl;
-	cout << "  t: Toggle texture                        " << endl;
-	cout << "  T: Switch texture addressing mode        " << endl;
-	cout << "===========================================" << endl;
+	cout << "  Z: Toggle poit/directional light source  " << endl;
+	cout << "  z/x: Increase/Decrease spotlight angle (point light) " << endl;
+	cout << "  t: Toggle texture/texture filtering mode  " << endl;
+	cout << "  T: Switch texture addressing mode         " << endl;
+	cout << "  d: Toggle demo mode                       " << endl;
+	cout << "=========================================== " << endl;
 }
 
 inline void reset() {
@@ -157,6 +160,18 @@ inline void switchKaKdKsLighting(){
   }
 }
 
+inline void togglePointLight() {
+  pointLight = !pointLight;
+  if (pointLight) cout << "Point light source" << endl;
+  else cout << "Directional light source" << endl;
+}
+inline void changeSpotlightAngle(float angle) {
+  spotlightAngle += angle;
+  if (spotlightAngle > 1) spotlightAngle = 1;
+  if (spotlightAngle < 0) spotlightAngle = 0;
+  cout << "Spotlight angle: " << spotlightAngle << endl;
+}
+
 inline void rotateUp() {
   //cout << "Rotate up" << endl;
   theta.x = (theta.x < 0)? (PI*2) : (theta.x - rotateSpeed);
@@ -165,27 +180,35 @@ inline void rotateDown() {
   //cout << "Rotate down" << endl;
   theta.x = (theta.x > PI*2)? 0 : (theta.x + rotateSpeed);
 }
-inline void rotateLeft() {
+inline void rotateLeftY() {
   //cout << "Rotate left" << endl;
   theta.y = (theta.y < 0)? (PI*2) : (theta.y - rotateSpeed);
 }
-inline void rotateRight() {
+inline void rotateRightY() {
   //cout << "Rotate right" << endl;
   theta.y = (theta.y > PI*2)? 0 : (theta.y + rotateSpeed);
 }
-inline void panUp(int pace) {
+inline void rotateLeftX() {
+  //cout << "Rotate left" << endl;
+  theta.z = (theta.z < 0)? (PI*2) : (theta.z - rotateSpeed);
+}
+inline void rotateRightX() {
+  //cout << "Rotate right" << endl;
+  theta.z = (theta.z > PI*2)? 0 : (theta.z + rotateSpeed);
+}
+inline void panUp(float pace) {
   //cout << "Pan up" << endl;
   translate.y += pace;
 }
-inline void panDown(int pace) {
+inline void panDown(float pace) {
   //cout << "Pan down" << endl;
   translate.y -= pace;
 }
-inline void panLeft(int pace) {
+inline void panLeft(float pace) {
   //cout << "Pan left" << endl;
   translate.x -= pace;
 }
-inline void panRight(int pace) {
+inline void panRight(float pace) {
   //cout << "Pan right" << endl;
 	translate.x += pace;
 }
@@ -214,7 +237,7 @@ inline void moveBackward() {
 inline void setLightSourcePosition(int x, int y) {
   float lightX = float(x - screenWidth_half)/screenWidth_half*5;
   float lightY = float(screenHeight_half - y)/screenHeight_half*5;
-  light.source = glm::vec3(lightX, lightY, 5.f);
+  light.source = glm::vec3(lightX, lightY, 1.f);
   cout << "Set light source to (" << lightX << ", " << lightY << ", 5)"<< endl;
 } 
 
@@ -249,6 +272,36 @@ inline void switchTextureModes() {
   cout << "Switch texture addressing to: " << textureAddressing << endl;
 }
 
+inline void toggleDemo() {
+  if (demoMode == 0) { 
+    demoMode = 1;
+    cout << "Switching to DEMO mode" << endl;
+	cout << "DEMO mode: switching to wireframe" << endl;
+	culling = false;
+	wireframe = 1;
+	normalDisplay = 0;
+	solid = 0;
+	shading = 1; 
+	textureAddressing = 0; 
+	textureDisplay = 0;
+	filterMode = 0;
+	numDrawTriangleIdx = 0;
+	theta = glm::vec3(0.f);
+  } else {
+	demoMode = 0;
+	cout << "Switching to MANUAL mode" << endl;
+	culling = true;
+	wireframe = 0;
+	normalDisplay = 0;
+	solid = 1;
+	shading = 1; 
+	textureAddressing = 0; 
+	textureDisplay = 0;
+	filterMode = 0;
+	
+  }
+}
+
 void motionFunc(int x, int y) {
   if ( rotating ) {
     int deltaMouseX = x - prevMouseX;
@@ -258,9 +311,9 @@ void motionFunc(int x, int y) {
     else if ( deltaMouseY < -100 )
       rotateDown();
     else if ( deltaMouseX < -100 )
-      rotateLeft();
+      rotateLeftY();
     else if ( deltaMouseX > 100 )
-      rotateRight();
+      rotateRightY();
   }
   if ( panning ) {
     int deltaMouseX = x - prevMouseX;
@@ -332,8 +385,14 @@ void keyboardFunc(unsigned char key, int x, int y)
     toggleCulling(); break;
 	case 'l':
     changeShading(); break;
-  case 'k':
+	case 'k':
     switchKaKdKsLighting(); break;
+	case 'Z':
+    togglePointLight(); break;
+	case 'z':
+    changeSpotlightAngle(-0.001); break;
+	case 'x':
+    changeSpotlightAngle(0.001); break;
 	case 'w':
     toggleWireframe(); break;
 	case 'n':
@@ -349,17 +408,23 @@ void keyboardFunc(unsigned char key, int x, int y)
   case 'T':
     switchTextureModes(); break;
   case 'A':
-    panLeft(10); break;
+    panLeft(0.1); break;
   case 'D':
-    panRight(10); break;
+    panRight(0.1); break;
   case 'W':
-    panUp(10); break;
+    panUp(0.1); break;
   case 'S':
-    panDown(10); break;
+    panDown(0.1); break;
   case '=':
     zoomIn(); break;
   case '-':
     zoomOut(); break;
+  case 'd':
+    toggleDemo(); break;
+  case '/':
+	rotateRightX(); break;
+  case '.':
+	rotateLeftX(); break;
 	}
 	glutPostRedisplay();
 }
@@ -369,9 +434,9 @@ void specialFunc(int key, int x, int y)
 {
 	switch (key) {
 	case GLUT_KEY_RIGHT:
-    rotateRight(); break;
+    rotateRightY(); break;
 	case GLUT_KEY_LEFT:
-    rotateLeft(); break;
+    rotateLeftY(); break;
 	case GLUT_KEY_UP:
     rotateUp(); break;
 	case GLUT_KEY_DOWN:
