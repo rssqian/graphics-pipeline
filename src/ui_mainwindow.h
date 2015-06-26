@@ -105,18 +105,13 @@ public:
     QPushButton *pushButton_6;
     QPushButton *pushButton_5;
     QPushButton *pushButton_1;
-    QSpacerItem *verticalSpacer;
-    QLabel *label_11;
-    QLabel *label_12;
-    QLabel *label_13;
-    QLabel *label_14;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::ApplicationModal);
-        MainWindow->resize(1104, 956);
+        MainWindow->resize(1104, 752);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout_2 = new QHBoxLayout(centralWidget);
@@ -249,7 +244,7 @@ public:
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         tabWidget = new QTabWidget(groupBox_5);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setMinimumSize(QSize(0, 600));
+        tabWidget->setMinimumSize(QSize(0, 500));
         tabWidget->setFocusPolicy(Qt::NoFocus);
         tab_3 = new QWidget();
         tab_3->setObjectName(QStringLiteral("tab_3"));
@@ -486,7 +481,7 @@ public:
 
         groupBox = new QGroupBox(groupBox_5);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setMinimumSize(QSize(0, 200));
+        groupBox->setMinimumSize(QSize(0, 110));
         groupBox->setAutoFillBackground(false);
         groupBox->setStyleSheet(QLatin1String("QGroupBox {\n"
 "	font-weight: bold;\n"
@@ -536,35 +531,6 @@ public:
         pushButton_1->setChecked(true);
 
         verticalLayout_2->addWidget(groupBox);
-
-        verticalSpacer = new QSpacerItem(20, 60, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_2->addItem(verticalSpacer);
-
-        label_11 = new QLabel(groupBox_5);
-        label_11->setObjectName(QStringLiteral("label_11"));
-        label_11->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        verticalLayout_2->addWidget(label_11);
-
-        label_12 = new QLabel(groupBox_5);
-        label_12->setObjectName(QStringLiteral("label_12"));
-        label_12->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        verticalLayout_2->addWidget(label_12);
-
-        label_13 = new QLabel(groupBox_5);
-        label_13->setObjectName(QStringLiteral("label_13"));
-        label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        verticalLayout_2->addWidget(label_13);
-
-        label_14 = new QLabel(groupBox_5);
-        label_14->setObjectName(QStringLiteral("label_14"));
-        label_14->setStyleSheet(QStringLiteral("font-weight:bold;"));
-        label_14->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-
-        verticalLayout_2->addWidget(label_14);
 
 
         horizontalLayout_2->addWidget(groupBox_5);
@@ -674,10 +640,6 @@ public:
         pushButton_6->setText(QApplication::translate("MainWindow", "Axes", 0));
         pushButton_5->setText(QApplication::translate("MainWindow", "Background", 0));
         pushButton_1->setText(QApplication::translate("MainWindow", "Culling", 0));
-        label_11->setText(QApplication::translate("MainWindow", "Chih-Wei Wu", 0));
-        label_12->setText(QApplication::translate("MainWindow", "Ching-Ting Chang", 0));
-        label_13->setText(QApplication::translate("MainWindow", "Shan-Yuan Teng", 0));
-        label_14->setText(QApplication::translate("MainWindow", "June 2015", 0));
     } // retranslateUi
 
 };

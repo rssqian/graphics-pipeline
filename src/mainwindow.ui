@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1104</width>
-    <height>956</height>
+    <height>752</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -237,7 +237,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>600</height>
+           <height>500</height>
           </size>
          </property>
          <property name="focusPolicy">
@@ -1040,7 +1040,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>200</height>
+           <height>110</height>
           </size>
          </property>
          <property name="autoFillBackground">
@@ -1193,62 +1193,6 @@
            <bool>true</bool>
           </property>
          </widget>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>60</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>Chih-Wei Wu</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Ching-Ting Chang</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>Shan-Yuan Teng</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="styleSheet">
-          <string notr="true">font-weight:bold;</string>
-         </property>
-         <property name="text">
-          <string>June 2015</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
         </widget>
        </item>
       </layout>

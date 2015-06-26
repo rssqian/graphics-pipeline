@@ -21,8 +21,8 @@ using namespace std;
 Model** modelPtr;
 
 /* frame size */
-int screenWidth = 974;
-int screenHeight = 955;
+int screenWidth = 1075;
+int screenHeight = 660;
 int screenWidth_half = screenWidth/2;
 int screenHeight_half = screenHeight/2;
 
